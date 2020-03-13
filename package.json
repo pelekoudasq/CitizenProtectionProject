@@ -1,0 +1,25 @@
+{
+  "name": "citizenprotectionproject",
+  "version": "1.0.0",
+  "description": "Software Engineering (Group 7)",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pelekoudasq/CitizenProtectionProject.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pelekoudasq/CitizenProtectionProject/issues"
+  },
+  "homepage": "https://github.com/pelekoudasq/CitizenProtectionProject#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
