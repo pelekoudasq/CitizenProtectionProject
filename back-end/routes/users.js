@@ -1,11 +1,14 @@
 // import packages
 const express = require('express');
+const mongojs = require('mongojs');
+
 
 // import files
-
+const config = require('../config.json');
 
 // declare vars
 const router = express.Router();
+const db = mongojs(config.dburi);
 
 //routes
 

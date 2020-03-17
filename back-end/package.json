@@ -1,13 +1,11 @@
 {
-  "name": "citizenprotectionproject",
+  "name": "back-end",
   "version": "1.0.0",
-  "description": "Software Engineering (Group 7)",
-  "main": "index.js",
-  "directories": {
-    "doc": "docs"
-  },
+  "description": "packages for node",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
   },
   "repository": {
     "type": "git",
@@ -20,6 +18,7 @@
   },
   "homepage": "https://github.com/pelekoudasq/CitizenProtectionProject#readme",
   "dependencies": {
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "mongojs": "^3.1.0"
   }
 }
