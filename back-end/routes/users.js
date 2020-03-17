@@ -15,7 +15,25 @@ const db = mongojs(config.dburi);
 //get all users
 router.get('/all', function(req, res, next) {
 	console.log('users: get all');
-	res.json("hey users");
+	db.Users.find(function(err, users) {
+		if (err) {
+			res.send(err);
+			return;
+		}
+		res.json(users);
+	})
+})
+
+//get user by id
+router.get('/:id', function(req, res, next) {
+	console.log('users: get by id');
+	db.Users.find({ _id: mongojs.ObjectID(req.params.id) }, function(err, user) {
+		if (err) {
+			res.send(err);
+			return;
+		}
+		res.json(user);
+	})
 })
 
 

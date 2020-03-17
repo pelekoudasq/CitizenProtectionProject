@@ -19,8 +19,6 @@ app.use('/users', users);
 app.use('/incidents', incidents);
 
 
-// app.listen(port, function(){
-// 	console.log(`Server started on port ${port}`);
-// })
-
-https.createServer(options, app).listen(port);
+https.createServer(options, app).listen(port, function(){
+	console.log(`Server started on port ${port}`);
+});

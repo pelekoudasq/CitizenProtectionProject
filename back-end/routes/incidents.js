@@ -8,7 +8,6 @@ const config = require('../config.json');
 
 // declare vars
 const router = express.Router();
-console.log(config.dburi);
 const db = mongojs(config.dburi);
 
 //routes
@@ -22,6 +21,18 @@ router.get('/all', function(req, res, next) {
 			return;
 		}
 		res.json(incidents);
+	})
+})
+
+//get incident by id
+router.get('/:id', function(req, res, next) {
+	console.log('incidents: get by id');
+	db.Incidents.findOne({ _id: mongojs.ObjectID(req.params.id) }, function(err, incident) {
+		if (err) {
+			res.send(err);
+			return;
+		}
+		res.json(incident);
 	})
 })
 
