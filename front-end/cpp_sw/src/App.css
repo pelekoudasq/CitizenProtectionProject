@@ -36,29 +36,3 @@
     transform: rotate(360deg);
   }
 }
-
-.login-form{
-  width: 100%;
-  max-width: 330px;
-  padding: 15px;
-  margin: auto;
-  height: 100%;
-}
-
-.navbar {
-    background-color: #54585d !important;
-    margin: auto;
-    height: 50px;
-}
-
-.font-weight-bold
-{
-  margin-bottom: 0.5rem;
-  font-weight: 500;
-  line-height: 0.0;
-}
-
-.img {
-  height: 80%;
-  margin-left: 10px;
-}

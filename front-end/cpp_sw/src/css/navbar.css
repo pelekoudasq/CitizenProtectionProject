@@ -1,0 +1,30 @@
+.navbar 
+{
+  background-color: #616973 !important;
+  margin: auto;
+  height: 50px;
+}
+
+.navbar_text
+{
+  color: white;
+  position:absolute;
+  left:80px;
+  top:13px;
+}
+
+.navbar_line
+{
+  border-right: 2px solid white;
+  height: 35px;
+  position:absolute;
+  left:70px;
+}
+
+.logo_img {
+  height: 95%; 
+  width: 45px;
+  position:absolute;
+  left:10px;
+  top:3px;
+}
