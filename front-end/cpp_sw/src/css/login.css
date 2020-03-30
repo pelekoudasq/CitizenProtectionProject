@@ -3,11 +3,11 @@
 	width: 100%;
 	max-width: 330px;
 	padding: 20px;
-	margin-left: 560px;
-	margin-bottom: 200px;
+	margin: auto;
+	padding-top: 60px; 
 }
 
-.loginbutton 
+.loginbutton
 {
 	width: 100%;
 	min-width: 280px;
@@ -23,10 +23,11 @@
 
 .login_text
 {
-	color: #2c71af; 
-	visibility: visible; 
-	margin-left: 520px;
-	margin-top: 70px;
+	color: #2c71af;
+	visibility: visible;
+	margin: auto;
+	text-align: center;
+	position: center;
 }
 
 
@@ -43,4 +44,3 @@
 	right:0px;
 	top:110px;
 }
-

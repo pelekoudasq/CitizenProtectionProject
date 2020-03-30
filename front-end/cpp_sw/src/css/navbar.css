@@ -1,4 +1,4 @@
-.navbar 
+.navbar
 {
   background-color: #616973 !important;
   margin: auto;
@@ -17,14 +17,21 @@
 {
   border-right: 2px solid white;
   height: 35px;
-  position:absolute;
-  left:70px;
+  position: absolute;
+  left: 63px;
 }
 
-.logo_img {
-  height: 95%; 
-  width: 45px;
-  position:absolute;
-  left:10px;
-  top:3px;
+.logo_img
+{
+  height: 90%;
+  width: 40px;
+  position: absolute;
+  left: 10px;
+  top: 3px;
+}
+
+.btn-primary
+{
+  color: #0389db;
+  padding: 4px 8px !important;
 }

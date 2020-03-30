@@ -46,29 +46,26 @@ class LoginForm extends  Component
 		this.setState({
 			buttonDisabled: true
 		})
-	}	
+	}
 
-	render() 
+	render()
 	{
 		return(
 			<div>
 			    <NavBar />
-				<h1 className = 'login_text'>
-			    	<h2>Πλατφόρμα Προστασίας Πολίτη</h2>	
-			    </h1>
 			   	<Form className="login-form">
 			    	<h3 className="text-center">Είσοδος στην υπηρεσία</h3>
 			    	<FormGroup>
-			        	<Label>Username</Label>
-			        	<Input 	type="name" 
+			        	<Label>Όνομα Χρήστη</Label>
+			        	<Input 	type="name"
 			        			placeholder=""
 			        			//value={this.state.username ? this.state.username : '' }
 			        			onChange={ (val) => this.setInputValue('username', val)}
 			        	/>
 			    	</FormGroup>
 			      	<FormGroup>
-			      		<Label>Password</Label>
-			        	<Input 	type="password" 
+			      		<Label>Κωδικός Πρόσβασης</Label>
+			        	<Input 	type="password"
 			        			placeholder=""
 			        			//value={this.state.password ? this.state.password : '' }
 								onChange={ (val) => this.setInputValue('password', val)}
@@ -76,7 +73,7 @@ class LoginForm extends  Component
 			     	</FormGroup>
 			    	<button className="loginbutton"
 			    			onClick={() => this.doLogin()}
-			    	>Σύνδεση		
+			    	>Σύνδεση
 			    	</button>
 			    </Form>
 			    <img className="login_img"
@@ -90,4 +87,3 @@ class LoginForm extends  Component
 
 
 export default LoginForm
-
