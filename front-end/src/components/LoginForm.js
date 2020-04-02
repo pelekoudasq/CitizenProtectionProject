@@ -1,9 +1,11 @@
 import React, { Component } from "react";
-import NavBar from '../nav_components/NavBar'
+import NavBar from './NavBar'
 import { Form, FormGroup, Label, Input } from 'reactstrap';
-import '../../css/login.css';
-import logo from '../../icons/login_img.jpg'
-
+import '../css/login.css';
+import logo from '../icons/login_img.jpg'
+import { Link } from 'react-router-dom'
+import HomePage from './HomePage'
+import Main from './Main'
 
 
 class LoginForm extends  Component
@@ -46,13 +48,13 @@ class LoginForm extends  Component
 		this.setState({
 			buttonDisabled: true
 		})
+
 	}
 
 	render()
 	{
 		return(
 			<div>
-			    <NavBar />
 			   	<Form className="login-form">
 			    	<h3 className="text-center">Είσοδος στην υπηρεσία</h3>
 			    	<FormGroup>
@@ -72,8 +74,9 @@ class LoginForm extends  Component
 			        	/>
 			     	</FormGroup>
 			    	<button className="loginbutton"
-			    			onClick={() => this.doLogin()}
-			    	>Σύνδεση
+			    			onClick={() => this.doLogin()}>
+			    	<Link to ='./Main'></Link>
+			    	Σύνδεση
 			    	</button>
 			    </Form>
 			    <img className="login_img"
