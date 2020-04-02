@@ -1,10 +1,9 @@
 import React, { Component } from "react";
-import '../../css/navbar.css';
-import logo from '../../icons/mainlogo.png'
+import '../css/navbar.css';
+import logo from '../icons/mainlogo.png'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons'
 import { Button } from 'reactstrap';
-// import logout_logo from
 
 
 
@@ -15,7 +14,7 @@ class NavBar extends Component
     return (
       <React.Fragment>
         <nav className="navbar navbar-dark mb-3">
-          <a className="navbar-brand" href="#">
+          <a className="navbar-brand" href="/">
           <img className="logo_img"
             src={logo}
             alt=''
@@ -26,14 +25,12 @@ class NavBar extends Component
           </a>
           <div className="navbar_line"></div>
           <h5 className = "navbar_text">
-
-          Πλατφόρμα Προστασίας Πολίτη
+            Πλατφόρμα Προστασίας Πολίτη
           </h5>
           <Button color="primary" >
-          Αποσύνδεση
-          <FontAwesomeIcon icon={ faSignOutAlt } style={{ marginLeft:'4px' }} />
-          </Button>{' '}
-
+            Αποσύνδεση
+            <FontAwesomeIcon icon={ faSignOutAlt } style={{ marginLeft:'4px' }} />
+          </Button>
         </nav>
       </React.Fragment>
     );
