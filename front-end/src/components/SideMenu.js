@@ -4,7 +4,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHome } from '@fortawesome/free-solid-svg-icons'
 import { faIndent } from '@fortawesome/free-solid-svg-icons'
 import '@trendmicro/react-sidenav/dist/react-sidenav.css';
-import '../css/sidemenu.css';
 import { Link } from 'react-router-dom'
 
 

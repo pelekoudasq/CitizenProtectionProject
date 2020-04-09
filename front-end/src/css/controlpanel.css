@@ -1,0 +1,27 @@
+.head_ltitle
+{
+	color: #464f56;
+	visibility: visible;
+	margin: auto;
+	text-align: center;
+	position: absolute;
+	left: 250px;
+}
+
+.head_rtitle
+{
+	color: #464f56;
+	visibility: visible;
+	margin: auto;
+	text-align: center;
+	position: absolute;
+	right: 250px;
+}
+
+.hrz_line
+{
+  	width: 90%;
+  	position: absolute;
+  	border-top: 2px solid grey;
+  	top: 104px;
+}
