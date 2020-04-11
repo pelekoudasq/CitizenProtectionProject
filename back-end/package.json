@@ -19,6 +19,7 @@
   "homepage": "https://github.com/pelekoudasq/CitizenProtectionProject#readme",
   "dependencies": {
     "express": "^4.17.1",
-    "mongojs": "^3.1.0"
+    "mongojs": "^3.1.0",
+    "opencage-api-client": "^0.7.1"
   }
 }
