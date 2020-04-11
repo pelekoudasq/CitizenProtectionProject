@@ -1,6 +1,7 @@
 // import packages
 const express = require('express');
 const mongojs = require('mongojs');
+const opencage = require('opencage-api-client');
 
 
 // import files
@@ -9,6 +10,26 @@ const config = require('../config.json');
 // declare vars
 const router = express.Router();
 const db = mongojs(config.dburi);
+
+
+opencage.geocode({q: 'Γορτυνίας 23, Δήμος Αγίου Δημητρίου'}).then(data => {
+  // console.log(JSON.stringify(data));
+  if (data.status.code == 200) {
+    if (data.results.length > 0) {
+      var place = data.results[0];
+      // console.log(place);
+      console.log(place.formatted);
+      console.log(place.geometry);
+      // console.log(place.annotations.timezone.name);
+    }
+  } else {
+    // other possible response codes:
+    // https://opencagedata.com/api#codes
+    console.log('error', data.status.message);
+  }
+}).catch(error => {
+  console.log('error', error.message);
+});
 
 //routes
 
