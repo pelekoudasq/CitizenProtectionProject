@@ -2,6 +2,7 @@
 const express = require('express');
 const fs = require("fs");
 const https = require("https");
+const bodyParser = require('body-parser');
 
 // import files
 const users = require('./routes/users');
@@ -14,6 +15,11 @@ const options = {
 };
 const app = express();
 const port = 3000;
+
+//Body Parsers middle ware
+app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
+app.use(bodyParser.json({limit: '50mb', extended: true}));
+
 
 app.use('/users', users);
 app.use('/incidents', incidents);

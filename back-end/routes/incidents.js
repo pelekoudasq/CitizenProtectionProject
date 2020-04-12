@@ -1,6 +1,7 @@
 // import packages
 const express = require('express');
 const mongojs = require('mongojs');
+const opencage = require('opencage-api-client');
 
 
 // import files
@@ -48,6 +49,51 @@ router.get('/priority/:priority', function(req, res, next) {
 	})
 })
 
+
+//create new incident
+router.post('/new', function(req, res, next) {
+	console.log('incidents: create new incident ' );
+	const incParam = req.body;
+	console.log(incParam);
+	var location;
+	opencage.geocode({q: incParam.address}).then(data => {
+		if (data.status.code == 200) {
+		  if (data.results.length > 0) {
+			var place = data.results[0];
+			console.log(place.geometry);
+			location = {
+				longtitude : place.geometry.lng,
+				latitude : place.geometry.lat
+			};
+			incident = db.Incidents.save({
+				title: incParam.title,
+				location : {
+					address: incParam.address,
+					longtitude: location.longtitude,
+					latitude: location.latitude
+				},
+				priority: incParam.priority,
+				date: new Date(),
+				auth: incParam.auth,
+				spots: 5,
+				active: true
+				
+			}, function(err, incident) {
+				if (err) {
+					res.send(err);
+					return;
+				}
+				res.json(incident);
+			})
+		  }
+		} else {
+			res.send(data.status.message);
+		}
+	}).catch(error => {
+		console.log('error', error.message);
+	});
+	
+})
 
 
 module.exports = router;
