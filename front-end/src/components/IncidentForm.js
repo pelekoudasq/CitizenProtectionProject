@@ -12,60 +12,56 @@ class IncidentForm extends Component
       <Row form>
         <Col md={6}>
           <FormGroup>
-            <Label for="exampleEmail">Τίτλος</Label>
-            <Input type="email" name="email" id="exampleEmail" placeholder="with a placeholder" />
+            <Label for="exampleTitle">Τίτλος</Label>
+            <Input type="text" name="title" id="exampleTitle" placeholder="Φωτιά στο Λιμάνι" />
+          </FormGroup>
+          <FormGroup>
+            <Label for="exampleLocation">Τοποθεσία</Label>
+            <Input type="text" name="location" id="exampleLocation" placeholder="Γρ. Αυξεντίου 78, Ζωγράφου" />
           </FormGroup>
         </Col>
         <Col md={6}>
           <FormGroup>
-            <Label for="examplePassword">Password</Label>
-            <Input type="text" name="password" id="examplePassword" placeholder="password placeholder" />
-          </FormGroup>
+		        <Label for="exampleCheckbox">Φορείς</Label>
+		        <div style={{border: '1px solid black', width: '145px', padding: '5px'}}>
+		          <CustomInput type="checkbox" id="EKAB" label="Ε.Κ.Α.Β." />
+		          <CustomInput type="checkbox" id="ELAS" label="ΕΛ.ΑΣ." />
+		          <CustomInput type="checkbox" id="Limeniko" label="Λιμενικό" />
+		          <CustomInput type="checkbox" id="Pirosvestiki" label="Πυρεσβεστική" />
+		        </div>
+		      </FormGroup>
+        </Col>
+        <Col md={6}>
+        	<FormGroup>
+	        <img src={alert}
+	            alt=''
+	        />
+	        </FormGroup>
         </Col>
       </Row>
-      <FormGroup>
-        <Label for="exampleCheckbox">Φορείς</Label>
-        <div>
-          <CustomInput type="checkbox" id="EKAB" label="Ε.Κ.Α.Β." />
-          <CustomInput type="checkbox" id="ELAS" label="ΕΛ.ΑΣ." />
-          <CustomInput type="checkbox" id="Limeniko" label="Λιμενικό" />
-          <CustomInput type="checkbox" id="Pirosvestiki" label="Πυρεσβεστική" />
-        </div>
-      </FormGroup>
-       <img src={alert}
-            alt=''
-        />
-      <FormGroup>
-        <Label for="exampleAddress">Τοποθεσία</Label>
-        <Input type="text" name="address" id="exampleAddress" placeholder="1234 Main St"/>
-      </FormGroup>
-      <FormGroup>
-        <Label for="exampleAddress2">Address 2</Label>
-        <Input type="text" name="address2" id="exampleAddress2" placeholder="Apartment, studio, or floor"/>
-      </FormGroup>
       <Row form>
-        <Col md={6}>
+        <Col md={3}>
           <FormGroup>
-            <Label for="exampleCity">City</Label>
-            <Input type="text" name="city" id="exampleCity"/>
+            <Label for="exampleTelephone">Τηλέφωνο Αναφέροντα</Label>
+            <Input type="tel" name="telephone" id="exampleTelephone"/>
           </FormGroup>
         </Col>
         <Col md={4}>
           <FormGroup>
-            <Label for="exampleState">State</Label>
-            <Input type="text" name="state" id="exampleState"/>
+            <Label for="exampleFullname">Ονοματεπώνυμο Αναφέροντα</Label>
+            <Input type="text" name="fullname" id="exampleFullname"/>
           </FormGroup>
         </Col>
-        <Col md={2}>
+        <Col md={3}>
           <FormGroup>
-            <Label for="exampleZip">Zip</Label>
-            <Input type="text" name="zip" id="exampleZip"/>
+            <Label for="exampleTypeOfIncident">Είδος συμβάντος</Label>
+            <Input type="text" name="typeOfIncident" id="exampleTypeOfIncident"/>
           </FormGroup>  
         </Col>
       </Row>
-      <FormGroup check>
-        <Input type="checkbox" name="check" id="exampleCheck"/>
-        <Label for="exampleCheck" check>Check me out</Label>
+      <Label for="exampleDescription">Περιγραφή</Label>
+      <FormGroup>
+        <textarea style={{height: '200px', width: '800px'}} type="text" name="description" id="exampleDescription" placeholder=""/>
       </FormGroup>
       <Button>Ολοκλήρωση</Button>
     </Form>
