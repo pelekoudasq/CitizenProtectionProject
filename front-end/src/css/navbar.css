@@ -1,8 +1,11 @@
 .navbar
 {
   background-color: #616973 !important;
-  margin: auto;
   height: 50px;
+}
+
+.navbar.mb-3{
+  margin-bottom: 5px !important;
 }
 
 .navbar_text

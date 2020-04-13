@@ -1,5 +1,9 @@
 import React, {Component} from 'react'
-import '../css/controlpanel.css'
+import { CustomInput, Col, Row, Button, Form, FormGroup, Label, Input } from 'reactstrap'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
+import { Link } from 'react-router-dom'
+import '../css/controlpanel.css';
 
 class ControlPanel extends Component
 {
@@ -7,9 +11,9 @@ class ControlPanel extends Component
 	{
 		return(
 			<div>
-				<h3 className = "head_ltitle">Τρέχοντα Συμβάντα</h3>
-				<h3 className = "head_rtitle">Χάρτης Συμβάντων</h3>
-				<div className = "hrz_line"></div>
+		        <h5 className = "head_ltitle">Τρέχοντα Συμβάντα</h5>
+		        <h5 className = "head_rtitle">Χάρτης Συμβάντων</h5>
+        		<div className = "hrz_line"></div>
 			</div>
 			)
 	}
