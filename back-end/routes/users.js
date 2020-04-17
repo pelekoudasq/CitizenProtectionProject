@@ -1,7 +1,8 @@
 // import packages
 const express = require('express');
 const mongojs = require('mongojs');
-// const opencage = require('opencage-api-client');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 
 // import files
@@ -11,27 +12,42 @@ const config = require('../config.json');
 const router = express.Router();
 const db = mongojs(config.dburi);
 
+// aux functions
 
-// opencage.geocode({q: 'Γορτυνίας 23, Δήμος Αγίου Δημητρίου'}).then(data => {
-//   // console.log(JSON.stringify(data));
-//   if (data.status.code == 200) {
-//     if (data.results.length > 0) {
-//       var place = data.results[0];
-//       // console.log(place);
-//       console.log(place.formatted);
-//       console.log(place.geometry);
-//       // console.log(place.annotations.timezone.name);
-//     }
-//   } else {
-//     // other possible response codes:
-//     // https://opencagedata.com/api#codes
-//     console.log('error', data.status.message);
-//   }
-// }).catch(error => {
-//   console.log('error', error.message);
-// });
+async function getById(id) {
+	await db.Users.findOne({_id: id}, function(err, user) {
+		if(user)
+			return user;
+		return null;
+	});
+}
+
+async function comparePass(user, password) {
+	if(user) {
+		if (bcrypt.compareSync(password, user.passwordHash)) {
+			const token = jwt.sign({ sub: user.id }, config.secret); // <==== The all-important "jwt.sign" function
+			// const userObj = new User(user);
+			const { password, ...userWithoutHash } = user;
+			return {
+				...userWithoutHash,
+				token
+			};
+		} else {
+			//console.log('Wrong pswd');
+		}
+	}
+}
 
 //routes
+//Authenticate user
+router.post('/authenticate', function(req, res, next) {
+	console.log('users: authenticate');
+	db.Users.findOne({ username: req.body.username }, function(err, user) {
+		comparePass(user, req.body.password)
+			.then(userRes => userRes ? res.json(userRes) : res.status(400).json({ error: 'Username or password is incorrect' }))
+			.catch(err => next(err));
+	});
+});
 
 //get all users
 router.get('/all', function(req, res, next) {
@@ -59,3 +75,7 @@ router.get('/:id', function(req, res, next) {
 
 
 module.exports = router;
+// module.exports = {
+	// router : router,
+	// getById: getById
+// }

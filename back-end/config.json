@@ -1,3 +1,4 @@
 {
-	"dburi":"mongodb://admin:ProXeiros0!@83.212.75.246:27017/CitizenProtection"
+	"dburi":"mongodb://admin:ProXeiros0!@83.212.75.246:27017/CitizenProtection",
+	"secret":"i vasia tha perasei moni tis to pasxa"
 }
