@@ -1,12 +1,13 @@
 import React, { Component } from "react";
-import NavBar from './NavBar'
 import { Form, FormGroup, Label, Input } from 'reactstrap';
 import '../css/login.css';
 import logo from '../icons/login_img.jpg'
-import { Link } from 'react-router-dom'
+//import { Link } from 'react-router-dom'
 import apiUrl from '../services/apiUrl'
 import { UserContext } from './UserContext'
+import { BehaviorSubject } from 'rxjs';
 
+const currentUserSubject = new BehaviorSubject((localStorage.getItem('currentUser')));
 
 class LoginForm extends  Component
 {
@@ -35,7 +36,8 @@ class LoginForm extends  Component
             }),
         })
             .then(response => response.json())
-            .then(json => {
+            .then(
+                json => {
                 console.log(json);
 				console.log(json.token);
 
@@ -45,12 +47,12 @@ class LoginForm extends  Component
                 localStorage.setItem('username', u);
 
                 // Use the setUserData function available through the UserContext.
-                this.context.setUserData(json.token, u);
-
+                currentUserSubject.next(json.token);
                 // Use the history prop available through the Route to programmatically
                 // navigate to another route.
                 this.props.history.push('/');
-            });
+                }
+            );
 
         event.preventDefault();
     };

@@ -1,17 +1,30 @@
 import React, { Component } from 'react';
 import { UserContext } from './UserContext';
-import apiUrl from '../services/apiUrl';
+// import apiUrl from '../services/apiUrl';
 import { Button } from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons'
+import { BehaviorSubject } from 'rxjs';
+import { withRouter } from 'react-router';
 
-export default class Logout extends Component {
+const currentUserSubject = new BehaviorSubject((localStorage.getItem('token')));
+
+class Logout extends Component 
+{
+    constructor(props) 
+    {
+        super(props)
+
+        this.doLogout = this.doLogout.bind(this)
+    }  
+
     static contextType = UserContext;
+
     doLogout() {
         localStorage.removeItem('token');
         localStorage.removeItem('username');
-        // this.context.setUserData(null, null);
-        // this.props.history.push('/Logout');
+        currentUserSubject.next(null);
+        this.props.history.push('/login');
     }
 
     // componentDidMount() {
@@ -28,9 +41,13 @@ export default class Logout extends Component {
     // }
 
     render() {
-        return (<Button onClick={this.doLogout} color="primary"> Αποσύνδεση
-          <FontAwesomeIcon icon={ faSignOutAlt } style={{ marginLeft:'4px' }} />
-        </Button>);
+        return (
+            <Button onClick={this.doLogout} color="primary"> Αποσύνδεση
+                <FontAwesomeIcon icon={ faSignOutAlt } style={{ marginLeft:'4px' }} />
+            </Button>);
     }
 
 };
+
+
+export default withRouter(Logout)

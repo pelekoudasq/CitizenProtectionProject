@@ -1,5 +1,4 @@
 import React, {Component} from 'react'
-import { CustomInput, Col, Row, Button, Form, FormGroup, Label, Input } from 'reactstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import { Link } from 'react-router-dom'

@@ -2,26 +2,23 @@ import React, {Component} from 'react'
 import { Switch, Route , Redirect} from 'react-router-dom'
 import ControlPanel from './components/ControlPanel'
 import Incidents from './components/Incidents'
-import SideMenu from './components/SideMenu'
 import NavBar from './components/NavBar'
 import IncidentForm from './components/IncidentForm'
 import LoginForm from './components/LoginForm'
+import { createBrowserHistory } from "history";
 
+const history = createBrowserHistory();
 
 class App extends Component
 {
 
-    constructor(props) {
-
+    constructor(props) 
+    {
         super(props);
-
         this.state = {
             token: props.userData.token,
             username: props.userData.username,
-            style: {
-                backgroundColor: '#fff',
-                height: '100vh',
-            },
+
             setUserData: (token, username) => this.setState({
                 token: token,
                 username: username,
@@ -29,9 +26,8 @@ class App extends Component
         };
     }
 
-    renderProtectedComponent(ProtectedComponent) {
-        console.log("after:")
-        console.log(this.state.username)
+    renderProtectedComponent(ProtectedComponent) 
+    {
         if (this.state.username !== null) {
             return props => <ProtectedComponent {...props} />;
         }
@@ -45,12 +41,11 @@ class App extends Component
     return (
         <div>
         <NavBar />
-        <Switch>
+        <Switch history = {history}>
               <Route exact path='/' component={this.renderProtectedComponent(ControlPanel)} />
               <Route path='/login' component={LoginForm} />
-              <Route path='/Incidents' component={this.renderProtectedComponent(Incidents)} />
-              <Route path='/IncidentForm' component={this.renderProtectedComponent(IncidentForm)} />
-              <Route path='/Logout' component={LoginForm} />
+              <Route path='/incident' component={this.renderProtectedComponent(Incidents)} />
+              <Route path='/new_incident' component={this.renderProtectedComponent(IncidentForm)} />
         </Switch>
         </div>
     );

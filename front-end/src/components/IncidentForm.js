@@ -5,7 +5,6 @@ import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import { Link } from 'react-router-dom'
 import alert from '../icons/alert.png'
 import '../css/incidentform.css';
-import PlacesAutocomplete,{ geocodeByAddress, getLating } from "react-places-autocomplete"
 import SideMenu from './SideMenu'
 
 

@@ -5,7 +5,7 @@ import { faHome } from '@fortawesome/free-solid-svg-icons'
 import { faIndent } from '@fortawesome/free-solid-svg-icons'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import '@trendmicro/react-sidenav/dist/react-sidenav.css'
-import { Link, NavLink } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 class SideMenu extends Component
 {
@@ -21,7 +21,7 @@ class SideMenu extends Component
                             <FontAwesomeIcon icon={ faPlus } style={{ marginLeft:'4px', color: 'white' }} />
                         </NavIcon>
                         <NavText>
-                           <Link to="/IncidentForm">Νέο Συμβάν</Link>
+                           <Link to="/new_incident">Νέο Συμβάν</Link>
                         </NavText>
                     </NavItem>
                     <NavItem>
@@ -37,7 +37,7 @@ class SideMenu extends Component
                             <FontAwesomeIcon icon={ faIndent } style={{ marginLeft:'4px' , color: 'white' }} />
                         </NavIcon>
                         <NavText>
-                            <Link to="/Incidents"> Συμβάντα</Link>
+                            <Link to="/incidents"> Συμβάντα</Link>
                         </NavText>
                     </NavItem>
                 </SideNav.Nav>
