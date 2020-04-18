@@ -4,78 +4,76 @@ import { Form, FormGroup, Label, Input } from 'reactstrap';
 import '../css/login.css';
 import logo from '../icons/login_img.jpg'
 import { Link } from 'react-router-dom'
-import HomePage from './HomePage'
-import Main from './Main'
+import apiUrl from '../services/apiUrl'
+import { UserContext } from './UserContext'
 
 
 class LoginForm extends  Component
 {
-	constructor(props)
-	{
-		super(props)
-		this.state={
-			username:'',
-			password:'',
-			buttonDisabled: false
-		}
-	}
+	static contextType = UserContext;
+    username = React.createRef();
+    password = React.createRef();
 
+    handleSubmit = event => {
 
-	setInputValue(property, value)
-	{
-		this.setState({
-			[property] : value
-		})
-	}
+        console.log('kalispera');
+        console.log('ref to username: ', this.username.current);
 
-	resetFrom()
-	{
-		this.setState({
-			username:'',
-			password:'',
-			buttonDisabled: false
-		})
-	}
+        const u = this.username.current.value;
+        const p = this.password.current.value;
 
-	async doLogin ()
-	{
-		if(!this.state.username)
-			return
+        console.log('Submitting...', u, p);
 
-		if(!this.state.password)
-			return
+        fetch(`${apiUrl}/login`, {
+            mode: 'cors',
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: new URLSearchParams({
+                username: u,
+                password: p,
+            }),
+        })
+            .then(response => response.json())
+            .then(json => {
+                console.log(json);
 
-		this.setState({
-			buttonDisabled: true
-		})
+                // Store the user's data in local storage to make them available
+                // for the next user's visit.
+                localStorage.setItem('token', json.token);
+                localStorage.setItem('username', u);
 
-	}
+                // Use the setUserData function available through the UserContext.
+                this.context.setUserData(json.token, u);
+
+                // Use the history prop available through the Route to programmatically
+                // navigate to another route.
+                this.props.history.push('/ControlPanel');
+            });
+
+        event.preventDefault();
+    };
 
 	render()
 	{
 		return(
 			<div>
-			   	<Form className="login-form">
+			   	<Form onSubmit={this.handleSubmit} className="login-form">
 			    	<h3 className="text-center">Είσοδος στην υπηρεσία</h3>
 			    	<FormGroup>
 			        	<Label>Όνομα Χρήστη</Label>
 			        	<Input 	type="name"
-			        			placeholder=""
-			        			//value={this.state.username ? this.state.username : '' }
-			        			onChange={ (val) => this.setInputValue('username', val)}
+			        			ref={this.username}
 			        	/>
 			    	</FormGroup>
 			      	<FormGroup>
 			      		<Label>Κωδικός Πρόσβασης</Label>
 			        	<Input 	type="password"
-			        			placeholder=""
-			        			//value={this.state.password ? this.state.password : '' }
-								onChange={ (val) => this.setInputValue('password', val)}
+			        			ref={this.password}
 			        	/>
 			     	</FormGroup>
-			    	<button className="loginbutton"
-			    			onClick={() => this.doLogin()}>
-			    	<Link to ='./Main'></Link>
+			    	<button type="submit" className="loginbutton">
 			    	Σύνδεση
 			    	</button>
 			    </Form>

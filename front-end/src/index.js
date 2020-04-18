@@ -6,9 +6,17 @@ import * as serviceWorker from './serviceWorker';
 import 'bootstrap/dist/css/bootstrap.css';
 import { BrowserRouter } from 'react-router-dom'
 
+
+const userData = {
+    token: localStorage.getItem('token'),
+    username: localStorage.getItem('username'),
+};
+
+
+
 ReactDOM.render(
 	<BrowserRouter>
-		<App />
+		<App userData={userData} />
 	</BrowserRouter>
 	, document.getElementById('root'));
 

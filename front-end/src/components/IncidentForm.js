@@ -6,6 +6,8 @@ import { Link } from 'react-router-dom'
 import alert from '../icons/alert.png'
 import '../css/incidentform.css';
 import PlacesAutocomplete,{ geocodeByAddress, getLating } from "react-places-autocomplete"
+import SideMenu from './SideMenu'
+
 
 class IncidentForm extends Component
 {
@@ -18,6 +20,7 @@ class IncidentForm extends Component
 	{
 		return(
       <div>
+				<SideMenu/>
         <Link to="/">
         <button className="btn btn-link" >
         <FontAwesomeIcon className="iconBack" icon={ faArrowLeft }/>

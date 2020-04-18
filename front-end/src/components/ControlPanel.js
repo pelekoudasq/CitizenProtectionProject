@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import { Link } from 'react-router-dom'
 import '../css/controlpanel.css';
+import SideMenu from './SideMenu'
 
 class ControlPanel extends Component
 {
@@ -11,6 +12,7 @@ class ControlPanel extends Component
 	{
 		return(
 			<div>
+        		<SideMenu/>
 		        <h5 className = "head_ltitle">Τρέχοντα Συμβάντα</h5>
 		        <h5 className = "head_rtitle">Χάρτης Συμβάντων</h5>
         		<div className = "hrz_line"></div>
