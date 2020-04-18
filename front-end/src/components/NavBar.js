@@ -4,8 +4,7 @@ import logo from '../icons/mainlogo.png'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons'
 import { Button } from 'reactstrap';
-
-
+import Logout from './Logout'
 
 class NavBar extends Component
 {
@@ -27,10 +26,7 @@ class NavBar extends Component
           <h5 className = "navbar_text">
             Πλατφόρμα Προστασίας Πολίτη
           </h5>
-          <Button color="primary" >
-            Αποσύνδεση
-            <FontAwesomeIcon icon={ faSignOutAlt } style={{ marginLeft:'4px' }} />
-          </Button>
+          <Logout />
         </nav>
       </React.Fragment>
     );

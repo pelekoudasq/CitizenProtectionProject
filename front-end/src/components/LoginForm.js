@@ -16,7 +16,6 @@ class LoginForm extends  Component
 
     handleSubmit = event => {
 
-        console.log('kalispera');
         console.log('ref to username: ', this.username.current);
 
         const u = this.username.current.value;
@@ -24,7 +23,7 @@ class LoginForm extends  Component
 
         console.log('Submitting...', u, p);
 
-        fetch(`${apiUrl}/login`, {
+        fetch(`${apiUrl}/users/authenticate`, {
             mode: 'cors',
             method: 'POST',
             headers: {
@@ -38,6 +37,7 @@ class LoginForm extends  Component
             .then(response => response.json())
             .then(json => {
                 console.log(json);
+				console.log(json.token);
 
                 // Store the user's data in local storage to make them available
                 // for the next user's visit.
@@ -49,7 +49,7 @@ class LoginForm extends  Component
 
                 // Use the history prop available through the Route to programmatically
                 // navigate to another route.
-                this.props.history.push('/ControlPanel');
+                this.props.history.push('/');
             });
 
         event.preventDefault();
@@ -64,13 +64,13 @@ class LoginForm extends  Component
 			    	<FormGroup>
 			        	<Label>Όνομα Χρήστη</Label>
 			        	<Input 	type="name"
-			        			ref={this.username}
+			        			innerRef={this.username}
 			        	/>
 			    	</FormGroup>
 			      	<FormGroup>
 			      		<Label>Κωδικός Πρόσβασης</Label>
 			        	<Input 	type="password"
-			        			ref={this.password}
+			        			innerRef={this.password}
 			        	/>
 			     	</FormGroup>
 			    	<button type="submit" className="loginbutton">

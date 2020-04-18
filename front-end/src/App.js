@@ -30,7 +30,8 @@ class App extends Component
     }
 
     renderProtectedComponent(ProtectedComponent) {
-
+        console.log("after:")
+        console.log(this.state.username)
         if (this.state.username !== null) {
             return props => <ProtectedComponent {...props} />;
         }
@@ -49,6 +50,7 @@ class App extends Component
               <Route path='/login' component={LoginForm} />
               <Route path='/Incidents' component={this.renderProtectedComponent(Incidents)} />
               <Route path='/IncidentForm' component={this.renderProtectedComponent(IncidentForm)} />
+              <Route path='/Logout' component={LoginForm} />
         </Switch>
         </div>
     );
