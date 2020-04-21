@@ -6,14 +6,51 @@ import { Link } from 'react-router-dom'
 import alert from '../icons/alert.png'
 import '../css/incidentform.css';
 import SideMenu from './SideMenu'
+import apiUrl from '../services/apiUrl'
 
 
 class IncidentForm extends Component
 {
-  doSomething()
-  {
-    console.log("Hi")
-  }
+
+    handleSubmit = event => {
+
+
+        console.log('Submitting...');
+
+
+        let checkFetch = response => 
+        {
+            console.log('respone status is', response.status)
+            if(response.status !== 200)                
+            {
+                console.log('flag in check fetch ', this.state.flag)
+            }
+            return response;
+        }
+
+        let requestOptions = {
+            mode: 'cors',
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: new URLSearchParams({
+            }),
+        }
+
+        let request = `${apiUrl}/incidents/new`
+
+
+        fetch(request, requestOptions)
+
+        .then(checkFetch)
+        .then( json => {
+            console.log(json);
+            console.log('flag', this.state.flag)
+        })
+
+    event.preventDefault();
+    };
 
 	render()
 	{

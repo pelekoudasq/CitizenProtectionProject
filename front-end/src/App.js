@@ -5,9 +5,7 @@ import Incidents from './components/Incidents'
 import NavBar from './components/NavBar'
 import IncidentForm from './components/IncidentForm'
 import LoginForm from './components/LoginForm'
-import { createBrowserHistory } from "history";
 
-const history = createBrowserHistory();
 
 class App extends Component
 {
@@ -27,11 +25,17 @@ class App extends Component
     }
 
     renderProtectedComponent(ProtectedComponent) 
-    {
-        if (this.state.username !== null) {
+    {   
+        let token = localStorage.getItem("token")
+        
+        if (this.state.token !== null) {
+
+            console.log("ime sti main if ",token)
             return props => <ProtectedComponent {...props} />;
         }
+
         else {
+            console.log("ime sti main else ",token)
             return props => <Redirect to='/login' />;
         }
     }
@@ -41,10 +45,10 @@ class App extends Component
     return (
         <div>
         <NavBar />
-        <Switch history = {history}>
+        <Switch >
               <Route exact path='/' component={this.renderProtectedComponent(ControlPanel)} />
               <Route path='/login' component={LoginForm} />
-              <Route path='/incident' component={this.renderProtectedComponent(Incidents)} />
+              <Route path='/incidents' component={this.renderProtectedComponent(Incidents)} />
               <Route path='/new_incident' component={this.renderProtectedComponent(IncidentForm)} />
         </Switch>
         </div>

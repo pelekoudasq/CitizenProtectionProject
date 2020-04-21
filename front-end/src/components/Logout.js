@@ -14,7 +14,6 @@ class Logout extends Component
     constructor(props) 
     {
         super(props)
-
         this.doLogout = this.doLogout.bind(this)
     }  
 

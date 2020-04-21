@@ -18,7 +18,7 @@ class SideMenu extends Component
                 <SideNav.Nav defaultSelected="home">
                     <NavItem>
                         <NavIcon>
-                            <FontAwesomeIcon icon={ faPlus } style={{ marginLeft:'4px', color: 'white' }} />
+                            <Link to="/new_incident"><FontAwesomeIcon icon={ faPlus } style={{ marginLeft:'4px', color: 'white' }} /></Link>
                         </NavIcon>
                         <NavText>
                            <Link to="/new_incident">Νέο Συμβάν</Link>
@@ -26,7 +26,7 @@ class SideMenu extends Component
                     </NavItem>
                     <NavItem>
                         <NavIcon>
-                            <FontAwesomeIcon icon={ faHome } style={{ marginLeft:'4px', color: 'white' }} />
+                            <Link to="/"><FontAwesomeIcon icon={ faHome } style={{ marginLeft:'4px', color: 'white' }} /></Link>         
                         </NavIcon>
                         <NavText>
                            <Link to="/"> Πίνακας Ελέγχου</Link>
@@ -34,7 +34,7 @@ class SideMenu extends Component
                     </NavItem>
                     <NavItem >
                         <NavIcon>
-                            <FontAwesomeIcon icon={ faIndent } style={{ marginLeft:'4px' , color: 'white' }} />
+                            <Link to="/incidents"><FontAwesomeIcon icon={ faIndent } style={{ marginLeft:'4px' , color: 'white' }} /></Link>     
                         </NavIcon>
                         <NavText>
                             <Link to="/incidents"> Συμβάντα</Link>

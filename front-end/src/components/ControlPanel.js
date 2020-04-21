@@ -7,6 +7,17 @@ import SideMenu from './SideMenu'
 
 class ControlPanel extends Component
 {
+
+	componentDidMount()
+	{
+		fetch(`https:localhost:9000/incidents/all`)
+            .then(res => res.json())
+            .then(result => 
+            	console.log(result))
+	}
+
+
+
 	render()
 	{
 		return(

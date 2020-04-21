@@ -6,11 +6,19 @@ import logo from '../icons/login_img.jpg'
 import apiUrl from '../services/apiUrl'
 import { UserContext } from './UserContext'
 import { BehaviorSubject } from 'rxjs';
+// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+// import { faSpinner } from '@fortawesome/free-solid-svg-icons'
 
 const currentUserSubject = new BehaviorSubject((localStorage.getItem('currentUser')));
 
 class LoginForm extends  Component
 {
+
+    state = {
+        isLoading: false,
+        flag: true
+    };
+
 	static contextType = UserContext;
     username = React.createRef();
     password = React.createRef();
@@ -24,7 +32,23 @@ class LoginForm extends  Component
 
         console.log('Submitting...', u, p);
 
-        fetch(`${apiUrl}/users/authenticate`, {
+        this.setState({ isLoading: true });
+
+
+        console.log('flag before fetch is', this.state.flag)
+
+        let checkFetch = response => 
+        {
+            console.log('respone status is', response.status)
+            if(response.status !== 200)                
+            {
+                this.setState({flag: false})
+                console.log('flag in check fetch ', this.state.flag)
+            }
+            return response;
+        }
+
+        let requestOptions = {
             mode: 'cors',
             method: 'POST',
             headers: {
@@ -34,31 +58,49 @@ class LoginForm extends  Component
                 username: u,
                 password: p,
             }),
-        })
-            .then(response => response.json())
-            .then(
-                json => {
-                console.log(json);
-				console.log(json.token);
+        }
 
-                // Store the user's data in local storage to make them available
-                // for the next user's visit.
-                localStorage.setItem('token', json.token);
-                localStorage.setItem('username', u);
+        let request = `${apiUrl}/users/authenticate`
 
-                // Use the setUserData function available through the UserContext.
-                currentUserSubject.next(json.token);
-                // Use the history prop available through the Route to programmatically
-                // navigate to another route.
+
+        fetch(request, requestOptions)
+
+        .then(checkFetch)
+        .then( json => {
+            console.log(json);
+            console.log('flag', this.state.flag)
+
+            // Store the users data in local storage to make them available
+            // for the next user's visit.
+            localStorage.setItem('token', json.token);
+            localStorage.setItem('username', u);
+
+            // Use the setUserData function available through the UserContext.
+            currentUserSubject.next(json.token);
+
+            // Use the history prop available through the Route to programmatically
+            // navigate to another route.
+            if(this.state.flag === true)
+            {
+                console.log("kano log in", this.state.flag)
                 this.props.history.push('/');
-                }
-            );
+            }
+            else
+            {
+                setTimeout(() => alert('O kodikos einai lathos'), 10);
+                console.log("de kano log in", this.state.flag)
+                window.location.reload(false);
+            }
+        })
 
-        event.preventDefault();
+    event.preventDefault();
     };
+
 
 	render()
 	{
+        const { isLoading } = this.state;
+
 		return(
 			<div>
 			   	<Form onSubmit={this.handleSubmit} className="login-form">
@@ -76,7 +118,10 @@ class LoginForm extends  Component
 			        	/>
 			     	</FormGroup>
 			    	<button type="submit" className="loginbutton">
-			    	Σύνδεση
+                        {isLoading && (
+                        <i className="fa fa-refresh fa-spin" style={{ marginRight: "5px" }}/>)}
+                        {isLoading && <span>Περιμένετε...</span>}
+                        {!isLoading && <span>Συνδεση</span>}
 			    	</button>
 			    </Form>
 			    <img className="login_img"
