@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Form, FormGroup, Label, Input } from 'reactstrap';
 import '../css/login.css';
-import logo from '../icons/login_img.jpg'
+import logo from '../icons/login_img2.jpg'
 //import { Link } from 'react-router-dom'
 import apiUrl from '../services/apiUrl'
 import { UserContext } from './UserContext'
