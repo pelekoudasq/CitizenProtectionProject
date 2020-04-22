@@ -83,7 +83,35 @@ router.post('/new', function(req, res, next) {
 					res.send(err);
 					return;
 				}
-				res.json(incident);
+
+				//ASSIGNMENT//
+				console.log(incident.auth);
+				db.Users.find({ userType : 2 , "details.authorityType" : { $in : incident.auth } }, function(err, users) {
+					if (err) {
+						res.send(err);
+						return;
+					}
+					users.forEach(user => {
+						console.log(user);
+						db.Users.update(
+							{_id: user._id },
+							{
+								$push: {
+									incidentRequest : incident._id
+								}
+							}
+						,function(err, incident) {
+							if (incident) {
+								res.send(incident);
+								return;
+							}
+						});
+					});
+				})
+
+				
+
+				//res.json(incident);
 			})
 		  }
 		} else {
@@ -93,6 +121,30 @@ router.post('/new', function(req, res, next) {
 		console.log('error', error.message);
 	});
 	
+})
+
+//update incident
+router.post('/update/:id', function(req, res, next) {
+	console.log('incidents: update incident ' );
+	console.log(req.body);
+	const incParam = req.body;
+	db.Incidents.update(
+		{_id: mongojs.ObjectID(req.params.id)},
+		{
+			$set: {
+				description : incParam.description,
+				callerName : incParam.callerName,
+				callerNumber : incParam.callerNumber,
+				keywords : incParam.keywords
+			}
+		}
+	,function(err, incident) {
+		if (incident) {
+			res.send(incident);
+			return;
+		}
+	});
+
 })
 
 
