@@ -2,12 +2,12 @@ import React, {Component} from 'react'
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 // import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 // import { Link } from 'react-router-dom'
-import '../css/controlpanel.css';
+import '../css/controlpanel.css'
 import SideMenu from './SideMenu'
+import { withRouter } from 'react-router'
 
 class ControlPanel extends Component
 {
-
 	componentDidMount()
 	{
 		fetch(`https:localhost:9000/incidents/all`)
@@ -15,8 +15,6 @@ class ControlPanel extends Component
             .then(result => 
             	console.log(result))
 	}
-
-
 
 	render()
 	{
@@ -31,4 +29,4 @@ class ControlPanel extends Component
 	}
 }
 
-export default ControlPanel
+export default withRouter(ControlPanel);

@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React , { Component }from "react";
 import SideNav, { NavItem, NavIcon, NavText } from '@trendmicro/react-sidenav'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHome } from '@fortawesome/free-solid-svg-icons'
@@ -6,6 +6,28 @@ import { faIndent } from '@fortawesome/free-solid-svg-icons'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import '@trendmicro/react-sidenav/dist/react-sidenav.css'
 import { Link } from 'react-router-dom'
+
+// const Component = props => {
+//   const [windowWidth, setWindowWidth] = useState(0)
+
+//   useEffect(() => {
+//     window.addEventListener('resize', updateWindowDimensions)
+//     updateWindowDimensions()
+//     return () => window.removeEventListener('resize', updateWindowDimensions)
+//   }, [])
+
+//   useEffect(() => {
+//     if (windowWidth < 500) {
+//       closeModal()
+//       return
+//     }
+//     openModal()
+//   }, [windowWidth])
+
+//   updateWindowDimensions(() => {
+//     setWindowWidth(window.innerWidth)
+//   })
+// }
 
 class SideMenu extends Component
 {

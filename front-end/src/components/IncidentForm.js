@@ -15,28 +15,32 @@ class IncidentForm extends Component
     {
         super(props)
         this.state = {
-            title: "", 
-            location: "",
+            title: React.createRef(), 
+            location: React.createRef(),
             auth: [],
-            priority: "", 
-            call_num: "",
-            call_name: "",
-            incident_type: "",
-            description: ""
+            priority: React.createRef(), 
+            call_num: React.createRef(),
+            call_name: React.createRef(),
+            incident_type: React.createRef(),
+            description: React.createRef()
         }
+        this.customInputValue.bind(this);
+        // this.state.auth.current = [];
     }  
 
-    title = React.createRef();
-    location = React.createRef();
-    auth = React.createRef();
-    priority = React.createRef();
+    customInputValue(buttonName, e) {
+        let newChecked = `${buttonName}`;
+        let newAuth = [...this.state.auth, newChecked];
+        // console.log("adding authorize ", newAuth);
+        this.state.auth = newAuth;
+    }
 
     handleSubmit = event => {
-
-
-        console.log('Submitting...');
-        console.log(this.state.title, this.state.location, this.state.auth, this.state.priority);
-
+        console.log('IncidentForm...');
+        console.log('Title: ',this.state.title.current.value);
+        console.log('Location: ',this.state.location.current.value);
+        console.log('Authorizations: ',this.state.auth);
+        console.log('Priority: ',this.state.priority.current.value);
 
         let checkFetch = response => 
         {
@@ -68,8 +72,16 @@ class IncidentForm extends Component
             console.log(json);
             console.log('flag', this.state.flag)
         })
-
     event.preventDefault();
+    };
+
+
+    handleSubmitmoreInfo = event => {
+        // console.log('IncidentFormmoreInfo...');
+        console.log('Calling number: ',this.state.call_num.current.value);
+        console.log('Calling name: ',this.state.call_name.current.value);
+        console.log('Incident type: ',this.state.incident_type.current.value);
+        console.log('Description: ',this.state.description);
     };
 
 	render()
@@ -105,11 +117,11 @@ class IncidentForm extends Component
                   <Col>
                     <FormGroup>
                       <Label for="exampleCheckbox">Φορείς</Label>
-                      <div className="CheckBox"> 
-                        <CustomInput type="checkbox" id="1" label="Ε.Κ.Α.Β." />
-                        <CustomInput type="checkbox" id="2" label="ΕΛ.ΑΣ." />
-                        <CustomInput type="checkbox" id="3" label="Λιμενικό" />
-                        <CustomInput type="checkbox" id="4" label="Πυρεσβεστική" />
+                      <div className="CheckBox" ref={this.state.auth}> 
+                        <CustomInput type="checkbox" id="1" label="Ε.Κ.Α.Β." onChange={this.customInputValue.bind(this, "1")} />
+                        <CustomInput type="checkbox" id="2" label="ΕΛ.ΑΣ."  onChange={this.customInputValue.bind(this, "2")}/>
+                        <CustomInput type="checkbox" id="3" label="Λιμενικό"  onChange={this.customInputValue.bind(this, "3")}/>
+                        <CustomInput type="checkbox" id="4" label="Πυρεσβεστική"  onChange={this.customInputValue.bind(this, "4")}/>
                       </div>
                     </FormGroup>
                   </Col>
@@ -142,27 +154,27 @@ class IncidentForm extends Component
                   <Col md={3}>
                     <FormGroup>
                       <Label for="exampleTelephone">Τηλέφωνο Αναφέροντα</Label>
-                      <Input type="tel" name="telephone" id="exampleTelephone"/>
+                      <Input type="tel" name="telephone" innerRef={this.state.call_num} id="exampleTelephone"/>
                     </FormGroup>
                   </Col>
                   <Col md={4}>
                     <FormGroup>
                       <Label for="exampleFullname">Ονοματεπώνυμο Αναφέροντα</Label>
-                      <Input type="text" name="fullname" id="exampleFullname"/>
+                      <Input type="text" name="fullname" innerRef={this.state.call_name} id="exampleFullname"/>
                     </FormGroup>
                   </Col>
                   <Col md={3}>
                     <FormGroup>
                       <Label for="exampleTypeOfIncident">Είδος συμβάντος</Label>
-                      <Input type="text" name="typeOfIncident" id="exampleTypeOfIncident"/>
+                      <Input type="text" name="typeOfIncident" innerRef={this.state.incident_type} id="exampleTypeOfIncident"/>
                     </FormGroup>  
                   </Col>
                 </Row>
                 <Label for="exampleDescription">Περιγραφή</Label>
                 <FormGroup>
-                  <textarea id="descriptionBox" type="text" name="description" placeholder=""/>
+                  <textarea id="descriptionBox" type="text" innerref={this.state.description} name="description" placeholder=""/>
                 </FormGroup>
-                <Button>Ολοκλήρωση</Button>
+                <Button onClick={this.handleSubmitmoreInfo}>Ολοκλήρωση</Button>
                 </Form>
 
             </div>

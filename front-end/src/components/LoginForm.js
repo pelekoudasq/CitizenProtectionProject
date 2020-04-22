@@ -1,11 +1,12 @@
 import React, { Component } from "react";
-import { Form, FormGroup, Label, Input } from 'reactstrap';
+import { Form, FormGroup, Label, Input } from 'reactstrap'
 import '../css/login.css';
 import logo from '../icons/login_img2.jpg'
 //import { Link } from 'react-router-dom'
 import apiUrl from '../services/apiUrl'
 import { UserContext } from './UserContext'
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject } from 'rxjs'
+import { withRouter } from 'react-router'
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 // import { faSpinner } from '@fortawesome/free-solid-svg-icons'
 
@@ -13,7 +14,6 @@ const currentUserSubject = new BehaviorSubject((localStorage.getItem('currentUse
 
 class LoginForm extends  Component
 {
-
     state = {
         isLoading: false,
         flag: true
@@ -23,18 +23,14 @@ class LoginForm extends  Component
     username = React.createRef();
     password = React.createRef();
 
-    handleSubmit = event => {
-
+    handleSubmit = (event) => {
         console.log('ref to username: ', this.username.current);
 
         const u = this.username.current.value;
         const p = this.password.current.value;
 
         console.log('Submitting...', u, p);
-
         this.setState({ isLoading: true });
-
-
         console.log('flag before fetch is', this.state.flag)
 
         let checkFetch = response => 
@@ -62,7 +58,6 @@ class LoginForm extends  Component
 
         let request = `${apiUrl}/users/authenticate`
 
-
         fetch(request, requestOptions)
 
         .then(checkFetch)
@@ -82,12 +77,12 @@ class LoginForm extends  Component
             // navigate to another route.
             if(this.state.flag === true)
             {
-                console.log("kano log in", this.state.flag)
+                console.log("mpainei edw: ", this.state.flag)
                 this.props.history.push('/');
             }
             else
             {
-                setTimeout(() => alert('O kodikos einai lathos'), 10);
+                setTimeout(() => alert('Password is wrong!'), 10);
                 console.log("de kano log in", this.state.flag)
                 window.location.reload(false);
             }
@@ -134,4 +129,4 @@ class LoginForm extends  Component
 }
 
 
-export default LoginForm
+export default withRouter(LoginForm);

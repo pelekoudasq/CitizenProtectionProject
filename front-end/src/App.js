@@ -5,6 +5,8 @@ import Incidents from './components/Incidents'
 import NavBar from './components/NavBar'
 import IncidentForm from './components/IncidentForm'
 import LoginForm from './components/LoginForm'
+import NotFound from './components/NotFound'
+import { withRouter } from 'react-router'
 
 
 class App extends Component
@@ -29,7 +31,6 @@ class App extends Component
         let token = localStorage.getItem("token")
         
         if (this.state.token !== null) {
-
             console.log("ime sti main if ",token)
             return props => <ProtectedComponent {...props} />;
         }
@@ -39,21 +40,22 @@ class App extends Component
             return props => <Redirect to='/login' />;
         }
     }
-
+// <Route component={NotFound} />
     render()
     {
     return (
         <div>
         <NavBar />
         <Switch >
-              <Route exact path='/' component={this.renderProtectedComponent(ControlPanel)} />
+              <Route exact path='/' component={this.renderProtectedComponent(ControlPanel)} history={this.props.history} />
               <Route path='/login' component={LoginForm} />
               <Route path='/incidents' component={this.renderProtectedComponent(Incidents)} />
               <Route path='/new_incident' component={this.renderProtectedComponent(IncidentForm)} />
+              <Route component={NotFound} />
         </Switch>
         </div>
     );
     }
 }
 
-export default App;
+export default withRouter(App);
