@@ -74,8 +74,8 @@ router.get('/:id', function(req, res, next) {
 })
 
 
-module.exports = router;
-// module.exports = {
-	// router : router,
-	// getById: getById
-// }
+// module.exports = router;
+module.exports = {
+	router : router,
+	getById: getById
+}
