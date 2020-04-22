@@ -8,9 +8,31 @@ import { withRouter } from 'react-router'
 
 class ControlPanel extends Component
 {
+	authHeader() 
+	{
+	    // return authorization header with jwt token
+	    const token = localStorage.getItem('token');
+	    if (token) {
+	    	console.log(token)
+	        return { Authorization: `Bearer ${token}` };
+	    } 
+	    else 
+	    {
+	        return {};
+	    }
+	}
+
+
 	componentDidMount()
 	{
-		fetch(`https:localhost:9000/incidents/all`)
+		const token = localStorage.getItem('token');
+		let requestOptions = {
+            method: 'GET',
+            headers: this.authHeader(),
+
+        }
+
+		fetch(`https:localhost:9000/incidents/all`, requestOptions)
             .then(res => res.json())
             .then(result => 
             	console.log(result))

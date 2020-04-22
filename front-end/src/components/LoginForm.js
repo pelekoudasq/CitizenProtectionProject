@@ -14,11 +14,17 @@ const currentUserSubject = new BehaviorSubject((localStorage.getItem('currentUse
 
 class LoginForm extends  Component
 {
-    state = {
-        isLoading: false,
-        flag: true
-    };
 
+    constructor(props, context) 
+    {
+        super(props, context);
+        this.state = {
+            isLoading: false,
+            flag: true
+        };
+    }
+
+    
 	static contextType = UserContext;
     username = React.createRef();
     password = React.createRef();
@@ -61,22 +67,24 @@ class LoginForm extends  Component
         fetch(request, requestOptions)
 
         .then(checkFetch)
+        .then(response => response.json())
         .then( json => {
             console.log(json);
             console.log('flag', this.state.flag)
 
             // Store the users data in local storage to make them available
             // for the next user's visit.
-            localStorage.setItem('token', json.token);
-            localStorage.setItem('username', u);
 
             // Use the setUserData function available through the UserContext.
-            currentUserSubject.next(json.token);
+            // currentUserSubject.next(json.token);
+            // this.context.setUserData(json.token, u);
 
             // Use the history prop available through the Route to programmatically
             // navigate to another route.
             if(this.state.flag === true)
             {
+                localStorage.setItem('token', json.token);
+                localStorage.setItem('username', u);
                 console.log("mpainei edw: ", this.state.flag)
                 this.props.history.push('/');
             }
@@ -116,7 +124,7 @@ class LoginForm extends  Component
                         {isLoading && (
                         <i className="fa fa-refresh fa-spin" style={{ marginRight: "5px" }}/>)}
                         {isLoading && <span>Περιμένετε...</span>}
-                        {!isLoading && <span>Συνδεση</span>}
+                        {!isLoading && <span>Σύνδεση</span>}
 			    	</button>
 			    </Form>
 			    <img className="login_img"
