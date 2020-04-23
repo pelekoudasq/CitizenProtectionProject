@@ -22,7 +22,7 @@ class IncidentForm extends Component
             call_num: React.createRef(),
             call_name: React.createRef(),
             incident_type: React.createRef(),
-            description: React.createRef()
+            description: ""
         }
         this.customInputValue.bind(this);
         // this.state.auth.current = [];
@@ -32,7 +32,8 @@ class IncidentForm extends Component
         let newChecked = `${buttonName}`;
         let newAuth = [...this.state.auth, newChecked];
         // console.log("adding authorize ", newAuth);
-        this.state.auth = newAuth;
+        // this.state.auth = newAuth;
+        this.setState({auth: newAuth});
     }
 
     handleSubmit = event => {
@@ -82,6 +83,13 @@ class IncidentForm extends Component
         console.log('Calling name: ',this.state.call_name.current.value);
         console.log('Incident type: ',this.state.incident_type.current.value);
         console.log('Description: ',this.state.description);
+    };
+    
+    handleTextArea = event => {
+        const {name,value} = event.target
+        this.setState({
+            [name]: value
+        })
     };
 
 	render()
@@ -172,7 +180,7 @@ class IncidentForm extends Component
                 </Row>
                 <Label for="exampleDescription">Περιγραφή</Label>
                 <FormGroup>
-                  <textarea id="descriptionBox" type="text" innerref={this.state.description} name="description" placeholder=""/>
+                  <textarea id="descriptionBox" type="text" value={this.state.description} onChange={this.handleTextArea} name="description" placeholder=""/>
                 </FormGroup>
                 <Button onClick={this.handleSubmitmoreInfo}>Ολοκλήρωση</Button>
                 </Form>

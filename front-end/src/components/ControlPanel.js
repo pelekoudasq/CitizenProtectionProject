@@ -5,6 +5,7 @@ import React, {Component} from 'react'
 import '../css/controlpanel.css'
 import SideMenu from './SideMenu'
 import { withRouter } from 'react-router'
+import dash from '../icons/dash.png'
 
 class ControlPanel extends Component
 {
@@ -46,6 +47,10 @@ class ControlPanel extends Component
 		        <h5 className = "head_ltitle">Τρέχοντα Συμβάντα</h5>
 		        <h5 className = "head_rtitle">Χάρτης Συμβάντων</h5>
         		<div className = "hrz_line"></div>
+        		<img className="dash_img"
+                            src={dash}
+                            alt=''
+                />
 			</div>
 			)
 	}

@@ -25,3 +25,12 @@
   	margin-top: 42px;
   	position: absolute;
 }
+
+.dash_img
+{
+	width: 85%;
+	height: 75%;
+	position:absolute;
+	right:150px;
+	top:110px;
+}
