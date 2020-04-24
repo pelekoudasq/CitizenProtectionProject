@@ -1,0 +1,18 @@
+.sidebar{
+	background-color: rgb(81, 147, 219);
+	margin-top: 50px;
+	overflow: hidden;
+	margin-bottom: -5000px;
+	padding-bottom: 5000px;
+}
+
+.screen{
+	background-color: red;
+	margin-left: 40px;
+	margin-top: 0px;
+	width: 4px;
+	overflow: hidden;
+	margin-bottom: -5000px;
+	padding-bottom: 5000px;
+}
+

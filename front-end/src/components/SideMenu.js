@@ -5,37 +5,17 @@ import { faHome } from '@fortawesome/free-solid-svg-icons'
 import { faIndent } from '@fortawesome/free-solid-svg-icons'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import '@trendmicro/react-sidenav/dist/react-sidenav.css'
+import '../css/sidemenu.css'
 import { Link } from 'react-router-dom'
 
-// const Component = props => {
-//   const [windowWidth, setWindowWidth] = useState(0)
-
-//   useEffect(() => {
-//     window.addEventListener('resize', updateWindowDimensions)
-//     updateWindowDimensions()
-//     return () => window.removeEventListener('resize', updateWindowDimensions)
-//   }, [])
-
-//   useEffect(() => {
-//     if (windowWidth < 500) {
-//       closeModal()
-//       return
-//     }
-//     openModal()
-//   }, [windowWidth])
-
-//   updateWindowDimensions(() => {
-//     setWindowWidth(window.innerWidth)
-//   })
-// }
 
 class SideMenu extends Component
-{
+{    
     render()
     {
         return (
             <React.Fragment>
-                <SideNav onSelect={(selected) => { }} style={{ backgroundColor: 'rgb(81, 147, 219)', marginTop: '50px'}}>
+                <SideNav id="sidenav"className="sidebar">
                 <SideNav.Toggle />
                 <SideNav.Nav defaultSelected="home">
                     <NavItem>
@@ -64,6 +44,7 @@ class SideMenu extends Component
                     </NavItem>
                 </SideNav.Nav>
                 </SideNav>
+                <main className="sc-bdVaJa bWcVOO"> </main>
             </React.Fragment>
         );
     }
