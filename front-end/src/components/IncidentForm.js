@@ -15,6 +15,7 @@ class IncidentForm extends Component
     {
         super(props)
         this.state = {
+            id : " ",
             title: React.createRef(), 
             location: React.createRef(),
             auth: [],
@@ -22,7 +23,8 @@ class IncidentForm extends Component
             call_num: React.createRef(),
             call_name: React.createRef(),
             incident_type: React.createRef(),
-            description: ""
+            description: "",
+            flag : true
         }
         this.customInputValue.bind(this);
         // this.state.auth.current = [];
@@ -36,12 +38,82 @@ class IncidentForm extends Component
         this.setState({auth: newAuth});
     }
 
+
+    authHeader() 
+    {
+        // return authorization header with jwt token
+        const token = localStorage.getItem('token');
+        console.log(token)
+        if (token) {
+            console.log(token)
+            return { Authorization: `Bearer ${token}` };
+        } 
+        else 
+        {
+            return {};
+        }
+    }
+
+
     handleSubmit = event => {
         console.log('IncidentForm...');
         console.log('Title: ',this.state.title.current.value);
         console.log('Location: ',this.state.location.current.value);
         console.log('Authorizations: ',this.state.auth);
         console.log('Priority: ',this.state.priority.current.value);
+
+        let checkFetch = response => 
+        {
+            console.log('respone status is', response.status)
+            if(response.status !== 200)                
+            {
+                this.setState({flag: false})
+                console.log('flag in check fetch ', this.state.flag)
+            }
+            return response;
+        }
+
+        let requestOptions = {
+            mode: 'cors',
+            method: 'POST',
+            headers: this.authHeader(),
+            body: new URLSearchParams({ 
+                title: this.state.title.current.value,
+                address: this.state.location.current.value,
+                priority: this.state.priority.current.value,
+                auth: this.state.auth        
+            }),
+        }
+
+
+        let request = `${apiUrl}/incidents/new`
+
+
+        fetch(request, requestOptions)
+
+        .then(checkFetch)
+        .then(response => response.json())
+        .then( json => {
+            console.log(json);
+            console.log('flag after fetch', this.state.flag)
+
+            this.setState({
+                id : json._id
+            })
+            console.log("id in first fetch", this.state.id)
+        })
+
+    event.preventDefault();
+    };
+
+
+    handleSubmitmoreInfo = event => {
+        // console.log('IncidentFormmoreInfo...');
+        console.log('Calling number: ',this.state.call_num.current.value);
+        console.log('Calling name: ',this.state.call_name.current.value);
+        console.log('Incident type: ',this.state.incident_type.current.value);
+        console.log('Description: ',this.state.description);
+
 
         let checkFetch = response => 
         {
@@ -56,33 +128,32 @@ class IncidentForm extends Component
         let requestOptions = {
             mode: 'cors',
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: new URLSearchParams({
+            headers: this.authHeader(),
+            body: new URLSearchParams({ 
+                description : this.state.description,
+                callerName : this.state.call_name.current.value,
+                callerNumber : this.state.call_num.current.value,
+                keywords : this.state.incident_type.current.value
             }),
         }
 
-        let request = `${apiUrl}/incidents/new`
+
+        let id = this.state.id;
+
+
+        let request = `${apiUrl}/incidents/update/${this.state.id}`
 
 
         fetch(request, requestOptions)
 
         .then(checkFetch)
+        .then(response => response.json())
         .then( json => {
             console.log(json);
             console.log('flag', this.state.flag)
         })
-    event.preventDefault();
-    };
 
 
-    handleSubmitmoreInfo = event => {
-        // console.log('IncidentFormmoreInfo...');
-        console.log('Calling number: ',this.state.call_num.current.value);
-        console.log('Calling name: ',this.state.call_name.current.value);
-        console.log('Incident type: ',this.state.incident_type.current.value);
-        console.log('Description: ',this.state.description);
     };
     
     handleTextArea = event => {

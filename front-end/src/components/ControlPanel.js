@@ -25,8 +25,7 @@ class ControlPanel extends Component
 
 
 	componentDidMount()
-	{
-		const token = localStorage.getItem('token');
+	{	
 		let requestOptions = {
             method: 'GET',
             headers: this.authHeader(),
