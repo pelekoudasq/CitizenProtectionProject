@@ -15,6 +15,12 @@
 	opacity: 0.6;
 }
 
+.containerBox{
+	width: 50%;
+	margin-left: 0;
+	margin-right: 0;
+}
+
 .CheckBox
 {
 	border: 1px solid #ced4da;
@@ -22,6 +28,7 @@
 	height: 125px;
 	border-radius: 0.25rem;
 	padding: 0.6rem 0.9rem;
+	margin-right: 0px;
 }
 
 .hrz_lineBack
@@ -71,9 +78,13 @@
 
 #descriptionBox
 {
-	height: 100px;
-	width: 800px;
+	height: 80px;
+	width: 100%;
 	border-radius: 0.25rem;
 	padding: 0.6rem 0.9rem;
 	border: 1px solid #ced4da;
+}
+
+#exampleSelect{
+	width: 100%;
 }

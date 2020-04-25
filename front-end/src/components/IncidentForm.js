@@ -7,6 +7,9 @@ import alert from '../icons/alert.png'
 import '../css/incidentform.css';
 import SideMenu from './SideMenu'
 import apiUrl from '../services/apiUrl'
+import Multiselect from 'react-widgets/lib/Multiselect'
+import AutoCompleteLoc from './AutoCompleteLoc'
+import "react-widgets/dist/css/react-widgets.css";
 
 
 class IncidentForm extends Component
@@ -29,6 +32,8 @@ class IncidentForm extends Component
         this.customInputValue.bind(this);
         // this.state.auth.current = [];
     }  
+
+
 
     customInputValue(buttonName, e) {
         let newChecked = `${buttonName}`;
@@ -58,7 +63,7 @@ class IncidentForm extends Component
     handleSubmit = event => {
         console.log('IncidentForm...');
         console.log('Title: ',this.state.title.current.value);
-        console.log('Location: ',this.state.location.current.value);
+        // console.log('Location: ',this.state.location.current.value);
         console.log('Authorizations: ',this.state.auth);
         console.log('Priority: ',this.state.priority.current.value);
 
@@ -163,11 +168,15 @@ class IncidentForm extends Component
         })
     };
 
-	render()
-	{
-		return(
+// <Input type="text" name="location" innerRef={this.state.location} id="exampleLocation" placeholder=""/>
+// <Input type="text" name="typeOfIncident" innerRef={this.state.incident_type} id="exampleTypeOfIncident"/>
+
+    render()
+    {
+        // let { Multiselect } = ReactWidgets;
+        return(
             <div>
-        		<SideMenu/>
+                <SideMenu/>
                 <Link to="/">
                 <button className="btn btn-link" >
                 <FontAwesomeIcon className="iconBack" icon={ faArrowLeft }/>
@@ -177,88 +186,100 @@ class IncidentForm extends Component
                 <h5 className = "head_ltitleInfo">Προσθήκη Νέου Συμβάντος</h5>
                 <div className = "hrz_lineBack"></div>
 
-                <Form style={{marginLeft: '100px', marginRight: '100px', marginTop: '20px'}}>
+                <Form style={{ marginLeft: '15%', marginRight: '100px', marginTop: '20px', width: '70%', position: 'absolute'}}>
                 
-                  <Container className="containerBox" style={{ width:'36%', marginLeft:'0', marginRight:'0'}}>
-                  <Row>
-                  <Col>
-                    <FormGroup>
-                      <Label for="exampleTitle">Τίτλος</Label>
-                      <Input type="text" name="title" innerRef={this.state.title} id="exampleTitle" placeholder="" style={{ height: '30px' }}/>
-                    </FormGroup>
-                    <FormGroup>
-                      <Label for="exampleLocation">Τοποθεσία</Label>
-                      <Input type="text" name="location" innerRef={this.state.location} id="exampleLocation" placeholder="" style={{ height: '30px' }}/>
-                    </FormGroup>
-                  </Col>
-                  </Row>
-                  <Row>
-                  <Col>
-                    <FormGroup>
-                      <Label for="exampleCheckbox">Φορείς</Label>
-                      <div className="CheckBox" ref={this.state.auth}> 
-                        <CustomInput type="checkbox" id="1" label="Ε.Κ.Α.Β." onChange={this.customInputValue.bind(this, "1")} />
-                        <CustomInput type="checkbox" id="2" label="ΕΛ.ΑΣ."  onChange={this.customInputValue.bind(this, "2")}/>
-                        <CustomInput type="checkbox" id="3" label="Λιμενικό"  onChange={this.customInputValue.bind(this, "3")}/>
-                        <CustomInput type="checkbox" id="4" label="Πυρεσβεστική"  onChange={this.customInputValue.bind(this, "4")}/>
-                      </div>
-                    </FormGroup>
-                  </Col>
-                  <Col>
-                    <FormGroup>
-                    <Label for="exampleSelect">Προτεραιότητα</Label>
-                    <Input type="select" name="select" innerRef={this.state.priority} id="exampleSelect">
-                      <option>Χαμηλή</option>
-                      <option>Μέτρια</option>
-                      <option>Υψηλή</option>
-                    </Input>
-                    </FormGroup>
-                  </Col>
-                  </Row>
-                    <FormGroup>
-                    <button id="close-image">
-                    <img src={alert}
-                        alt=''
-                        style={{ width: '230px' }}
-                        onClick={this.handleSubmit}
-                    />
-                    </button>
-                    </FormGroup>
-                  </Container>
+                    <Container className="containerBox">
+                        <Row>
+                            <Col xs="6">
+                            <FormGroup>
+                            <Label for="exampleTitle">Τίτλος</Label>
+                            <Input type="text" name="title" innerRef={this.state.title} id="exampleTitle" placeholder="" required/>
+                            </FormGroup>
+                            </Col>
 
-               
-                <div className="TextInfo">Επιπλέον Πληροφορίες</div>
-                <div className = "hrz_lineInfo"></div>
-                <Row form style={{ marginTop: '30px' }}>
-                  <Col md={3}>
-                    <FormGroup>
-                      <Label for="exampleTelephone">Τηλέφωνο Αναφέροντα</Label>
-                      <Input type="tel" name="telephone" innerRef={this.state.call_num} id="exampleTelephone"/>
-                    </FormGroup>
-                  </Col>
-                  <Col md={4}>
-                    <FormGroup>
-                      <Label for="exampleFullname">Ονοματεπώνυμο Αναφέροντα</Label>
-                      <Input type="text" name="fullname" innerRef={this.state.call_name} id="exampleFullname"/>
-                    </FormGroup>
-                  </Col>
-                  <Col md={3}>
-                    <FormGroup>
-                      <Label for="exampleTypeOfIncident">Είδος συμβάντος</Label>
-                      <Input type="text" name="typeOfIncident" innerRef={this.state.incident_type} id="exampleTypeOfIncident"/>
-                    </FormGroup>  
-                  </Col>
-                </Row>
-                <Label for="exampleDescription">Περιγραφή</Label>
-                <FormGroup>
-                  <textarea id="descriptionBox" type="text" value={this.state.description} onChange={this.handleTextArea} name="description" placeholder=""/>
-                </FormGroup>
-                <Button onClick={this.handleSubmitmoreInfo}>Ολοκλήρωση</Button>
+                            <Col xs="6">
+                            <FormGroup>
+                            <Label for="exampleTelephone">Τηλέφωνο Αναφέροντα</Label>
+                            <Input type="tel" name="telephone" innerRef={this.state.call_num} id="exampleTelephone"/>
+                            </FormGroup>
+                            </Col>
+                        </Row>
+
+                        <Row>
+                            <Col>
+                            <FormGroup>
+                            <Label for="exampleLocation">Τοποθεσία</Label>
+                            <AutoCompleteLoc innerRef={this.state.location}/>
+                            </FormGroup>
+                            </Col>
+
+                            <Col>
+                            <FormGroup>
+                            <Label for="exampleFullname">Ονοματεπώνυμο Αναφέροντα</Label>
+                            <Input type="text" name="fullname" innerRef={this.state.call_name} id="exampleFullname"/>
+                            </FormGroup>
+                            </Col>
+                        </Row>
+
+                        <Row>
+                            <Col sm={3}>
+                                <FormGroup style={{ width:'40% !important' }}>
+                                <Label for="exampleCheckbox">Φορείς</Label>
+                                <div className="CheckBox" ref={this.state.auth}> 
+                                <CustomInput type="checkbox" id="1" label="Ε.Κ.Α.Β." onChange={this.customInputValue.bind(this, "1")} />
+                                <CustomInput type="checkbox" id="2" label="ΕΛ.ΑΣ."  onChange={this.customInputValue.bind(this, "2")}/>
+                                <CustomInput type="checkbox" id="3" label="Λιμενικό"  onChange={this.customInputValue.bind(this, "3")}/>
+                                <CustomInput type="checkbox" id="4" label="Πυρεσβεστική"  onChange={this.customInputValue.bind(this, "4")}/>
+                                </div>
+                                </FormGroup>
+                            </Col>
+                            <Col sm={3}>
+                            <FormGroup>
+                            <Label for="exampleSelect">Προτεραιότητα</Label>
+                            <Input type="select" name="select" innerRef={this.state.priority} id="exampleSelect">
+                              <option>Χαμηλή</option>
+                              <option>Μέτρια</option>
+                              <option>Υψηλή</option>
+                            </Input>
+                            </FormGroup>
+                            </Col>
+
+                            <Col sm={6}>
+                            <FormGroup>
+                            <Label for="exampleTypeOfIncident">Είδος συμβάντος</Label>
+                            <Multiselect dropDown data={['Φόνος','Ληστεία','Διάρρηξη','Τροχαίο']} innerRef={this.state.incident_type} />
+                            </FormGroup>  
+
+                            <Label for="exampleDescription">Περιγραφή</Label>
+                            <FormGroup>
+                            <textarea id="descriptionBox" type="text" value={this.state.description} onChange={this.handleTextArea} name="description" placeholder=""/>
+                            </FormGroup>
+                            </Col>
+                        </Row>
+
+                        <Row>
+                            <Col>
+                            <Col>
+                            <FormGroup>
+                            <button id="close-image">
+                            <img src={alert} alt='' style={{ width: '230px' }} onClick={this.handleSubmit} />
+                            </button>
+                            </FormGroup>
+                            </Col>
+                            </Col>
+                            
+                            <FormGroup>
+                            <Col>
+                            <Button onClick={this.handleSubmitmoreInfo}>Ολοκλήρωση</Button>
+                            </Col>
+                            </FormGroup>
+                        </Row>
+                </Container>
                 </Form>
 
             </div>
-		)
-	}
+        )
+    }
 }
 
 export default IncidentForm

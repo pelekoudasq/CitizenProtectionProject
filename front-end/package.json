@@ -21,6 +21,7 @@
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.4.0",
     "react-social-login-buttons": "^3.0.0",
+    "react-widgets": "^4.5.0",
     "reactstrap": "^8.4.1",
     "yup": "^0.28.4"
   },
