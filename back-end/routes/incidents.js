@@ -88,7 +88,7 @@ router.post('/new', function(req, res, next) {
 				console.log(incident.auth);
 				db.Users.find({ userType : 2 , "details.authorityType" : { $in : incident.auth } }, function(err, users) {
 					if (err) {
-						res.send(err);
+						res.json(incident);
 						return;
 					}
 					users.forEach(user => {
@@ -101,17 +101,16 @@ router.post('/new', function(req, res, next) {
 								}
 							}
 						,function(err, incident) {
-							if (incident) {
-								res.send(incident);
-								return;
-							}
+							// if (incident) {
+							// 	res.send(incident);
+							// 	return;
+							// }
 						});
 					});
-				})
+					res.json(incident);
+				})				
 
-				
-
-				//res.json(incident);
+				// res.json(incident);
 			})
 		  }
 		} else {
