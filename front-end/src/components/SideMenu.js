@@ -10,13 +10,34 @@ import { Link } from 'react-router-dom'
 
 
 class SideMenu extends Component
-{    
+{       
+    constructor(props)
+    {
+        super(props)
+        this.state = {
+            buttonPressed: false
+        }
+
+        this.handleClick = this.handleClick.bind(this);
+    }
+
+    handleClick() {
+        this.setState(PrevState => ({
+            buttonPressed: !this.state.buttonPressed
+        }));
+    }
+
     render()
     {
         return (
             <React.Fragment>
-                <SideNav id="sidenav"className="sidebar">
-                <SideNav.Toggle />
+                {this.state.buttonPressed ?
+                    <div className="overlay" />
+                : (
+                    <p> </p>
+                )}
+                <SideNav  id="sidenav" className="sidebar">
+                <SideNav.Toggle onClick= {this.handleClick} />
                 <SideNav.Nav defaultSelected="home">
                     <NavItem>
                         <NavIcon>
@@ -44,7 +65,6 @@ class SideMenu extends Component
                     </NavItem>
                 </SideNav.Nav>
                 </SideNav>
-                <main className="sc-bdVaJa bWcVOO"> </main>
             </React.Fragment>
         );
     }

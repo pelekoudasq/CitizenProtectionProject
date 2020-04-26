@@ -40,13 +40,34 @@ class IncidentForm extends Component
     }  
 
 
-
     customInputValue(buttonName, e) {
         let newChecked = `${buttonName}`;
-        let newAuth = [...this.state.auth, newChecked];
-        // console.log("adding authorize ", newAuth);
-        // this.state.auth = newAuth;
-        this.setState({auth: newAuth});
+        let newAuth = []
+        if(this.state.auth.indexOf(newChecked) === -1){
+            newAuth = [...this.state.auth, newChecked];
+        }
+        else
+        {     
+            var index = this.state.auth.indexOf(newChecked);
+            if (index !== -1) this.state.auth.splice(index, 1);
+            newAuth = this.state.auth
+        }
+
+        console.log("adding authorize ", newAuth);
+        if(this.state.auth.length != 0)            
+        {
+            this.setState({
+                auth: newAuth,
+                formError: true
+            });
+        }
+        else
+        {
+            this.setState({
+                auth: newAuth,
+                formError: false
+            });
+        }
     }
 
 
@@ -67,11 +88,11 @@ class IncidentForm extends Component
 
 
     handleSubmit = event => {
-        // console.log('IncidentForm...');
-        // console.log('Title: ',this.state.title.current.value);
-        // console.log('Location: ',this.state.location);
-        // console.log('Authorizations: ',this.state.auth);
-        // console.log('Priority: ',this.state.priority.current.value);
+        console.log('IncidentForm...');
+        console.log('Title: ',this.state.title.current.value);
+        console.log('Location: ',this.state.location);
+        console.log('Authorizations: ',this.state.auth);
+        console.log('Priority: ',this.state.priority.current.value);
 
         this.setState({
             formLoading: true
@@ -195,18 +216,12 @@ class IncidentForm extends Component
         })
     };
 
+
+
 // <Input type="text" name="location" innerRef={this.state.location} id="exampleLocation" placeholder=""/>
 // <Input type="text" name="typeOfIncident" innerRef={this.state.incident_type} id="exampleTypeOfIncident"/>
 
-    PrioritySubmit = (e) => {
-        e.preventDefault();
-        this.setState({
-            formError:true,
-        })
-    };
 
-
-    
     render()
     {   
         return(
@@ -226,16 +241,14 @@ class IncidentForm extends Component
                 }
 
                 <Form  style={{ marginLeft: '15%', marginRight: '100px', marginTop: '20px', width: '70%', position: 'absolute'}}>
-                
                     <Container className="containerBox">
                         <Row>
                             <Col xs="6">
                             <FormGroup>
                             <Label for="exampleTitle">Τίτλος*</Label>
-                            <Input type="text" name="title" innerRef={this.state.title} id="exampleTitle" placeholder="" required/>
+                            <Input type="text" name="title" innerRef={this.state.title} onChange ={this.handleNameChange} id="exampleTitle" placeholder="" required/>
                             </FormGroup>
                             </Col>
-
                             <Col xs="6">
                             <FormGroup>
                             <Label for="exampleTelephone">Τηλέφωνο Αναφέροντα</Label>
@@ -263,23 +276,23 @@ class IncidentForm extends Component
 
                         <Row>
                             <Col sm={3}>
-                                <FormGroup  onChange= {this.PrioritySubmit} style={{ width:'40% !important' }}>
+                                <FormGroup style={{ width:'40% !important' }}>
                                 <Label for="exampleCheckbox">Φορείς*</Label>
-                                <div className="CheckBox" ref={this.state.auth} > 
-                                <CustomInput type="checkbox" id="1" label="Ε.Κ.Α.Β." onChange={this.customInputValue.bind(this, "1")} />
-                                <CustomInput type="checkbox" id="2" label="ΕΛ.ΑΣ."  onChange={this.customInputValue.bind(this, "2")}/>
-                                <CustomInput type="checkbox" id="3" label="Λιμενικό"  onChange={this.customInputValue.bind(this, "3")}/>
-                                <CustomInput type="checkbox" id="4" label="Πυρεσβεστική"  onChange={this.customInputValue.bind(this, "4")}/>
+                                <div className="CheckBox" innerref={this.state.auth}> 
+                                <CustomInput type="checkbox" id="1" label="Ε.Κ.Α.Β." onClick={this.customInputValue.bind(this, "1")} />
+                                <CustomInput type="checkbox" id="2" label="ΕΛ.ΑΣ."  onClick={this.customInputValue.bind(this, "2")}/>
+                                <CustomInput type="checkbox" id="3" label="Λιμενικό"  onClick={this.customInputValue.bind(this, "3")}/>
+                                <CustomInput type="checkbox" id="4" label="Πυρεσβεστική"  onClick={this.customInputValue.bind(this, "4")}/>
                                 </div>
                                 </FormGroup>
                             </Col>
                             <Col sm={3}>
                             <FormGroup>
                             <Label for="exampleSelect">Προτεραιότητα* </Label>
-                            <Input type="select" name="select" innerRef={this.state.priority} id="exampleSelect" >
-                              <option required>Χαμηλή</option>
-                              <option required>Μέτρια</option>
-                              <option required>Υψηλή</option>
+                            <Input required type="select" name="select" innerRef={this.state.priority} id="exampleSelect" >
+                              <option>Χαμηλή</option>
+                              <option>Μέτρια</option>
+                              <option>Υψηλή</option>
                             </Input>
                             </FormGroup>
                             </Col>
@@ -301,8 +314,8 @@ class IncidentForm extends Component
                             <Col>
                             <Col>
                             <FormGroup>
-                            <button id="close-image" disabled={false}>
-                            <img src={alert1} alt='' style={{ width: '230px'}} onClick={this.state.formError ? this.handleSubmit : <h1>D</h1>} />
+                            <button id="close-image" disabled={this.state.formError}>
+                            <img src={alert1} alt='' style={{ width: '230px'}} onClick={this.handleSubmit} />
                             </button>
                             </FormGroup>
                             </Col>

@@ -32,12 +32,12 @@ class App extends Component
         
         // if (this.state.token !== null) {
         if (token !== null) {
-            console.log("ime sti main if ",token)
+            // console.log("ime sti main if ",token)
             return props => <ProtectedComponent {...props} />;
         }
 
         else {
-            console.log("ime sti main else ",token)
+            // console.log("ime sti main else ",token)
             return props => <Redirect to='/login' />;
         }
     }
