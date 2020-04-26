@@ -24,10 +24,10 @@
 
 Κλωνοποίηση αποθετηρίου
 -----------------------
-``bash
+```bash
 git clone git://github.com/pelekoudasq/bidit.git
 cd CitizenProtectionProject
-``
+```
 
 Εγκατάσταση και εκτέλεση Frontend
 ---------------------------------
