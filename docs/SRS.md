@@ -1,12 +1,4 @@
 # Citizen Protection Project
-### Υλοποιήθηκε από τους:
-
-* [Theophilos Kantartzis](https://github.com/TheoKant/ "Theophilos Kantartzis")
-* [Vasiliki Koumarela](https://github.com/VasiaKoum/ "Vasiliki Koumarela")
-* [Sofia Kostakonti](https://github.com/SofiaKstk/ "Sofia Kostakonti")
-* [Dimitris Papachristou](https://github.com/dimpapac/ "Dimitris Papachristou")
-* [Ioannis Pelekoudas](https://github.com/pelekoudasq/ "Ioannis Pelekoudas")
-* [George Skouras](https://github.com/GaSkouras/ "George Skouras")
 
 ### Σκοπός του συστήματος:
 
@@ -93,11 +85,11 @@
 
 
 ### Παραδοχές συστήματος
-Μετά το κλείσιμο του συμβάντος, δεν θα γίνονται επιπλέον σχόλια και αλλαγές.
-Δεν λαμβάνουμε υπόψη τις περιπτώσεις όπου δεν υπάρχει αρκετό προσωπικό να καλύψει το συμβάν.
-Σε περίπτωση λάθους, γίνεται τηλεφωνική ενημέρωση.
-Για back-up, ενημέρωση μέσω ασυρμάτου.
-Ο αριθμός του απαιτούμενου προσωπικού καθορίζεται από την προτεραιότητα. 3 για χαμηλή, 5 για μεσαία, 8 για υψηλή.
+* Μετά το κλείσιμο του συμβάντος, δεν θα γίνονται επιπλέον σχόλια και αλλαγές.
+* Δεν λαμβάνουμε υπόψη τις περιπτώσεις όπου δεν υπάρχει αρκετό προσωπικό να καλύψει το συμβάν.
+* Σε περίπτωση λάθους, γίνεται τηλεφωνική ενημέρωση.
+* Για back-up, ενημέρωση μέσω ασυρμάτου.
+* Ο αριθμός του απαιτούμενου προσωπικού καθορίζεται από την προτεραιότητα. 3 για χαμηλή, 5 για μεσαία, 8 για υψηλή.
 
 
 
