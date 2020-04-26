@@ -29,7 +29,7 @@ class AutoCompleteLoc extends Component {
       <PlacesAutocomplete value={this.state.address} onChange={this.handleChange} searchOptions={searchOptions}>
         {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
           <div>
-            <Input {...getInputProps({ className: 'location-search-input'})}/>
+            <Input required {...getInputProps({ className: 'location-search-input'})}/>
             <div className="autocomplete-dropdown-container">
               {loading && <div>Loading...</div>}
               {suggestions.map(suggestion => {
