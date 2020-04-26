@@ -20,7 +20,8 @@ class IncidentForm extends Component
         this.state = {
             id : " ",
             title: React.createRef(), 
-            location: React.createRef(),
+            // location: React.createRef(),
+            location: " ",
             auth: [],
             priority: React.createRef(), 
             call_num: React.createRef(),
@@ -63,14 +64,14 @@ class IncidentForm extends Component
     handleSubmit = event => {
         console.log('IncidentForm...');
         console.log('Title: ',this.state.title.current.value);
-        // console.log('Location: ',this.state.location.current.value);
+        console.log('Location: ',this.state.location);
         console.log('Authorizations: ',this.state.auth);
         console.log('Priority: ',this.state.priority.current.value);
 
         let checkFetch = response => 
         {
             console.log('respone status is', response.status)
-            if(response.status !== 200)                
+            if(response.status !== 200)
             {
                 this.setState({flag: false})
                 console.log('flag in check fetch ', this.state.flag)
@@ -84,7 +85,7 @@ class IncidentForm extends Component
             headers: this.authHeader(),
             body: new URLSearchParams({ 
                 title: this.state.title.current.value,
-                address: this.state.location.current.value,
+                address: this.state.location,
                 priority: this.state.priority.current.value,
                 auth: this.state.auth        
             }),
@@ -114,10 +115,10 @@ class IncidentForm extends Component
 
     handleSubmitmoreInfo = event => {
         // console.log('IncidentFormmoreInfo...');
-        console.log('Calling number: ',this.state.call_num.current.value);
-        console.log('Calling name: ',this.state.call_name.current.value);
-        console.log('Incident type: ',this.state.incident_type.current.value);
-        console.log('Description: ',this.state.description);
+        console.log('Calling number: ', this.state.call_num.current.value);
+        console.log('Calling name: ', this.state.call_name.current.value);
+        console.log('Incident type: ', this.state.incident_type.current._values.value);
+        console.log('Description: ', this.state.description);
 
 
         let checkFetch = response => 
@@ -134,20 +135,18 @@ class IncidentForm extends Component
             mode: 'cors',
             method: 'POST',
             headers: this.authHeader(),
-            body: new URLSearchParams({ 
+            body: new URLSearchParams({
                 description : this.state.description,
                 callerName : this.state.call_name.current.value,
                 callerNumber : this.state.call_num.current.value,
-                keywords : this.state.incident_type.current.value
+                keywords : this.state.incident_type.current._values.value
             }),
         }
 
 
         let id = this.state.id;
 
-
         let request = `${apiUrl}/incidents/update/${this.state.id}`
-
 
         fetch(request, requestOptions)
 
@@ -158,13 +157,21 @@ class IncidentForm extends Component
             console.log('flag', this.state.flag)
         })
 
-
     };
     
     handleTextArea = event => {
-        const {name,value} = event.target
+        const {name,value} = event.target;
         this.setState({
             [name]: value
+        })
+    };
+
+    handleLocation = (val) => {
+        // console.log(val);
+        this.setState({
+            location: val
+        }, () => {
+            console.log(this.state.location);
         })
     };
 
@@ -209,7 +216,8 @@ class IncidentForm extends Component
                             <Col>
                             <FormGroup>
                             <Label for="exampleLocation">Τοποθεσία</Label>
-                            <AutoCompleteLoc innerRef={this.state.location}/>
+                            {/*<AutoCompleteLoc innerRef={this.state.location}/>*/}
+                            <AutoCompleteLoc value={this.state.location} handleLocation={this.handleLocation} name="location"/>
                             </FormGroup>
                             </Col>
 
@@ -247,7 +255,7 @@ class IncidentForm extends Component
                             <Col sm={6}>
                             <FormGroup>
                             <Label for="exampleTypeOfIncident">Είδος συμβάντος</Label>
-                            <Multiselect dropDown data={['Φόνος','Ληστεία','Διάρρηξη','Τροχαίο']} innerRef={this.state.incident_type} />
+                            <Multiselect dropDown data={['Φόνος','Ληστεία','Διάρρηξη','Τροχαίο']} ref={this.state.incident_type} />
                             </FormGroup>  
 
                             <Label for="exampleDescription">Περιγραφή</Label>

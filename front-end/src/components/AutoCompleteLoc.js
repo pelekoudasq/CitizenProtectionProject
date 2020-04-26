@@ -17,7 +17,11 @@ class AutoCompleteLoc extends Component {
     }
 
     handleChange = address => {
-        this.setState({ address });
+        this.setState({ 
+          address: address 
+        }, () => {
+          this.props.handleLocation(address)
+        });
     };
 
     render() {
