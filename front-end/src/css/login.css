@@ -15,9 +15,9 @@
 	padding: 12px;
 	font-size: 14px;
 	font-weight: bold;
-	border: solid 2px ##e6ecf1;
+	border: solid #2c71af !important;
 	border-radius: 4px;
-	background: #2c71af;
+	background: #2c71af !important;
 	cursor: pointer;
 }
 

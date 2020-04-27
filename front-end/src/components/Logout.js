@@ -1,25 +1,41 @@
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
 import { UserContext } from './UserContext';
 // import apiUrl from '../services/apiUrl';
-import { Button } from 'reactstrap';
+// import { Button } from 'reactstrap';
+import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Button } from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons'
 import { BehaviorSubject } from 'rxjs';
 import { withRouter } from 'react-router';
 
 const currentUserSubject = new BehaviorSubject((localStorage.getItem('token')));
-
+ 
 class Logout extends Component 
 {
     constructor(props) 
     {
         super(props)
         this.doLogout = this.doLogout.bind(this)
+        this.toggle = this.toggle.bind(this);
+        this.state = {
+            dropdownOpen: false,
+            name: localStorage.getItem('username')
+        };
     }  
+
+
+    toggle(event) 
+    {
+
+        this.setState({
+            dropdownOpen: !this.state.dropdownOpen
+        });
+    }
 
     static contextType = UserContext;
 
-    doLogout() {
+    doLogout() 
+    {
         localStorage.removeItem('token');
         localStorage.removeItem('username');
         currentUserSubject.next(null);
@@ -39,11 +55,21 @@ class Logout extends Component
     //     .then(() => this.doLogout());
     // }
 
+
     render() {
+        
+
         return (
-            <Button onClick={this.doLogout} color="primary"> Αποσύνδεση
-                <FontAwesomeIcon icon={ faSignOutAlt } style={{ marginLeft:'4px' }} />
-            </Button>);
+            <Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggle}>
+            <DropdownToggle caret style={{ backgroundColor: "#0063bf", borderColor: "#0063bf" }}>
+                {this.state.name}
+            </DropdownToggle>
+              <DropdownMenu right>
+                <DropdownItem onClick={this.doLogout}> <FontAwesomeIcon icon={ faSignOutAlt } style={{ marginLeft:'4px' }} /> Αποσύνδεση </DropdownItem>
+              </DropdownMenu>
+            </Dropdown>
+                   
+        );
     }
 
 };

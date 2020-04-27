@@ -7,24 +7,30 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import '@trendmicro/react-sidenav/dist/react-sidenav.css'
 import '../css/sidemenu.css'
 import { Link } from 'react-router-dom'
+import { withRouter } from 'react-router'
 
 
 class SideMenu extends Component
 {       
-    constructor(props)
+    constructor(props, context)
     {
-        super(props)
+        super(props, context)
         this.state = {
             buttonPressed: false
         }
 
         this.handleClick = this.handleClick.bind(this);
+        this.handleNavItem = this.handleNavItem.bind(this);
     }
 
     handleClick() {
         this.setState(PrevState => ({
             buttonPressed: !this.state.buttonPressed
         }));
+    }
+
+    handleNavItem(item){
+        this.props.history.push(item);
     }
 
     render()
@@ -39,28 +45,28 @@ class SideMenu extends Component
                 <SideNav  id="sidenav" className="sidebar">
                 <SideNav.Toggle onClick= {this.handleClick} />
                 <SideNav.Nav defaultSelected="home">
-                    <NavItem>
+                    <NavItem onClick={() => this.handleNavItem("/new_incident")}>
                         <NavIcon>
-                            <Link to="/new_incident"><FontAwesomeIcon icon={ faPlus } style={{ marginLeft:'4px', color: 'white' }} /></Link>
+                            <FontAwesomeIcon icon={ faPlus } style={{ marginLeft:'4px', color: 'white' }} />
                         </NavIcon>
                         <NavText>
-                           <Link to="/new_incident">Νέο Συμβάν</Link>
+                           Νέο Συμβάν
                         </NavText>
                     </NavItem>
-                    <NavItem>
+                    <NavItem onClick={() => this.handleNavItem("/")}>
                         <NavIcon>
-                            <Link to="/"><FontAwesomeIcon icon={ faHome } style={{ marginLeft:'4px', color: 'white' }} /></Link>         
+                            <FontAwesomeIcon icon={ faHome } style={{ marginLeft:'4px', color: 'white' }} />        
                         </NavIcon>
                         <NavText>
-                           <Link to="/"> Πίνακας Ελέγχου</Link>
+                           Πίνακας Ελέγχου
                         </NavText>
                     </NavItem>
-                    <NavItem >
+                    <NavItem onClick={() => this.handleNavItem("/incidents")}>
                         <NavIcon>
-                            <Link to="/incidents"><FontAwesomeIcon icon={ faIndent } style={{ marginLeft:'4px' , color: 'white' }} /></Link>     
+                            <FontAwesomeIcon icon={ faIndent } style={{ marginLeft:'4px' , color: 'white' }} /> 
                         </NavIcon>
                         <NavText>
-                            <Link to="/incidents"> Συμβάντα</Link>
+                            Συμβάντα
                         </NavText>
                     </NavItem>
                 </SideNav.Nav>
@@ -70,4 +76,4 @@ class SideMenu extends Component
     }
 }
 
-export default SideMenu;
+export default withRouter(SideMenu);

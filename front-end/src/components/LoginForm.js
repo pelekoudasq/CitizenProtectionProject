@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Form, FormGroup, Label, Input } from 'reactstrap'
+import { Form, FormGroup, Label, Input, Button} from 'reactstrap'
 import '../css/login.css';
 import logo from '../icons/login_img2.jpg'
 //import { Link } from 'react-router-dom'
@@ -120,12 +120,12 @@ class LoginForm extends  Component
 			        			innerRef={this.password}
 			        	/>
 			     	</FormGroup>
-			    	<button type="submit" className="loginbutton">
+			    	<Button type="submit" className="loginbutton">
                         {isLoading && (
                         <i className="fa fa-refresh fa-spin" style={{ marginRight: "5px" }}/>)}
                         {isLoading && <span>Περιμένετε...</span>}
                         {!isLoading && <span>Σύνδεση</span>}
-			    	</button>
+			    	</Button>
 			    </Form>
 			    <img className="login_img"
             		src={logo}
