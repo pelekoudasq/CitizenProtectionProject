@@ -71,7 +71,7 @@ class IncidentForm extends Component
     }
 
 
-    authHeader() 
+    authHeader()
     {
         // return authorization header with jwt token
         const token = localStorage.getItem('token');
@@ -114,7 +114,7 @@ class IncidentForm extends Component
             mode: 'cors',
             method: 'POST',
             headers: this.authHeader(),
-            body: new URLSearchParams({ 
+            body: JSON.stringify({ 
                 title: this.state.title.current.value,
                 address: this.state.location,
                 priority: this.state.priority.current.value,
@@ -122,34 +122,34 @@ class IncidentForm extends Component
             }),
         }
 
+        requestOptions.headers['Content-Type'] = 'application/json'
 
         let request = `${apiUrl}/incidents/new`
-
 
         fetch(request, requestOptions)
 
         .then(checkFetch)
         .then(response => response.json())
         .then( json => {
-            //console.log(json);
+            console.log(json);
             //console.log('flag after fetch', this.state.flag)
-        if(this.state.flag)
-        {
-            this.setState({
-                id : json._id,
-                formLoading: false,
-                successSubmit: true
-            })           
-        }
-        else
-            this.setState({
-                id : null,
-                formLoading: false,
-                successSubmit: false
-            })           
-            //console.log("id in first fetch", this.state.id)
+            if(this.state.flag)
+            {
+                this.setState({
+                    id : json._id,
+                    formLoading: false,
+                    successSubmit: true
+                })           
+            }
+            else
+                this.setState({
+                    id : null,
+                    formLoading: false,
+                    successSubmit: false
+                })           
+                //console.log("id in first fetch", this.state.id)
         }) 
-    event.preventDefault();
+        event.preventDefault();
     };
 
 
@@ -173,13 +173,15 @@ class IncidentForm extends Component
             mode: 'cors',
             method: 'POST',
             headers: this.authHeader(),
-            body: new URLSearchParams({
+            body: JSON.stringify({
                 description : this.state.description,
                 callerName : this.state.call_name.current.value,
                 callerNumber : this.state.call_num.current.value,
                 keywords : this.state.incident_type.current._values.value
             }),
         }
+
+        requestOptions.headers['Content-Type'] = 'application/json'
 
         let request = `${apiUrl}/incidents/update/${this.state.id}`
 
