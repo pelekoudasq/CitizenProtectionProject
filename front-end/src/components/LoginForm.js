@@ -72,17 +72,11 @@ class LoginForm extends  Component
             console.log(json);
             console.log('flag', this.state.flag)
 
-            // Store the users data in local storage to make them available
-            // for the next user's visit.
-
-            // Use the setUserData function available through the UserContext.
-            // currentUserSubject.next(json.token);
-            // this.context.setUserData(json.token, u);
-
-            // Use the history prop available through the Route to programmatically
-            // navigate to another route.
             if(this.state.flag === true)
             {
+                let fullname = json.name['firstName'] + ' ' + (json.name['lastName'])
+                localStorage.setItem('fullname', fullname)
+                localStorage.setItem('usertype', json.userType)
                 localStorage.setItem('token', json.token);
                 localStorage.setItem('username', u);
                 console.log("mpainei edw: ", this.state.flag)

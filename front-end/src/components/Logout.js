@@ -19,7 +19,7 @@ class Logout extends Component
         this.toggle = this.toggle.bind(this);
         this.state = {
             dropdownOpen: false,
-            name: localStorage.getItem('username')
+            name: localStorage.getItem('fullname')
         };
     }  
 

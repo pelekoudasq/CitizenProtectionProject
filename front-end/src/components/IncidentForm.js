@@ -30,13 +30,17 @@ class IncidentForm extends Component
             incident_type: React.createRef(),
             description: "",
             flag : true,
-            formError: false,
+            authError: true,
+            titleError: true,
+            locError: true,
             formLoading: false,
             successSubmit: " "
         }
-        this.customInputValue.bind(this);
+        this.customInputValue = this.customInputValue.bind(this);
         // this.state.auth.current = [];
         this.handleSubmit.bind(this);
+        this.handleNameChange = this.handleNameChange.bind(this)
+        this.handleLocation = this.handleLocation.bind(this)
     }  
 
 
@@ -53,19 +57,18 @@ class IncidentForm extends Component
             newAuth = this.state.auth
         }
 
-        console.log("adding authorize ", newAuth);
-        if(this.state.auth.length != 0)            
+        if(Object.keys(newAuth).length > 0)            
         {
             this.setState({
                 auth: newAuth,
-                formError: true
+                authError: false
             });
         }
         else
         {
             this.setState({
                 auth: newAuth,
-                formError: false
+                authError: true
             });
         }
     }
@@ -75,9 +78,9 @@ class IncidentForm extends Component
     {
         // return authorization header with jwt token
         const token = localStorage.getItem('token');
-        console.log(token)
+        // console.log(token)
         if (token) {
-            console.log(token)
+            // console.log(token)
             return { Authorization: `Bearer ${token}` };
         } 
         else 
@@ -88,11 +91,11 @@ class IncidentForm extends Component
 
 
     handleSubmit = event => {
-        console.log('IncidentForm...');
-        console.log('Title: ',this.state.title.current.value);
-        console.log('Location: ',this.state.location);
-        console.log('Authorizations: ',this.state.auth);
-        console.log('Priority: ',this.state.priority.current.value);
+        // console.log('IncidentForm...');
+        // console.log('Title: ',this.state.title.current.value);
+        // console.log('Location: ',this.state.location);
+        // console.log('Authorizations: ',this.state.auth);
+        // console.log('Priority: ',this.state.priority.current.value);
 
         this.setState({
             formLoading: true
@@ -101,7 +104,7 @@ class IncidentForm extends Component
 
         let checkFetch = response => 
         {
-            console.log('respone status is', response.status)
+            //console.log('respone status is', response.status)
             if(response.status !== 200)
             {
                 this.setState({flag: false})
@@ -139,14 +142,14 @@ class IncidentForm extends Component
                     id : json._id,
                     formLoading: false,
                     successSubmit: true
-                })           
+                })
             }
             else
                 this.setState({
                     id : null,
                     formLoading: false,
                     successSubmit: false
-                })           
+                })
                 //console.log("id in first fetch", this.state.id)
         }) 
         event.preventDefault();
@@ -209,23 +212,48 @@ class IncidentForm extends Component
         //console.log("I simaia einai", this.state.formError)
     };
 
-    handleLocation = (val) => {
-        // console.log(val);
-        this.setState({
-            location: val
-        }, () => {
-            //console.log(this.state.location);
-        })
+    handleLocation =  (val) => {
+        
+        console.log(val.length);
+        if (val.length > 0) 
+            this.setState({
+                location: val,
+                locError: false
+            })
+        else
+            this.setState({
+                location: val,
+                locError: true
+            })
     };
 
+    handleNameChange = (val) => {
+        console.log("len is",this.state.title.current.value.length)
 
-
+        if(this.state.title.current.value.length > 0)
+        {
+            this.setState({
+                titleError: false
+            })
+        }
+        else
+        {
+            this.setState({
+                titleError: true
+            })
+        }
+    };
 // <Input type="text" name="location" innerRef={this.state.location} id="exampleLocation" placeholder=""/>
 // <Input type="text" name="typeOfIncident" innerRef={this.state.incident_type} id="exampleTypeOfIncident"/>
 
 
     render()
     {   
+        let formflag = false
+        if (this.state.authError == false && this.state.titleError == false && this.state.locError == false)
+            formflag =  true
+        console.log("i teliki simaia einai", formflag)
+
         return(
             <div>
                 <SideMenu/>
@@ -280,8 +308,8 @@ class IncidentForm extends Component
                             <Col sm={3}>
                                 <FormGroup style={{ width:'40% !important' }}>
                                 <Label for="exampleCheckbox">Φορείς*</Label>
-                                <div className="CheckBox" innerref={this.state.auth}> 
-                                <CustomInput type="checkbox" id="1" label="Ε.Κ.Α.Β." onClick={this.customInputValue.bind(this, "1")} />
+                                <div required className="CheckBox" innerref={this.state.auth}> 
+                                <CustomInput type="checkbox" id="mycheck" label="Ε.Κ.Α.Β." onClick={this.customInputValue.bind(this, "1")} />
                                 <CustomInput type="checkbox" id="2" label="ΕΛ.ΑΣ."  onClick={this.customInputValue.bind(this, "2")}/>
                                 <CustomInput type="checkbox" id="3" label="Λιμενικό"  onClick={this.customInputValue.bind(this, "3")}/>
                                 <CustomInput type="checkbox" id="4" label="Πυρεσβεστική"  onClick={this.customInputValue.bind(this, "4")}/>
@@ -291,7 +319,7 @@ class IncidentForm extends Component
                             <Col sm={3}>
                             <FormGroup>
                             <Label for="exampleSelect">Προτεραιότητα* </Label>
-                            <Input required type="select" name="select" innerRef={this.state.priority} id="exampleSelect" >
+                            <Input type="select" name="select" innerRef={this.state.priority} id="exampleSelect" >
                               <option>Χαμηλή</option>
                               <option>Μέτρια</option>
                               <option>Υψηλή</option>
@@ -316,8 +344,8 @@ class IncidentForm extends Component
                             <Col>
                             <Col>
                             <FormGroup>
-                            <button id="close-image" disabled={this.state.formError}>
-                            <img src={alert1} alt='' style={{ width: '230px'}} onClick={this.handleSubmit} />
+                            <button id="close-image">
+                            <img src={alert1} alt='' style={{ width: '230px'}} onClick= {(formflag == true) ? this.handleSubmit : console.log(" ")} />
                             </button>
                             </FormGroup>
                             </Col>
@@ -325,14 +353,14 @@ class IncidentForm extends Component
 
                             <FormGroup>
                             <Col>
-                            <Button onClick={this.handleSubmitmoreInfo}>Ολοκλήρωση</Button>
+                            <Button disabled = {!formflag} onClick={this.handleSubmitmoreInfo}>Ολοκλήρωση</Button>
                             </Col>
                             </FormGroup>
                         </Row>
                 </Container>
             
                 <br/>
-                {this.state.successSubmit===true ? (
+                {this.state.successSubmit=== true ? (
                     <div className="alert alert-success" style = {{}}>
                         <strong>Οι αρμόδιοι Φορείς ενημερώθηκαν επιτυχώς για το συμβάν</strong>
                     </div>
