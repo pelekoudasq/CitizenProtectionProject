@@ -10,7 +10,6 @@ import apiUrl from '../services/apiUrl'
 import Multiselect from 'react-widgets/lib/Multiselect'
 import AutoCompleteLoc from './AutoCompleteLoc'
 import "react-widgets/dist/css/react-widgets.css";
-import { Message } from  'semantic-ui-react'
 
 
 class IncidentForm extends Component
@@ -250,9 +249,8 @@ class IncidentForm extends Component
     render()
     {   
         let formflag = false
-        if (this.state.authError == false && this.state.titleError == false && this.state.locError == false)
+        if (this.state.authError === false && this.state.titleError === false && this.state.locError === false)
             formflag =  true
-        console.log("i teliki simaia einai", formflag)
 
         return(
             <div>
@@ -345,7 +343,7 @@ class IncidentForm extends Component
                             <Col>
                             <FormGroup>
                             <button id="close-image">
-                            <img src={alert1} alt='' style={{ width: '230px'}} onClick= {(formflag == true) ? this.handleSubmit : console.log(" ")} />
+                            <img src={alert1} alt='' style={{ width: '230px'}} onClick= {(formflag === true) ? this.handleSubmit : console.log(" ")} />
                             </button>
                             </FormGroup>
                             </Col>

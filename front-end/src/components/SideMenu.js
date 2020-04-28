@@ -6,7 +6,6 @@ import { faIndent } from '@fortawesome/free-solid-svg-icons'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import '@trendmicro/react-sidenav/dist/react-sidenav.css'
 import '../css/sidemenu.css'
-import { Link } from 'react-router-dom'
 import { withRouter } from 'react-router'
 
 

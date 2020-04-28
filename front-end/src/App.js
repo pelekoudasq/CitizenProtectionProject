@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import { Switch, Route , Redirect} from 'react-router-dom'
 import ControlPanel from './components/ControlPanel'
-import Incidents from './components/Incidents'
+import IncidentsHistory from './components/IncidentsHistory'
 import NavBar from './components/NavBar'
 import IncidentForm from './components/IncidentForm'
 import LoginForm from './components/LoginForm'
@@ -49,7 +49,7 @@ class App extends Component
         <Switch >
               <Route exact path='/' component={this.renderProtectedComponent(ControlPanel)} history={this.props.history} />
               <Route path='/login' component={LoginForm} />
-              <Route path='/incidents' component={this.renderProtectedComponent(Incidents)} />
+              <Route path='/incidents' component={this.renderProtectedComponent(IncidentsHistory)} />
               <Route path='/new_incident' component={this.renderProtectedComponent(IncidentForm)} />
               <Route component={NotFound} />
         </Switch>

@@ -5,12 +5,10 @@ import logo from '../icons/login_img2.jpg'
 //import { Link } from 'react-router-dom'
 import apiUrl from '../services/apiUrl'
 import { UserContext } from './UserContext'
-import { BehaviorSubject } from 'rxjs'
 import { withRouter } from 'react-router'
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 // import { faSpinner } from '@fortawesome/free-solid-svg-icons'
 
-const currentUserSubject = new BehaviorSubject((localStorage.getItem('currentUser')));
 
 class LoginForm extends  Component
 {

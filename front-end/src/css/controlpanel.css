@@ -22,10 +22,18 @@
   	width: 100%;
   	border-top: 2px solid grey;
   	opacity: 0.4;
-  	margin-top: 42px;
+  	margin-top: 44px;
   	position: absolute;
 }
 
+.incident_line
+{
+	width: 50%;
+  	border-top: 1px solid black;
+  	opacity: 0.4;
+  	position: absolute;
+  	margin-left: 8%;
+}
 .dash_img
 {
 	width: 85%;
@@ -33,4 +41,58 @@
 	position:absolute;
 	right:150px;
 	top:110px;
+}
+
+.incident_box
+{
+	width: 60%;
+  	margin: 30px auto;
+  	background-color: grey;
+  	max-height: 300px;
+  	box-sizing: border-box;
+}
+
+.container{
+	background-color: black; 
+}
+
+#inc_box:hover 
+{
+    opacity: 0.7;
+    cursor: pointer;
+}
+
+.Modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.35);
+    z-index: 9998;
+}
+
+.Modal-content {
+    display: relative;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    border: 1px solid #ccc;
+    background: rgb(38,38,38);
+    border: 1.5px solid rgb(45,45,45);
+    overflow: auto;
+    border-radius: 1px;
+    outline: none;
+    z-index: 9999;
+    width: 400px;
+    margin-left: -150px;
+    margin-right: -150px;
+    padding: 24px;
+    line-height: 16px;
+}
+
+.Modal_button {
+    display: inline-block;
+    padding: 4px;
+    margin: 0;
 }
