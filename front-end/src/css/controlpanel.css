@@ -58,8 +58,8 @@
 
 #inc_box:hover 
 {
-    opacity: 0.7;
-    cursor: pointer;
+  opacity: 0.7;
+  cursor: pointer;
 }
 
 .Modal-overlay {
@@ -96,3 +96,88 @@
     padding: 4px;
     margin: 0;
 }
+
+.scroll
+{
+  overflow-y: scroll;
+  height: 430px;
+  overflow-x: hidden; 
+}
+
+
+.scroll::-webkit-scrollbar {
+    display: none;
+}
+
+
+.loadmore
+{
+  min-width: 50px;
+  color: #f5f5f5;
+  padding: 12px;
+  font-size: 14px;
+  font-weight: bold;
+  border: solid #2c71af !important;
+  border-radius: 4px;
+  background: #2c71af !important;
+  cursor: pointer;
+}
+
+
+#load:hover 
+{
+  opacity: 0.9;
+}
+
+
+.inc_line
+{
+    width: 40%;
+    margin-left: 10%;
+    border-top: 2px solid grey;
+    opacity: 0.4;
+    position: absolute;
+}
+
+
+.load-spin {
+    position:fixed;
+    width:55%;
+    left:8%;right:15%;top:21%;bottom:15%;
+    background-color: rgba(255,255,255,0.7);
+    z-index:9999;
+}
+
+@-webkit-keyframes spin {
+  from {-webkit-transform:rotate(0deg);}
+  to {-webkit-transform:rotate(360deg);}
+}
+
+@keyframes spin {
+  from {transform:rotate(0deg);}
+  to {transform:rotate(360deg);}
+}
+
+.load-spin::after 
+{
+    content:'';
+    display:block;
+    position:absolute;
+    left:48%;top:40%;
+    width:40px;height:40px;
+    border-style:solid;
+    border-color:black;
+    border-top-color:transparent;
+    border-width: 4px;
+    border-radius:10%;
+    -webkit-animation: spin .8s linear infinite;
+    animation: spin .8s linear infinite;
+}
+
+
+#container{
+    text-align: center;
+}
+
+
+

@@ -94,19 +94,19 @@ class IncidentForm extends Component
         // console.log('Title: ',this.state.title.current.value);
         // console.log('Location: ',this.state.location);
         // console.log('Authorizations: ',this.state.auth);
-        // console.log('Priority: ',this.state.priority.current.value);
+        // console.log('Priority: ',this.state.priority.current.value); 
+        //console.log("i forma", this.state.formLoading)     
 
         this.setState({
             formLoading: true
-        });  
-        //console.log("i forma", this.state.formLoading)     
+        }); 
 
         let checkFetch = response => 
         {
             //console.log('respone status is', response.status)
             if(response.status !== 200)
             {
-                this.setState({flag: false})
+                this.setState({flag: false, formLoading: false})
                 //console.log('flag in check fetch ', this.state.flag)
             }
             return response;
@@ -127,6 +127,7 @@ class IncidentForm extends Component
         requestOptions.headers['Content-Type'] = 'application/json'
 
         let request = `${apiUrl}/incidents/new`
+
 
         fetch(request, requestOptions)
 
@@ -208,7 +209,6 @@ class IncidentForm extends Component
         this.setState({
             [name]: value
         })
-        //console.log("I simaia einai", this.state.formError)
     };
 
     handleLocation =  (val) => {
@@ -358,7 +358,7 @@ class IncidentForm extends Component
                 </Container>
             
                 <br/>
-                {this.state.successSubmit=== true ? (
+                {this.state.successSubmit === true ? (
                     <div className="alert alert-success" style = {{}}>
                         <strong>Οι αρμόδιοι Φορείς ενημερώθηκαν επιτυχώς για το συμβάν</strong>
                     </div>

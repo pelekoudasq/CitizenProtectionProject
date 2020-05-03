@@ -5,10 +5,8 @@ import { UserContext } from './UserContext';
 import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem} from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons'
-import { BehaviorSubject } from 'rxjs';
 import { withRouter } from 'react-router';
 
-const currentUserSubject = new BehaviorSubject((localStorage.getItem('token')));
  
 class Logout extends Component 
 {
@@ -38,7 +36,6 @@ class Logout extends Component
     {
         localStorage.removeItem('token');
         localStorage.removeItem('username');
-        currentUserSubject.next(null);
         this.props.history.push('/login');
     }
 
@@ -56,9 +53,8 @@ class Logout extends Component
     // }
 
 
-    render() {
-        
-
+    render() 
+    {
         return (
             <Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggle}>
             <DropdownToggle caret style={{ backgroundColor: "#0063bf", borderColor: "#0063bf" }}>
@@ -67,11 +63,9 @@ class Logout extends Component
               <DropdownMenu right>
                 <DropdownItem onClick={this.doLogout}> <FontAwesomeIcon icon={ faSignOutAlt } style={{ marginLeft:'4px' }} /> Αποσύνδεση </DropdownItem>
               </DropdownMenu>
-            </Dropdown>
-                   
+            </Dropdown>    
         );
     }
-
 };
 
 

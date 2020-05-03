@@ -5,6 +5,7 @@ import low from '../icons/low.png'
 import medium from '../icons/medium.png'
 import Modal from 'react-modal';
 import { Button }from 'reactstrap'
+import { withRouter } from 'react-router';
 
 
 Modal.setAppElement('#root');
@@ -12,8 +13,8 @@ Modal.setAppElement('#root');
 const customStyles = {
   content : {
     top: '20%',
-    left: '10%',
-    right:'10%',
+    left: '20%',
+    right:'20%',
     bottom:'20%',
   }
 };
@@ -41,54 +42,55 @@ class Incident extends Component
     	this.setState({ 
     		showModal: false
     	});
-    	console.log("this modal is", this.state.showModal)
   	};
 
-  render()
-  {
 
-	let icon
-	if(this.props.priority === "Χαμηλή")
-		icon = low
-	else if(this.props.priority === "Μέτρια")
-		icon = medium
+    render()
+    {
 
-	if(this.props.priority === "Υψηλή")
-		icon = high
+        let icon
+        if(this.props.priority === "Χαμηλή")
+        	icon = low
+        else if(this.props.priority === "Μέτρια")
+        	icon = medium
 
-  	return(
-  		<div>
-			<div>
-				<div>
-				<br/>
-				<div className="row" id="inc_box" onClick={this.OpenModal}>
-					<Modal
+        if(this.props.priority === "Υψηλή")
+        	icon = high
+
+    	return(
+    		<div>
+    			<br/>
+    			<div className="row" id="inc_box" onClick={this.OpenModal}>
+    				<Modal
             			overlayClassName={{
                		 		base: 'Modal-overlay'
             			}}
            				isOpen={this.state.showModal}
-           				contentLabel="onRequestClose Example"
+           				contentLabel="onRequestClose"
            				onRequestClose={this.CloseModal}
            				style={customStyles}
         			>
-          				<p>Περισσότερες Πληροφορίες Συμβάντος</p>
-          				<Button onClick={this.CloseModal}>Κλείσιμο</Button>
+          				<p>Προεπισκόπηση Συμβάντος</p>
+                        <p>{this.props.title}</p>
+
+                        <p>{this.props.loacation}</p>
+                        <div id="container">
+                            <Button style = {{marginTop: '33%', backgroundColor: 'white', color: 'black'}} onClick={this.CloseModal}>Κλείσιμο</Button>
+                            <Button style = {{marginTop: '33%', marginLeft: '2%'}} onClick={this.props.onClick}>Περισσότερα</Button>
+                        </div>
         			</Modal>
 
-					<div  className="col-md-1" style={{marginLeft: '8%'}}>
-						<img src={icon} alt= '' />
-					</div>
-					<div className="col-lg-2">{this.props.date}</div>
-					<div className="col-lg-2">{this.props.location}</div>
-					<div className="col-lg-2">{this.props.title}</div>
+    				<div  className="col-md-1" style={{marginLeft: '8%'}}>
+    					<img src={icon} alt= '' />
+    				</div>
+    				<div className="col-lg-2">{this.props.date}</div>
+    				<div className="col-lg-2">{this.props.location}</div>
+    				<div className="col-lg-2">{this.props.title}</div>
     			</div>
-    		</div>
     			<br/>
-    			<div className = 'incident_line'></div>
-			</div>
-		</div>
-  	);
-  }
+    		</div>
+    	);
+    }
 }
 
 

@@ -3,6 +3,7 @@ import '../css/navbar.css';
 import logo from '../icons/mainlogo.png'
 import Logout from './Logout'
 
+
 class NavBar extends Component
 {
 
@@ -27,7 +28,9 @@ class NavBar extends Component
                         <h5 className = "navbar_text">
                             Πλατφόρμα Προστασίας Πολίτη
                         </h5>
+                        <div>
                         <Logout />
+                        </div>
                     </nav>
                 </React.Fragment>
             );
