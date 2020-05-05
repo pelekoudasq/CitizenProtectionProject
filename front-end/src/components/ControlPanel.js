@@ -20,7 +20,7 @@ class ControlPanel extends Component
 			incidents: [],
 			showModal: false,
 			coordinates: [],
-			visiblePosts: 4,
+			visiblePosts: 5,
 			isloading: false
 
 		}
@@ -46,7 +46,6 @@ class ControlPanel extends Component
 		let requestOptions = {
             method: 'GET',
             headers: this.authHeader(),
-
         }
 
         let coordinate = {}; //object of coordinates
@@ -109,8 +108,8 @@ class ControlPanel extends Component
 	{
 		let incidents = this.state.incidents
 		return(
-			<div>
-				<SideMenu />
+			<div className = "hide-scroll">
+				<SideMenu /> 
 		        <h5 className = "head_ltitle">Τρέχοντα Συμβάντα</h5>
 		        <h5 className = "head_rtitle">Χάρτης Συμβάντων</h5>
         		<div className = "hrz_line"></div>
@@ -120,29 +119,31 @@ class ControlPanel extends Component
                     <div className="load-spin"></div> : console.log("")
                 }
 
-
+				<div className = "container-fluid" style={{marginLeft: '7.2%'}}>	
         		<div className = "row">
-        			<div className = "col-md-1" style={{marginLeft: '8%'}}>
+        			<div className = "col-sm-1" >
         				<FontAwesomeIcon icon={ faExclamationTriangle } style={{width: '50px', marginTop: '15px'}} />
         			</div>
         			<div className = "col-lg-2">
-        				<p style={{fontSize:'25px'}}>Ημερομηνία</p>
+        				<p style={{fontSize:'22px'}}>Ημερομηνία</p>
         			</div>
         			<div className = "col-lg-2">
-        				<p style={{fontSize:'25px'}}>Διεύθυνση</p>
+        				<p style={{fontSize:'22px'}}>Διεύθυνση</p>
         			</div>        			        			
         			<div className = "col-lg-1">
-        				<p style={{fontSize:'25px'}}>Τίτλος</p>
+        				<p style={{fontSize:'23px'}}>Τίτλος</p>
         			</div>    
         		</div>
-        		<div className = 'incident_line' style={{opacity: '1.0'}}></div>
-        		
-
-               	{this.state.coordinates.length > 0 && !this.state.isloading ? (
+				</div>
+				
+				{this.state.coordinates.length > 0 && !this.state.isloading ? (
 					<Gmap coordinates = {this.state.coordinates.slice(0, this.state.visiblePosts)} />
                 ) : (
                    <p> </p>
                 )}  
+        		<div className = 'incident_line' style={{opacity: '1.0'}}></div>
+        		
+
 
         		<div className = "scroll">
 		    		{incidents.slice(0, this.state.visiblePosts).map((incident, index) => { /*Loop through every row of the jsonfile and get the attributes*/
@@ -166,7 +167,7 @@ class ControlPanel extends Component
 				{(incidents.length > 5 && incidents.length > this.state.visiblePosts) ?
         			(<Button id = "load" className = "loadmore" onClick = {this.loadmore} style = {{position: 'absolute', marginLeft: '25%'}}>Φόρτωση Περισσοτέρων</Button>
         			) : (
-        			<p> </p>
+        			<p></p>
         		)}
 
                 </div>

@@ -20,7 +20,7 @@
 	border: 1px solid #e8eaec;
 	background-color: #e8eaec;
 	border-radius: 15px;
-	width: 30px important!;
+	width: 30px !important;
 	-webkit-box-shadow: 0px 0px 23px 0px rgba(0,0,0,0.39);
 	-moz-box-shadow: 0px 0px 23px 0px rgba(0,0,0,0.39);
 	box-shadow: 0px 0px 23px 0px rgba(0,0,0,0.39);

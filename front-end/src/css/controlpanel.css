@@ -45,7 +45,7 @@
 
 .incident_box
 {
-	width: 60%;
+	  width: 80%;
   	margin: 30px auto;
   	background-color: grey;
   	max-height: 300px;
@@ -101,13 +101,14 @@
 {
   overflow-y: scroll;
   height: 430px;
-  overflow-x: hidden; 
+  overflow-x: hidden;
+  width: 60%;
 }
 
 
-.scroll::-webkit-scrollbar {
+/* .scroll::-webkit-scrollbar {
     display: none;
-}
+} */
 
 
 .loadmore
@@ -143,7 +144,7 @@
 .load-spin {
     position:fixed;
     width:55%;
-    left:8%;right:15%;top:21%;bottom:15%;
+    left:8%;right:15%;top:21%;bottom:5%;
     background-color: rgba(255,255,255,0.7);
     z-index:9999;
 }

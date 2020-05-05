@@ -75,17 +75,20 @@ class Incident extends Component
 
                         <p>{this.props.loacation}</p>
                         <div id="container">
-                            <Button style = {{marginTop: '33%', backgroundColor: 'white', color: 'black'}} onClick={this.CloseModal}>Κλείσιμο</Button>
-                            <Button style = {{marginTop: '33%', marginLeft: '2%'}} onClick={this.props.onClick}>Περισσότερα</Button>
+                            <Button style = {{marginTop: '26%', backgroundColor: 'white', color: 'black'}} onClick={this.CloseModal}>Κλείσιμο</Button>
+                            <Button style = {{marginTop: '26%', marginLeft: '2%'}} onClick={this.props.onClick}>Περισσότερα</Button>
                         </div>
         			</Modal>
-
-    				<div  className="col-md-1" style={{marginLeft: '8%'}}>
-    					<img src={icon} alt= '' />
-    				</div>
-    				<div className="col-lg-2">{this.props.date}</div>
-    				<div className="col-lg-2">{this.props.location}</div>
-    				<div className="col-lg-2">{this.props.title}</div>
+					<div className = "container-fluid" style = {{marginLeft: '14%' }}>
+						<div className = "row">
+							<div  className="col-lg-2" >
+								<img src={icon} alt= '' />
+							</div>
+							<div className="col-md-4">{this.props.date}</div>
+							<div className="col-sm-4">{this.props.location}</div>
+							<div className="col">{this.props.title}</div>
+						</div>
+					</div>
     			</div>
     			<br/>
     		</div>

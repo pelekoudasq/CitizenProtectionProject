@@ -269,7 +269,7 @@ class IncidentForm extends Component
                 }
 
                 <Form  style={{ marginLeft: '15%', marginRight: '100px', marginTop: '20px', width: '70%', position: 'absolute'}}>
-                    <Container className="containerBox">
+                    <Container className="containerBox" style ={{textAlign: 'flex'}}>
                         <Row>
                             <Col xs="6">
                             <FormGroup>
