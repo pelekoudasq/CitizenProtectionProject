@@ -5,7 +5,7 @@ import low from '../icons/low.png'
 import medium from '../icons/medium.png'
 import Modal from 'react-modal';
 import { Button }from 'reactstrap'
-import { withRouter } from 'react-router';
+// import { withRouter } from 'react-router';
 
 
 Modal.setAppElement('#root');

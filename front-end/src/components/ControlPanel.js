@@ -121,7 +121,7 @@ class ControlPanel extends Component
 
 				<div className = "container-fluid" style={{marginLeft: '7.2%'}}>	
         		<div className = "row">
-        			<div className = "col-sm-1" >
+        			<div className = "col-sm-1">
         				<FontAwesomeIcon icon={ faExclamationTriangle } style={{width: '50px', marginTop: '15px'}} />
         			</div>
         			<div className = "col-lg-2">

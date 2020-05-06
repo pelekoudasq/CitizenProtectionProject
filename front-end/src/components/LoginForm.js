@@ -6,8 +6,7 @@ import logo from '../icons/login_img2.jpg'
 import apiUrl from '../services/apiUrl'
 import { UserContext } from './UserContext'
 import { withRouter } from 'react-router'
-// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-// import { faSpinner } from '@fortawesome/free-solid-svg-icons'
+import { faWindowRestore } from "@fortawesome/free-solid-svg-icons";
 
 
 class LoginForm extends  Component
@@ -18,7 +17,8 @@ class LoginForm extends  Component
         super(props, context);
         this.state = {
             isLoading: false,
-            flag: true
+            flag: true,
+            
         };
     }
 
@@ -28,23 +28,28 @@ class LoginForm extends  Component
     password = React.createRef();
 
     handleSubmit = (event) => {
-        console.log('ref to username: ', this.username.current);
+        // console.log('ref to username: ', this.username.current);
 
         const u = this.username.current.value;
         const p = this.password.current.value;
 
-        console.log('Submitting...', u, p);
+        // console.log('Submitting...', u, p);
         this.setState({ isLoading: true });
-        console.log('flag before fetch is', this.state.flag)
+        // console.log('flag before fetch is', this.state.flag)
 
         let checkFetch = response => 
         {
-            console.log('respone status is', response.status)
+            //console.log('response status is', response.status)
             if(response.status !== 200)                
             {
                 this.setState({flag: false})
                 console.log('flag in check fetch ', this.state.flag)
             }
+            else
+            {
+                this.setState({flag: true})
+            }
+
             return response;
         }
 
@@ -67,25 +72,24 @@ class LoginForm extends  Component
         .then(checkFetch)
         .then(response => response.json())
         .then( json => {
-            console.log(json);
-            console.log('flag', this.state.flag)
-
+            //console.log(json);
+            // console.log('flag', this.state.flag)
             if(this.state.flag === true)
-            {
+            {               
                 let fullname = json.name['firstName'] + ' ' + (json.name['lastName'])
                 localStorage.setItem('fullname', fullname)
                 localStorage.setItem('usertype', json.userType)
                 localStorage.setItem('token', json.token);
                 localStorage.setItem('username', u);
-                console.log("mpainei edw: ", this.state.flag)
+                //console.log("mpainei edw: ", this.state.flag)
                 this.props.history.push('/');
             }
-            else
-            {
-                setTimeout(() => alert('Password is wrong!'), 10);
-                console.log("de kano log in", this.state.flag)
-                window.location.reload(false);
-            }
+
+            this.setState({
+                isLoading:false,
+            })
+
+            //window.location.reload(false);
         })
 
     event.preventDefault();
@@ -94,7 +98,6 @@ class LoginForm extends  Component
 
 	render()
 	{
-        const { isLoading } = this.state;
 
 		return(
 			<div>
@@ -103,26 +106,31 @@ class LoginForm extends  Component
 			    	<FormGroup>
 			        	<Label>Όνομα Χρήστη</Label>
 			        	<Input 	type="name"
-			        			innerRef={this.username}
+                                innerRef={this.username}
+                                required
 			        	/>
 			    	</FormGroup>
 			      	<FormGroup>
 			      		<Label>Κωδικός Πρόσβασης</Label>
 			        	<Input 	type="password"
-			        			innerRef={this.password}
+                                innerRef={this.password}
+                                required   
 			        	/>
 			     	</FormGroup>
 			    	<Button type="submit" className="loginbutton">
-                        {isLoading && (
-                        <i className="fa fa-refresh fa-spin" style={{ marginRight: "5px" }}/>)}
-                        {isLoading && <span>Περιμένετε...</span>}
-                        {!isLoading && <span>Σύνδεση</span>}
+                        {this.state.isLoading && <span>Περιμένετε...</span>}
+                        {!this.state.isLoading && <span>Σύνδεση</span>}
 			    	</Button>
 			    </Form>
 			    <img className="login_img"
             		src={logo}
             		alt=''
           		/>
+                {!this.state.flag &&             
+                    <div className="alert alert-danger" style = {{marginLeft: '40%', width: '20%'}}>
+                        <strong>Ο κωδικός πρόσβασης είναι λάθος</strong>
+                    </div>
+                }
 		    </div>
 		)
 	}
