@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHome } from '@fortawesome/free-solid-svg-icons'
 import { faIndent } from '@fortawesome/free-solid-svg-icons'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
+import { faChartLine } from '@fortawesome/free-solid-svg-icons'
 import '@trendmicro/react-sidenav/dist/react-sidenav.css'
 import '../css/sidemenu.css'
 import { withRouter } from 'react-router'
@@ -63,6 +64,14 @@ class SideMenu extends Component
                     <NavItem onClick={() => this.handleNavItem("/incidents")}>
                         <NavIcon>
                             <FontAwesomeIcon icon={ faIndent } style={{ marginLeft:'4px' , color: 'white' }} /> 
+                        </NavIcon>
+                        <NavText>
+                            Συμβάντα
+                        </NavText>
+                    </NavItem>
+                    <NavItem onClick={() => this.handleNavItem("/statistics")}>
+                        <NavIcon>
+                            <FontAwesomeIcon icon={ faChartLine } style={{ marginLeft:'4px' , color: 'white' }} /> 
                         </NavIcon>
                         <NavText>
                             Συμβάντα

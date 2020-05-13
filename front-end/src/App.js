@@ -5,6 +5,7 @@ import IncidentsHistory from './components/IncidentsHistory'
 import NavBar from './components/NavBar'
 import IncidentForm from './components/IncidentForm'
 import LoginForm from './components/LoginForm'
+import Statistics from './components/Statistics'
 import NotFound from './components/NotFound'
 import { withRouter } from 'react-router'
 
@@ -51,6 +52,7 @@ class App extends Component
               <Route path='/login' component={LoginForm} />
               <Route path='/incidents' component={this.renderProtectedComponent(IncidentsHistory)} />
               <Route path='/new_incident' component={this.renderProtectedComponent(IncidentForm)} />
+              <Route path='/statistics' component={this.renderProtectedComponent(Statistics)} />
               <Route component={NotFound} />
         </Switch>
         </div>

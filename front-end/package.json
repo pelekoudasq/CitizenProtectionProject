@@ -29,6 +29,7 @@
     "react-spinners": "^0.8.1",
     "react-widgets": "^4.5.0",
     "reactstrap": "^8.4.1",
+    "recharts": "^1.8.5",
     "semantic-ui-react": "^0.88.2",
     "yup": "^0.28.4"
   },
