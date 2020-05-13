@@ -5,7 +5,7 @@ import low from '../icons/low.png'
 import medium from '../icons/medium.png'
 import Modal from 'react-modal';
 import { Button }from 'reactstrap'
-// import { withRouter } from 'react-router';
+import { withRouter } from 'react-router';
 
 
 Modal.setAppElement('#root');
@@ -31,6 +31,8 @@ class Incident extends Component
 
 		this.OpenModal = this.OpenModal.bind(this);
     	this.CloseModal = this.CloseModal.bind(this);
+        this.handleClick = this.handleClick.bind(this);
+
  	}
   
   	OpenModal () {
@@ -45,16 +47,52 @@ class Incident extends Component
   	};
 
 
+    authHeader() 
+    {
+        // return authorization header with jwt token
+        const token = localStorage.getItem('token');
+        if (token) {
+            return { Authorization: `Bearer ${token}` };
+        } 
+        else 
+        {
+            return {};
+        }
+    }
+
+
+    handleClick()
+    {
+    
+        let requestOptions = {
+                method: 'GET',
+                headers: this.authHeader(),
+            }
+
+        let id = this.props.incident._id
+
+        console.log("To id ine", id);
+
+        fetch(`https:localhost:9000/incidents/${id}`, requestOptions)
+                .then(response => response.json())
+                .then(response => {
+
+                console.log("When click more", response)  
+              }); 
+
+        this.props.history.push(`/incident/${id}`)
+    }
+
     render()
     {
 
         let icon
-        if(this.props.priority === "Χαμηλή")
+        if(this.props.incident.priority === "Χαμηλή")
         	icon = low
-        else if(this.props.priority === "Μέτρια")
+        else if(this.props.incident.priority === "Μέτρια")
         	icon = medium
 
-        if(this.props.priority === "Υψηλή")
+        if(this.props.incident.priority === "Υψηλή")
         	icon = high
 
     	return(
@@ -71,22 +109,22 @@ class Incident extends Component
            				style={customStyles}
         			>
           				<p>Προεπισκόπηση Συμβάντος</p>
-                        <p>{this.props.title}</p>
+                        <p>{this.props.incident.title}</p>
 
-                        <p>{this.props.loacation}</p>
+                        <p>{this.props.incident.location.address}</p>
                         <div id="container">
                             <Button style = {{marginTop: '26%', backgroundColor: 'white', color: 'black'}} onClick={this.CloseModal}>Κλείσιμο</Button>
-                            <Button style = {{marginTop: '26%', marginLeft: '2%'}} onClick={this.props.onClick}>Περισσότερα</Button>
+                            <Button style = {{marginTop: '26%', marginLeft: '2%'}} onClick={this.handleClick}>Περισσότερα</Button>
                         </div>
         			</Modal>
 					<div className = "container-fluid" style = {{marginLeft: '14%' }}>
 						<div className = "row">
-							<div  className="col-lg-2" >
+							<div  className="col-lg-2 mr-1">
 								<img src={icon} alt= '' />
 							</div>
-							<div className="col-md-4">{this.props.date}</div>
-							<div className="col-sm-4">{this.props.location}</div>
-							<div className="col">{this.props.title}</div>
+							<div className="col-md-4 ml-1">{this.props.incident.date}</div>
+							<div className="col-sm-4 ml-1">{this.props.incident.location.address}</div>
+							<div className="col">{this.props.incident.title}</div>
 						</div>
 					</div>
     			</div>
@@ -97,6 +135,6 @@ class Incident extends Component
 }
 
 
-export default Incident
+export default withRouter(Incident);
 
 

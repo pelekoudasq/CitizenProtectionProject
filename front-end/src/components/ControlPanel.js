@@ -25,7 +25,7 @@ class ControlPanel extends Component
 
 		}
 		this.loadmore = this.loadmore.bind(this)
-		this.handleClick = this.handleClick.bind(this)
+		
 	}	
 
 	authHeader() 
@@ -43,6 +43,7 @@ class ControlPanel extends Component
 
 	componentDidMount()
 	{	
+
 		let requestOptions = {
             method: 'GET',
             headers: this.authHeader(),
@@ -70,10 +71,13 @@ class ControlPanel extends Component
 						/* Push it to the array of coordinates */
 						coordinates.push(coordinate)
 		    		})
+
+            	console.log(this.state.incidents[0].location.address);
                 this.setState({
             		coordinates: coordinates
             	})
         	});	
+
 	}
 
 	sleep(ms) 
@@ -99,10 +103,6 @@ class ControlPanel extends Component
 
 	}
 
-	handleClick()
-	{
-		this.props.history.push('/incidents')
-	}
 
 	render()
 	{
@@ -148,14 +148,9 @@ class ControlPanel extends Component
         		<div className = "scroll">
 		    		{incidents.slice(0, this.state.visiblePosts).map((incident, index) => { /*Loop through every row of the jsonfile and get the attributes*/
 		    			return (
-		    				<div key = {incidents.id}>
+		    				<div key = {incident._id}>
 		        				<Incident /* Render the same Component with different values each time */
-		        					key = {incident.id}
-		        					priority = {incident.priority} 
-		        					date ={incident.date}
-		        					location = {incident.location['address']}
-		        					title = {incident.title}
-		        					onClick = {this.handleClick}
+		       						incident = {incident}
 								/>
 							</div>
 						)     			

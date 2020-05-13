@@ -51,6 +51,7 @@ class App extends Component
               <Route exact path='/' component={this.renderProtectedComponent(ControlPanel)} history={this.props.history} />
               <Route path='/login' component={LoginForm} />
               <Route path='/incidents' component={this.renderProtectedComponent(IncidentsHistory)} />
+              <Route path= '/incident/:id' component={this.renderProtectedComponent(IncidentsHistory)} />
               <Route path='/new_incident' component={this.renderProtectedComponent(IncidentForm)} />
               <Route path='/statistics' component={this.renderProtectedComponent(Statistics)} />
               <Route component={NotFound} />
