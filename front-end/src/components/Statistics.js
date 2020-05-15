@@ -8,6 +8,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Button }from 'reactstrap'
 import { LineChart, AreaChart, Area, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 
+import apiUrl from '../services/apiUrl'
+
+
 const data = [
   { name: 'ΕΚΑΒ', Ανοιχτά: 4000, Κλειστά: 2400, amt: 2400, },
   { name: 'ΛΙΜΕΝΙΚΟ', Ανοιχτά: 3000, Κλειστά: 1398, amt: 2210, },
@@ -54,7 +57,7 @@ class Statistics extends Component
         let coordinate = {}; //object of coordinates
         let coordinates = [] //array of objects of coordinates
 
-		fetch(`https:localhost:9000/incidents/all`, requestOptions)
+		fetch(`${apiUrl}/incidents/all`, requestOptions)
             .then(response => response.json())
             .then(response => {
 

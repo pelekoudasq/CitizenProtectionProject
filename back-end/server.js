@@ -8,6 +8,7 @@ const jwt = require('./jwt');
 // import files
 const users = require('./routes/users');
 const incidents = require('./routes/incidents');
+const base = require('./routes/base');
 
 // declare vars
 const options = {
@@ -31,8 +32,9 @@ app.use(function(req, res, next) {
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 app.use(bodyParser.json({limit: '50mb', extended: true}));
 
-app.use('/users', users.router);
-app.use('/incidents', incidents);
+app.use('/control-center/api/admin/users', users.router);
+app.use('/control-center/api/incidents', incidents);
+app.use('/control-center/api/', base);
 
 https.createServer(options, app).listen(port, function(){
 	console.log(`Server started on port ${port}`);

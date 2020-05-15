@@ -11,6 +11,8 @@ import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Button }from 'reactstrap'
 
+import apiUrl from '../services/apiUrl'
+
 class ControlPanel extends Component
 {
 	constructor(props)
@@ -52,7 +54,7 @@ class ControlPanel extends Component
         let coordinate = {}; //object of coordinates
         let coordinates = [] //array of objects of coordinates
 
-		fetch(`https:localhost:9000/incidents/all`, requestOptions)
+		fetch(`${apiUrl}/incidents/all`, requestOptions)
             .then(response => response.json())
             .then(response => {
 

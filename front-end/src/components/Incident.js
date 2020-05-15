@@ -7,6 +7,7 @@ import Modal from 'react-modal';
 import { Button }from 'reactstrap'
 import { withRouter } from 'react-router';
 
+import apiUrl from '../services/apiUrl'
 
 Modal.setAppElement('#root');
 
@@ -73,12 +74,11 @@ class Incident extends Component
 
         console.log("To id ine", id);
 
-        fetch(`https:localhost:9000/incidents/${id}`, requestOptions)
-                .then(response => response.json())
-                .then(response => {
-
-                console.log("When click more", response)  
-              }); 
+        fetch(`${apiUrl}/incidents/${id}`, requestOptions)
+        .then(response => response.json())
+        .then(response => {
+           console.log("When click more", response)  
+        }); 
 
         this.props.history.push(`/incident/${id}`)
     }

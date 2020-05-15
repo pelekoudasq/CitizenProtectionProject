@@ -65,7 +65,7 @@ class LoginForm extends  Component
             }),
         }
 
-        let request = `${apiUrl}/users/authenticate`
+        let request = `${apiUrl}/login`
 
         fetch(request, requestOptions)
 

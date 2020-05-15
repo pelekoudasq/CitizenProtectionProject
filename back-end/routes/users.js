@@ -1,8 +1,6 @@
 // import packages
 const express = require('express');
 const mongojs = require('mongojs');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
 
 
 // import files
@@ -22,34 +20,9 @@ async function getById(id) {
 	});
 }
 
-async function comparePass(user, password) {
-	if (user) {
-		if (bcrypt.compareSync(password, user.passwordHash)) {
-			const token = jwt.sign({ sub: user.id }, config.secret); // <==== The all-important "jwt.sign" function
-			// const userObj = new User(user);
-			const { password, ...userWithoutHash } = user;
-			return {
-				...userWithoutHash,
-				token
-			};
-		} else {
-			//console.log('Wrong pswd');
-		}
-	}
-}
+// routed
 
-//routes
-//Authenticate user
-router.post('/authenticate', function(req, res, next) {
-	console.log('users: authenticate');
-	db.Users.findOne({ username: req.body.username }, function(err, user) {
-		comparePass(user, req.body.password)
-			.then(userRes => userRes ? res.json(userRes) : res.status(400).json({ error: 'Username or password is incorrect' }))
-			.catch(err => next(err));
-	});
-});
-
-//get all users
+// get all users
 router.get('/all', function(req, res, next) {
 	console.log('users: get all');
 	db.Users.find(function(err, users) {
