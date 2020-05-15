@@ -7,7 +7,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons'
 import { withRouter } from 'react-router';
 
- 
+import { authenticationService } from '../services/authentication.service';
+
 class Logout extends Component 
 {
     constructor(props) 
@@ -32,10 +33,8 @@ class Logout extends Component
 
     static contextType = UserContext;
 
-    doLogout() 
-    {
-        localStorage.removeItem('token');
-        localStorage.removeItem('username');
+    doLogout = (event) => {
+        authenticationService.logout();
         this.props.history.push('/login');
     }
 

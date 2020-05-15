@@ -1,11 +1,11 @@
-import React, { Component, PureComponent } from 'react'
+import React, { Component/*, PureComponent */} from 'react'
 import SideMenu from './SideMenu'
-import Incident from './Incident'
+// import Incident from './Incident'
 import HeatMap from './HeatMap'
 import { withRouter } from 'react-router'
-import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { Button }from 'reactstrap'
+// import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons'
+// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+// import { Button }from 'reactstrap'
 import { LineChart, AreaChart, Area, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 
 import apiUrl from '../services/apiUrl'
@@ -85,7 +85,7 @@ class Statistics extends Component
 
 	render()
 	{
-		let incidents = this.state.incidents
+		// let incidents = this.state.incidents;
 		return(
 			<div className = "hide-scroll">
 				<SideMenu /> 

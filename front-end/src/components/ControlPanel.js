@@ -74,7 +74,6 @@ class ControlPanel extends Component
 						coordinates.push(coordinate)
 		    		})
 
-            	console.log(this.state.incidents[0].location.address);
                 this.setState({
             		coordinates: coordinates
             	})
