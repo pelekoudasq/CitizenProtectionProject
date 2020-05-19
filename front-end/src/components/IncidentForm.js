@@ -268,42 +268,32 @@ class IncidentForm extends Component
                     <div className="cover-spin"></div> : console.log("")
                 }
 
-                <Form  style={{ marginLeft: '15%', marginRight: '100px', marginTop: '20px', width: '70%', position: 'absolute'}}>
-                    <Container className="containerBox" style ={{textAlign: 'flex'}}>
-                        <Row>
-                            <Col xs="6">
+                <div style={{ marginLeft: '15%', marginRight: '100px', width: '70%'}}>
+                    <Row style={{ position: 'center', paddingLeft: '25px'}}>
+                        <Col xs="6" style={{paddingRight: '30px'}}> 
+                        <p className="Title">Ειδοποιήση Φορέων</p>
+                        </Col>
+                        <Col xs="6" style={{paddingRight: '30px'}}> 
+                        <p className="Title">Λεπτομέρειες</p>
+                        </Col>
+                    </Row>
+                </div>
+
+                <Form className="incform">
+                    <Row style={{ position: 'center', paddingLeft: '25px', paddingBottom: '20px', marginBottom:'-40px', paddingTop: '2px'}}>
+                    <Col xs="6" style={{borderRight: '3px solid #cccccc', paddingLeft: '2px'}}> 
+                    <Container>
                             <FormGroup>
                             <Label for="exampleTitle">Τίτλος*</Label>
                             <Input type="text" name="title" innerRef={this.state.title} onChange ={this.handleNameChange} id="exampleTitle" placeholder="" required/>
                             </FormGroup>
-                            </Col>
-                            <Col xs="6">
-                            <FormGroup>
-                            <Label for="exampleTelephone">Τηλέφωνο Αναφέροντα</Label>
-                            <Input type="tel" name="telephone" innerRef={this.state.call_num} id="exampleTelephone"/>
-                            </FormGroup>
-                            </Col>
-                        </Row>
-
-                        <Row>
-                            <Col>
                             <FormGroup>
                             <Label for="exampleLocation">Τοποθεσία*</Label>
                             {/*<AutoCompleteLoc innerRef={this.state.location}/>*/}
                             <AutoCompleteLoc value={this.state.location} handleLocation={this.handleLocation} name="location"/>
                             </FormGroup>
-                            </Col>
-
-                            <Col>
-                            <FormGroup>
-                            <Label for="exampleFullname">Ονοματεπώνυμο Αναφέροντα</Label>
-                            <Input type="text" name="fullname" innerRef={this.state.call_name} id="exampleFullname"/>
-                            </FormGroup>
-                            </Col>
-                        </Row>
-
                         <Row>
-                            <Col sm={3}>
+                            <Col sm={4}>
                                 <FormGroup style={{ width:'40% !important' }}>
                                 <Label for="exampleCheckbox">Φορείς*</Label>
                                 <div required className="CheckBox" innerref={this.state.auth}> 
@@ -314,7 +304,7 @@ class IncidentForm extends Component
                                 </div>
                                 </FormGroup>
                             </Col>
-                            <Col sm={3}>
+                            <Col sm={8}>
                             <FormGroup>
                             <Label for="exampleSelect">Προτεραιότητα* </Label>
                             <Input type="select" name="select" innerRef={this.state.priority} id="exampleSelect" >
@@ -324,38 +314,42 @@ class IncidentForm extends Component
                             </Input>
                             </FormGroup>
                             </Col>
-
-                            <Col sm={6}>
-                            <FormGroup>
-                            <Label for="exampleTypeOfIncident">Είδος συμβάντος</Label>
-                            <Multiselect dropDown data={['Φόνος','Ληστεία','Διάρρηξη','Τροχαίο']} ref={this.state.incident_type} />
-                            </FormGroup>  
-
-                            <Label for="exampleDescription">Περιγραφή</Label>
-                            <FormGroup>
-                                <textarea id="descriptionBox" type="text" value={this.state.description} onChange={this.handleTextArea} name="description" placeholder=""/>
-                            </FormGroup>
-                            </Col>
                         </Row>
-
-                        <Row>
-                            <Col>
-                            <Col>
                             <FormGroup>
                             <button id="close-image">
                             <img src={alert1} alt='' style={{ width: '230px'}} onClick= {(formflag === true) ? this.handleSubmit : console.log(" ")} />
                             </button>
                             </FormGroup>
-                            </Col>
-                            </Col>
-
+                    </Container>
+                    </Col>
+                    <Col xs="6" style={{paddingRight: '30px'}}>
+                    <Container>
+                            <FormGroup>
+                            <Label for="exampleTelephone">Τηλέφωνο Αναφέροντα</Label>
+                            <Input type="tel" name="telephone" innerRef={this.state.call_num} id="exampleTelephone"/>
+                            </FormGroup>
+                            <FormGroup>
+                            <Label for="exampleFullname">Ονοματεπώνυμο Αναφέροντα</Label>
+                            <Input type="text" name="fullname" innerRef={this.state.call_name} id="exampleFullname"/>
+                            </FormGroup>
+                            <FormGroup>
+                            <Label for="exampleTypeOfIncident">Είδος συμβάντος</Label>
+                            <Multiselect dropDown data={['Φόνος','Ληστεία','Διάρρηξη','Τροχαίο']} ref={this.state.incident_type} />
+                            </FormGroup>
+                            <Label for="exampleDescription">Περιγραφή</Label>
+                            <FormGroup>
+                                <textarea id="descriptionBox" type="text" value={this.state.description} onChange={this.handleTextArea} name="description" placeholder=""/>
+                            </FormGroup>
+                        <Row>
                             <FormGroup>
                             <Col>
                             <Button disabled = {!formflag} onClick={this.handleSubmitmoreInfo}>Ολοκλήρωση</Button>
                             </Col>
                             </FormGroup>
                         </Row>
-                </Container>
+                    </Container>
+                    </Col>
+                    </Row>
             
                 <br/>
                 {this.state.successSubmit === true ? (
