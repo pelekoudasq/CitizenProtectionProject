@@ -1,0 +1,28 @@
+{
+  "name": "@telo/control-center",
+  "version": "1.0.0",
+  "description": "A Control Center CLI",
+  "main": "src/index.js",
+  "bin": {
+    "@telo/control-center": "bin/control-center",
+    "control-center": "bin/control-center"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "cli",
+    "control-center"
+  ],
+  "author": "Koumarela and Pelekoudas",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.19.2",
+    "commander": "^5.1.0",
+    "esm": "^3.2.25",
+    "https": "^1.0.0"
+  }
+}

@@ -17,7 +17,7 @@ router.get('/health-check', function(req, res, next) {
 		if (err || !health.ok){
 			res.status(500).json(err);
 		}
-		res.json({health : 'ok'})
+		res.json({ status : 'ok' })
 	}) 
 })
 
