@@ -46,12 +46,21 @@ router.get('/', function(req, res, next) {
 //get user by id
 router.get('/:id', function(req, res, next) {
 	console.log('users: get by id');
+	const format = req.query.format
 	db.Users.find({ _id: mongojs.ObjectID(req.params.id) }, function(err, user) {
 		if (err) {
+			if (format && format === "xml")
+				res.send(json2xml(err))
+			else
+				res.json(err)
 			res.send(err);
 			return;
 		}
-		res.json(user);
+		if (format && format === "xml"){
+			res.send(json2xml(user))
+		}
+		else
+			res.json(user)
 	})
 })
 
