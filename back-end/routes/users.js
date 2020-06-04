@@ -1,7 +1,7 @@
 // import packages
 const express = require('express');
 const mongojs = require('mongojs');
-
+const json2xml = require('json2xml');
 
 // import files
 const config = require('../config.json');
@@ -20,17 +20,26 @@ async function getById(id) {
 	});
 }
 
-// routed
+// routes
 
 // get all users
-router.get('/all', function(req, res, next) {
+router.get('/', function(req, res, next) {
 	console.log('users: get all');
+	const format = req.query.format
 	db.Users.find(function(err, users) {
 		if (err) {
+			if (format && format === "xml")
+				res.send(json2xml(err))
+			else
+				res.json(err)
 			res.send(err);
 			return;
 		}
-		res.json(users);
+		if (format && format === "xml"){
+			res.send(json2xml(users))
+		}
+		else
+			res.json(users)
 	})
 })
 
