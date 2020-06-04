@@ -71,7 +71,7 @@ export function cli(args) {
 					return console.log('Token not found. Login first', err);
 				}
 				const token = JSON.parse(data).token;
-				axios.get(`${apiUrl}/admin/users/all`, { httpsAgent: agent, headers: { 'Authorization': `Bearer ${token}` } })
+				axios.get(`${apiUrl}/admin/users`, { httpsAgent: agent, headers: { 'Authorization': `Bearer ${token}` } })
 					.then(function (response) {
 						// handle success
 						console.log(response.data);
