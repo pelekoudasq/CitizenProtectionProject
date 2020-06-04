@@ -53,9 +53,18 @@ npm install -g
 node server
 ```
 
-Εκτέλεση όλων
--------------
+Εκτέλεση front & back
+---------------------
 ```bash
 cd back-end
 npm run dev
 ```
+
+Εγκατάσταση και εκτέλεση cli
+----------------------------
+```bash
+cd cli-app/control-center
+npm install -g
+npm link
+control-center
+```	
