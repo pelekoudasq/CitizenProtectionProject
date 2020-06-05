@@ -1,9 +1,13 @@
 package com.example.theophilos.citizenprotectionproject;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -26,6 +30,44 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class MainActivity extends AppCompatActivity {
 
     private TextView textViewResult;
+
+
+    public void login( View view ){
+        final Intent intent = new Intent(getApplicationContext(),IncidentsActivity.class);
+
+        EditText userText = (EditText) findViewById(R.id.userNameTextField);
+        EditText passText = (EditText) findViewById(R.id.passwordTextField);
+        UserInfo userInfo = new UserInfo(userText.getText().toString(),passText.getText().toString());
+
+        Toast.makeText(this, userText.getText().toString(), Toast.LENGTH_SHORT).show();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://10.0.2.2:9000")
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(getUnsafeOkHttpClient().build())
+                .build();
+
+        JsonApi jsonApi = retrofit.create(JsonApi.class);
+        Call<UserInfo> call = jsonApi.login(userInfo);
+
+        call.enqueue(new Callback<UserInfo>() {
+            @Override
+            public void onResponse(Call<UserInfo> call, Response<UserInfo> response) {
+                if(!response.isSuccessful()) {
+                    textViewResult.setText("Code: " + response.code());
+                    return;
+                }
+                startActivity(intent);
+
+            }
+
+            @Override
+            public void onFailure(Call<UserInfo> call, Throwable t) {
+                textViewResult.setText(t.getMessage());
+            }
+        });
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
 
                 HealthCheck check = response.body();
 
-                textViewResult.setText(check.getStatus());
+//                textViewResult.setText(check.getStatus());
 
 
             }
