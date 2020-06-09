@@ -56,9 +56,8 @@ router.get('/:id', function(req, res, next) {
 			res.send(err);
 			return;
 		}
-		if (format && format === "xml"){
+		if (format && format === "xml")
 			res.send(json2xml(user))
-		}
 		else
 			res.json(user)
 	})
@@ -72,9 +71,8 @@ router.get('/requests/:user_id', function(req, res, next) {
 			res.send(err);
 			return;
 		}
-		if (user.userType == 2) {
+		if (user.userType == 2)
 			res.json({ incidentRequests: user.incidentRequests});
-		}
 		else
 			res.status(404).json({ error: 'User is not an officer in duty' });
 	})

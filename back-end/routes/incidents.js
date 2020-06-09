@@ -14,44 +14,64 @@ const db = mongojs(config.dburi);
 //routes
 
 //get all incidents
-router.get('/all', function(req, res, next) {
+router.get('/', function(req, res, next) {
 	console.log('incidents: get all');
+	const format = req.query.format;
 	db.Incidents.find(function(err, incidents) {
 		if (err) {
-			res.send(err);
+			if (format && format === "xml")
+				res.send(json2xml(err))
+			else
+				res.send(err);
 			return;
 		}
-		res.json(incidents);
+		if (format && format === "xml")
+			res.send(json2xml(incidents))
+		else
+			res.json(incidents)
 	})
 })
 
 //get incident by id
 router.get('/:id', function(req, res, next) {
 	console.log('incidents: get by id');
+	const format = req.query.format;
 	db.Incidents.findOne({ _id: mongojs.ObjectID(req.params.id) }, function(err, incident) {
 		if (err) {
-			res.send(err);
+			if (format && format === "xml")
+				res.send(json2xml(err))
+			else
+				res.send(err);
 			return;
 		}
-		res.json(incident);
+		if (format && format === "xml")
+			res.send(json2xml(incident));
+		else
+			res.json(incident)
 	})
 })
 
 //get incident by priority
 router.get('/priority/:priority', function(req, res, next) {
 	console.log('incidents: get by priority');
-	db.Incidents.findOne({ priority: req.params.priority }, function(err, incident) {
+	db.Incidents.find({ priority: req.params.priority }, function(err, incidents) {
 		if (err) {
-			res.send(err);
+			if (format && format === "xml")
+				res.send(json2xml(err))
+			else
+				res.send(err);
 			return;
 		}
-		res.json(incident);
+		if (format && format === "xml")
+			res.send(json2xml(incidents))
+		else
+			res.json(incidents)
 	})
 })
 
 
 //create new incident
-router.post('/new', function(req, res, next) {
+router.post('/', function(req, res, next) {
 	console.log('incidents: create new incident');
 	const incParam = req.body;
 	console.log(incParam);

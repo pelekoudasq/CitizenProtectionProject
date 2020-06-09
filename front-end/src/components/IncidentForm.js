@@ -126,7 +126,7 @@ class IncidentForm extends Component
 
         requestOptions.headers['Content-Type'] = 'application/json'
 
-        let request = `${apiUrl}/incidents/new`
+        let request = `${apiUrl}/incidents/`
 
 
         fetch(request, requestOptions)
