@@ -53,12 +53,12 @@ router.post('/', function(req, res, next){
 
 	console.log('api: add user');
 	const format = req.query.format;
-	const username = req.query.username;
-	const password = req.query.password;
-	const firstName = req.query.firstName;
-	const lastName = req.query.lastName;
-	const role = req.query.role;
-	const agency = req.query.agency;
+	const username = req.body.username;
+	const password = req.body.password;
+	const firstName = req.body.firstName;
+	const lastName = req.body.lastName;
+	const role = req.body.role;
+	const agency = req.body.agency;
 	db.Users.findOne({ username: username }, function(err, user){
 		if (user) {
 			res.status(400).json({ error: 'This username is already in use' });
@@ -95,12 +95,12 @@ router.put('/:id', function(req, res, next) {
 
 	console.log('api: update user');
 	const format = req.query.format;
-	var username = req.query.username;
-	var password = req.query.password;
-	var firstName = req.query.firstName;
-	var lastName = req.query.lastName;
-	var role = req.query.role;
-	var agency = req.query.agency;
+	var username = req.body.username;
+	var password = req.body.password;
+	var firstName = req.body.firstName;
+	var lastName = req.body.lastName;
+	var role = req.body.role;
+	var agency = req.body.agency;
 	db.Users.findOne({ _id: mongojs.ObjectID(req.params.id)  }, function(err, user){
 		if (err) {
 			if (format && format === "xml")
@@ -114,7 +114,7 @@ router.put('/:id', function(req, res, next) {
 		if (!lastName) { lastName = user.name.lastName; }
 		if (!role) { role = user.userType; }
 		if (!agency && user.details) { agency = user.details.authorityType; }
-        
+
         // keep prev details
         var departmentId, area, lat, long;
         if (user.details) {

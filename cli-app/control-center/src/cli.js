@@ -5,7 +5,7 @@ const fs = require('fs');
 
 const apiUrl = 'https://localhost:9000/control-center/api';
 const agent = new https.Agent({
-	rejectUnauthorized: false
+	rejectUnauthorized: false,
 });
 
 export function cli(args) {
@@ -33,7 +33,7 @@ export function cli(args) {
 					return console.log('Removing token failed:', err);
 				}
 				console.log('Logout successful. Token removed');
-			}); 
+			});
 		});
 
 	program
@@ -53,7 +53,7 @@ export function cli(args) {
 							return console.log('Writing token failed:', err);
 						}
 						console.log('Login successful. Token saved');
-					}); 
+					});
 				})
 				.catch(function (error) {
 					console.log('Login failed: ', error.response.data.error);
@@ -63,15 +63,49 @@ export function cli(args) {
 	program
 		.command('list-users')
 		.option('--format <value>', 'Give format', 'json')
-		.option('--start')
-		.option('--count')
+		.option('--start <value>')
+		.option('--count <value>')
 		.action(function (command) {
 			fs.readFile('/tmp/user.json', function(err, data) {
 				if (err) {
 					return console.log('Token not found. Login first', err);
 				}
 				const token = JSON.parse(data).token;
-				axios.get(`${apiUrl}/admin/users?format=${command.format}`, { httpsAgent: agent, headers: { 'Authorization': `Bearer ${token}` } })
+				axios.get(`${apiUrl}/admin/users?format=${command.format}&start=${command.start}&count=${command.count}`, { httpsAgent: agent, headers: { 'Authorization': `Bearer ${token}` } })
+					.then(function (response) {
+						// handle success
+						console.log(response.data);
+					})
+					.catch(function (error) {
+						// handle error
+						console.log('{ status: \'error\' }');
+					})
+			})
+		});
+
+	program
+		.command('add-user')
+		.option('--format <value>', 'Give format', 'json')
+		.requiredOption('--username <value>', 'User\'s username')
+		.requiredOption('--password <value>', 'User\'s password')
+		.requiredOption('--firstName <value>', 'User\'s firstname')
+		.requiredOption('--lastName <value>', 'User\'s lastname')
+		.requiredOption('--role <value>', 'User\'s role, type:\n0 for Κέντρο Ελέγχου\n1 for Υπάλληλος Τμήματος\n2 for Προσωπικό Τμήματος\n3 for Γενική Διοίκηση\n4 for Admin\n5 for Διοίκηση Φορέα\n')
+		.requiredOption('--agency <value>', 'User\'s agency, type:\n0 for ΕΚΑΒ\n1 for Αστυνομία\n2 for Πυροσβεστική\n3 for Λιμενικό\n')
+		.action(function (command) {
+			fs.readFile('/tmp/user.json', function(err, data) {
+				if (err) {
+					return console.log('Token not found. Login first', err);
+				}
+				const token = JSON.parse(data).token;
+				axios.post(`${apiUrl}/admin/users?format=${command.format}`, {
+					username: command.username,
+					password: command.password,
+					firstName: command.firstName,
+					lastName: command.lastName,
+					role: command.role,
+					agency: command.agency
+				}, { httpsAgent: agent, headers: { 'Authorization': `Bearer ${token}` } })
 					.then(function (response) {
 						// handle success
 						console.log(response.data);
@@ -87,12 +121,6 @@ export function cli(args) {
 		.command('get-user')
 		.option('--format <value>', 'Give format', 'json')
 		.requiredOption('--id <value>', 'User\'s id')
-		// .requiredOption('--username <value>', 'User\'s username')
-		// .requiredOption('--password <value>', 'User\'s password')
-		// .requiredOption('--firstName <value>', 'User\'s firstname')
-		// .requiredOption('--lastName <value>', 'User\'s lastname')
-		// .requiredOption('--role <value>', 'User\'s role')
-		// .requiredOption('--agency <value>', 'User\'s agency')
 		.action(function (command) {
 			fs.readFile('/tmp/user.json', function(err, data) {
 				if (err) {
@@ -111,6 +139,62 @@ export function cli(args) {
 			})
 		});
 
+		program
+			.command('update-user')
+			.option('--format <value>', 'Give format', 'json')
+			.requiredOption('--id <value>', 'User\'s id')
+			.option('--username <value>', 'User\'s username', null)
+			.option('--password <value>', 'User\'s password', null)
+			.option('--firstName <value>', 'User\'s firstname', null)
+			.option('--lastName <value>', 'User\'s lastname', null)
+			.option('--role <value>', 'User\'s role, type:\n0 for Κέντρο Ελέγχου\n1 for Υπάλληλος Τμήματος\n2 for Προσωπικό Τμήματος\n3 for Γενική Διοίκηση\n4 for Admin\n5 for Διοίκηση Φορέα\n')
+			.option('--agency <value>', 'User\'s agency, type:\n0 for ΕΚΑΒ\n1 for Αστυνομία\n2 for Πυροσβεστική\n3 for Λιμενικό\n')
+			.action(function (command) {
+				fs.readFile('/tmp/user.json', function(err, data) {
+					if (err) {
+						return console.log('Token not found. Login first', err);
+					}
+					const token = JSON.parse(data).token;
+					axios.put(`${apiUrl}/admin/users/${command.id}?format=${command.format}`, {
+						username: command.username,
+						password: command.password,
+						firstName: command.firstName,
+						lastName: command.lastName,
+						role: command.role,
+						agency: command.agency
+					}, { httpsAgent: agent, headers: { 'Authorization': `Bearer ${token}` } })
+						.then(function (response) {
+							// handle success
+							console.log(response.data);
+						})
+						.catch(function (error) {
+							// handle error
+							console.log('{ status: \'error\' }', error);
+						})
+				})
+			});
+
+			program
+				.command('delete-user')
+				.option('--format <value>', 'Give format', 'json')
+				.requiredOption('--id <value>', 'User\'s id')
+				.action(function (command) {
+					fs.readFile('/tmp/user.json', function(err, data) {
+						if (err) {
+							return console.log('Token not found. Login first', err);
+						}
+						const token = JSON.parse(data).token;
+						axios.delete(`${apiUrl}/admin/users/${command.id}?format=${command.format}`, { httpsAgent: agent, headers: { 'Authorization': `Bearer ${token}` } })
+							.then(function (response) {
+								// handle success
+								console.log(response.data);
+							})
+							.catch(function (error) {
+								// handle error
+								console.log('{ status: \'error\' }');
+							})
+					})
+				});
 
 	program.parse(process.argv);
 }
