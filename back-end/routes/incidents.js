@@ -2,6 +2,7 @@
 const express = require('express');
 const mongojs = require('mongojs');
 const opencage = require('opencage-api-client');
+const json2xml = require('json2xml');
 
 
 // import files
@@ -17,7 +18,9 @@ const db = mongojs(config.dburi);
 router.get('/', function(req, res, next) {
 	console.log('incidents: get all');
 	const format = req.query.format;
-	db.Incidents.find(function(err, incidents) {
+	const start = parseInt(req.query.start);
+	const count = parseInt(req.query.count);
+	db.Incidents.find({}).limit(count).skip(start, function(err, incidents) {
 		if (err) {
 			if (format && format === "xml")
 				res.send(json2xml(err))
@@ -29,8 +32,9 @@ router.get('/', function(req, res, next) {
 			res.send(json2xml(incidents))
 		else
 			res.json(incidents)
-	})
-})
+	});
+});
+
 
 //get incident by id
 router.get('/:id', function(req, res, next) {
@@ -48,8 +52,9 @@ router.get('/:id', function(req, res, next) {
 			res.send(json2xml(incident));
 		else
 			res.json(incident)
-	})
-})
+	});
+});
+
 
 //get incident by priority
 router.get('/priority/:priority', function(req, res, next) {
@@ -66,11 +71,11 @@ router.get('/priority/:priority', function(req, res, next) {
 			res.send(json2xml(incidents))
 		else
 			res.json(incidents)
-	})
-})
+	});
+});
 
 
-//create new incident
+// POST new incident
 router.post('/', function(req, res, next) {
 	console.log('incidents: create new incident');
 	const incParam = req.body;
@@ -138,7 +143,8 @@ router.post('/', function(req, res, next) {
 		console.log('error: ', error.message);
 	});
 	
-})
+});
+
 
 //update incident
 router.post('/update/:id', function(req, res, next) {
@@ -162,7 +168,8 @@ router.post('/update/:id', function(req, res, next) {
 		}
 		res.json(incident);
 	});
-})
+});
+
 
 // accept request
 router.post('/accept', function(req, res, next) {
