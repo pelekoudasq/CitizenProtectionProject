@@ -6,7 +6,7 @@
   "scripts": {
     "start": "nodemon server.js",
     "dev": "concurrently \" nodemon server \" \" npm --prefix ../front-end start \" ",
-    "test": "jest"
+    "test": "jest --forceExit"
   },
   "repository": {
     "type": "git",

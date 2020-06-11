@@ -15,7 +15,6 @@ const router = express.Router();
 // get system health
 router.get('/health-check', function(req, res, next) {
 
-	console.log('system health-check');
 	const format = req.query.format
 	db.runCommand({ping: 1}, function (err, health) {
 		if (err || !health.ok)
@@ -30,7 +29,6 @@ router.get('/health-check', function(req, res, next) {
 // reset system
 router.get('/reset', function(req, res, next) {
 
-	console.log('system reseting..');
 	const format = req.query.format;
 	if (format && format === "xml")
 		res.send(json2xml({ status : 'OK' }))
@@ -41,7 +39,6 @@ router.get('/reset', function(req, res, next) {
 // logout
 router.get('/logout', function(req, res, next) {
 
-	console.log('logout');
 	const format = req.query.format;
 	if (format && format === "xml")
 		res.send(json2xml({ logout : 'completed' }))
@@ -68,8 +65,7 @@ async function comparePass(user, password) {
 
 // login user
 router.post('/login', function(req, res, next) {
-	
-	console.log('login');
+
 	const format = req.query.format
 	db.Users.findOne({ username: req.body.username }, function(err, user) {
 		comparePass(user, req.body.password)

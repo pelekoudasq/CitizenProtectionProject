@@ -27,7 +27,6 @@ async function getById(id) {
 // GET all Users
 router.get('/', function(req, res, next) {
 
-	console.log('users: get all');
 	const format = req.query.format;
 	const start = parseInt(req.query.start);
 	const count = parseInt(req.query.count);
@@ -51,7 +50,6 @@ router.get('/', function(req, res, next) {
 // Add new user
 router.post('/', function(req, res, next){
 
-	console.log('api: add user');
 	const format = req.query.format;
 	const username = req.body.username;
 	const password = req.body.password;
@@ -93,7 +91,6 @@ router.post('/', function(req, res, next){
 // UPDATE user
 router.put('/:id', function(req, res, next) {
 
-	console.log('api: update user');
 	const format = req.query.format;
 	var username = req.body.username;
 	var password = req.body.password;
@@ -178,7 +175,6 @@ router.put('/:id', function(req, res, next) {
 // DELETE user
 router.delete('/:id', function(req, res, next) {
 
-	console.log('users: delete by id');
 	const format = req.query.format;
 	db.Users.remove({ _id: mongojs.ObjectID(req.params.id) }, function(err, result) {
 		if (err) {
@@ -199,7 +195,6 @@ router.delete('/:id', function(req, res, next) {
 // GET user by id
 router.get('/:id', function(req, res, next) {
 
-	console.log('users: get by id');
 	const format = req.query.format;
 	db.Users.find({ _id: mongojs.ObjectID(req.params.id) }, function(err, user) {
 		if (err) {
