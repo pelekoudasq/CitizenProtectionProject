@@ -12,7 +12,7 @@ import { authenticationService } from '../services/authentication.service';
 class LoginForm extends  Component
 {
 
-    constructor(props, context) 
+    constructor(props, context)
     {
         super(props, context);
         this.state = {
@@ -21,7 +21,7 @@ class LoginForm extends  Component
         };
     }
 
-    
+
 	static contextType = UserContext;
     username = React.createRef();
     password = React.createRef();
@@ -46,7 +46,10 @@ class LoginForm extends  Component
                     localStorage.setItem('token', user.token);
                     localStorage.setItem('username', u);
                     //console.log("mpainei edw: ", this.state.flag)
-                    this.props.history.push('/');
+                    if(user.userType === 3)
+                        this.props.history.push('/statistics');
+                    else
+                        this.props.history.push('/');
                 },
                 error => {
                     this.setState({flag: false});
@@ -78,7 +81,7 @@ class LoginForm extends  Component
 			      		<Label>Κωδικός Πρόσβασης</Label>
 			        	<Input 	type="password"
                                 innerRef={this.password}
-                                required   
+                                required
 			        	/>
 			     	</FormGroup>
 			    	<Button type="submit" className="loginbutton">
@@ -86,7 +89,7 @@ class LoginForm extends  Component
                         {!this.state.isLoading && <span>Σύνδεση</span>}
 			    	</Button>
                     {!this.state.flag &&
-                        <FormGroup>         
+                        <FormGroup>
                             <div className="mt-2 alert alert-danger">
                                 <strong>To Όνομα Χρήστη ή ο Κωδικός Πρόσβασης είναι λάθος</strong>
                             </div>

@@ -35,8 +35,11 @@ request. A token can be acquired from the Login view above.
 Each endpoint manipulates or displays information related to the `Users` collection:
 
 
-* Get all Users : `GET /control-center/api/admin/users/`
-* Get single User : `GET /control-center/api/admin/users/${USER_ID}`
+* Get all Users : `GET /control-center/api/admin/users/` (Query Parameters: `start` and `count` for data pagination)
+* Get User : `GET /control-center/api/admin/users/${USER_ID}`
+* Add User : `POST /control-center/api/admin/users`
+* Update User : `PUT /control-center/api/admin/users/${USER_ID}`
+* Delete User : `DELETE /control-center/api/admin/users/${USER_ID}`
 * Get Incident requests for User : `GET /control-center/api/admin/users/requests/${USER_ID}'`
 * Get accepted Incidents from User : `GET /control-center/api/admin/users/accepted/${USER_ID}'`
 
@@ -44,9 +47,9 @@ Each endpoint manipulates or displays information related to the `Users` collect
 
 Each endpoint manipulates or displays information related to the `Incidents` collection:
 
-* Get all Incidents : `GET /control-center/api/incidents/all`
+* Get all Incidents : `GET /control-center/api/incidents/` (Query Parameters: `start` and `count` for data pagination)
+* Create new Incident : `POST /control-center/api/incidents/`
 * Get single Incident : `GET /control-center/api/incidents/${INCIDENT_ID}`
 * Get Incidents of Priority : `GET /control-center/api/incidents/${PRIORITY}`
-* Create new Incident : `POST /control-center/api/incidents/new`
 * Update Incident: `POST /control-center/api/incidents/update/${INCIDENT_ID}`
 * Accept Incident: `POST /control-center/api/incidents/accept`

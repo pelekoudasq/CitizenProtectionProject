@@ -36,6 +36,8 @@ app.use('/control-center/api/admin/users', users.router);
 app.use('/control-center/api/incidents', incidents);
 app.use('/control-center/api/', base);
 
-https.createServer(options, app).listen(port, function(){
+server = https.createServer(options, app).listen(port, function(){
 	console.log(`Server started on port ${port}`);
 });
+
+module.exports = server;

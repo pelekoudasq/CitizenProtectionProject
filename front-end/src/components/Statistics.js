@@ -1,11 +1,7 @@
-import React, { Component/*, PureComponent */} from 'react'
+import React, { Component, Container, Col, Row } from 'react'
 import SideMenu from './SideMenu'
-// import Incident from './Incident'
 import HeatMap from './HeatMap'
 import { withRouter } from 'react-router'
-// import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons'
-// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-// import { Button }from 'reactstrap'
 import { LineChart, AreaChart, Area, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 
 import apiUrl from '../services/apiUrl'
@@ -32,23 +28,23 @@ class Statistics extends Component
 			isloading: false
 
 		}
-	}	
+	}
 
-	authHeader() 
+	authHeader()
 	{
 	    // return authorization header with jwt token
 	    const token = localStorage.getItem('token');
 	    if (token) {
 	        return { Authorization: `Bearer ${token}` };
-	    } 
-	    else 
+	    }
+	    else
 	    {
 	        return {};
 	    }
 	}
 
 	componentDidMount()
-	{	
+	{
 		let requestOptions = {
             method: 'GET',
             headers: this.authHeader(),
@@ -65,12 +61,12 @@ class Statistics extends Component
             		incidents: response,
             	})
             	//console.log(this.state.incidents)
-            	
+
             	this.state.incidents.map(incident => { /*Loop through every row of the jsonfile and get the attributes*/
 						/*define the new coordinate */
         				coordinate = {}
 						coordinate['lat'] = incident.location['latitude']
-						coordinate['lng'] = incident.location['longtitude']    
+						coordinate['lng'] = incident.location['longtitude']
 						coordinate['priority'] = incident.priority
 
 						/* Push it to the array of coordinates */
@@ -79,7 +75,7 @@ class Statistics extends Component
                 this.setState({
             		coordinates: coordinates
             	})
-        	});	
+        	});
 	}
 
 
@@ -88,14 +84,14 @@ class Statistics extends Component
 		// let incidents = this.state.incidents;
 		return(
 			<div className = "hide-scroll">
-				<SideMenu /> 
+				<SideMenu />
 		        <h5 className = "head_ltitle">Στατιστικά</h5>
 		        <h5 className = "head_rtitle">Χάρτης Συμβάντων</h5>
         		<div className = "hrz_line"></div>
         		<br/><br/><br/>
 
-				<div className = "container-fluid" style={{ marginLeft: '7.2%', marginRight:'0px', width:'80%' }}>	
-					<HeatMap coordinates = {this.state.coordinates} /> 
+				<div className = "container-fluid" style={{ marginLeft: '7.2%', marginRight:'0px', width:'80%' }}>
+					<HeatMap coordinates = {this.state.coordinates} />
 					  <LineChart width={700} height={300} data={data} margin={{ top: 5, right: 0, left: 0, bottom: 5}}>
 					    <CartesianGrid strokeDasharray="3 3" />
 					    <XAxis dataKey="name" />
@@ -126,8 +122,8 @@ class Statistics extends Component
 					</AreaChart>
 
 				</div>
-				
-				
+
+
 
                 </div>
 		)
