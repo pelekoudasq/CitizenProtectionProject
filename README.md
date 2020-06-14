@@ -15,6 +15,7 @@
 ------------------
 * [Software Requirements Specification](./docs/SRS.md)
 * [Wireframes](./docs/UI.md)
+* [UML Diagrams](./docs/uml)
 
 Απαιτήσεις συστήματος
 ---------------------
