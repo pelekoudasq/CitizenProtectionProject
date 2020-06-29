@@ -6,6 +6,7 @@ import medium from '../icons/medium.png'
 import Modal from 'react-modal';
 import { Button }from 'reactstrap'
 import { withRouter } from 'react-router';
+import moment from 'moment'
 
 import apiUrl from '../services/apiUrl'
 
@@ -122,7 +123,7 @@ class Incident extends Component
 							<div  className="col-lg-2 mr-1">
 								<img src={icon} alt= '' />
 							</div>
-							<div className="col-md-4 ml-1">{this.props.incident.date}</div>
+							<div className="col-md-4 ml-1">{moment(this.props.incident.date).format('DD-MM')}  {moment(this.props.incident.date).format('HH:mm')}</div>
 							<div className="col-sm-4 ml-1">{this.props.incident.location.address}</div>
 							<div className="col">{this.props.incident.title}</div>
 						</div>
