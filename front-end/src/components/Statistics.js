@@ -1,4 +1,4 @@
-import React, { Component, Container, Col, Row } from 'react'
+import React, { Component/*, Container, Col, Row*/ } from 'react'
 import SideMenu from './SideMenu'
 import HeatMap from './HeatMap'
 import { withRouter } from 'react-router'
@@ -62,7 +62,7 @@ class Statistics extends Component
             	})
             	//console.log(this.state.incidents)
 
-            	this.state.incidents.map(incident => { /*Loop through every row of the jsonfile and get the attributes*/
+            	this.state.incidents.forEach(incident => { /*Loop through every row of the jsonfile and get the attributes*/
 						/*define the new coordinate */
         				coordinate = {}
 						coordinate['lat'] = incident.location['latitude']

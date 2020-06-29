@@ -5,7 +5,7 @@ import HeatmapLayer from "react-google-maps/lib/components/visualization/Heatmap
 
 function HeatMap(props)
 {
-	var points=new Array();
+	var points = [];
 	for (var i=0; i < props.coordinates.length; i++) {
 		points[i] = new window.google.maps.LatLng(props.coordinates[i].lat, props.coordinates[i].lng);
 	}

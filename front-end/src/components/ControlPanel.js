@@ -54,7 +54,7 @@ class ControlPanel extends Component
         let coordinate = {}; //object of coordinates
         let coordinates = [] //array of objects of coordinates
 
-		fetch(`${apiUrl}/incidents/all`, requestOptions)
+		fetch(`${apiUrl}/incidents`, requestOptions)
             .then(response => response.json())
             .then(response => {
 
@@ -63,7 +63,7 @@ class ControlPanel extends Component
             	})
             	//console.log(this.state.incidents)
             	
-            	this.state.incidents.map(incident => { /*Loop through every row of the jsonfile and get the attributes*/
+            	this.state.incidents.forEach(incident => { /*Loop through every row of the jsonfile and get the attributes*/
 						/*define the new coordinate */
         				coordinate = {}
 						coordinate['lat'] = incident.location['latitude']

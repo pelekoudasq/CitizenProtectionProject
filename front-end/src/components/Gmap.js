@@ -22,7 +22,7 @@ function GMap(props)
     {
         googleMap = initGoogleMap();
         let bounds = new window.google.maps.LatLngBounds();
-        markerList.map((coordinate, index) => {
+        markerList.forEach((coordinate, index) => {
           const marker = createMarker(coordinate);
           bounds.extend(marker.position);
         });
