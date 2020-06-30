@@ -8,6 +8,7 @@ import LoginForm from './components/LoginForm'
 import Statistics from './components/Statistics'
 import NotFound from './components/NotFound'
 import { withRouter } from 'react-router'
+import ViewIncident from './components/ViewIncident'
 
 
 class App extends Component
@@ -51,7 +52,7 @@ class App extends Component
               <Route exact path='/' component={this.renderProtectedComponent(ControlPanel)} history={this.props.history} />
               <Route path='/login' component={LoginForm} />
               <Route path='/incidents' component={this.renderProtectedComponent(IncidentsHistory)} />
-              <Route path= '/incident/:id' component={this.renderProtectedComponent(IncidentsHistory)} />
+              <Route path= '/incident/:id' component={this.renderProtectedComponent(ViewIncident)} />
               <Route path='/new_incident' component={this.renderProtectedComponent(IncidentForm)} />
               <Route path='/statistics' component={this.renderProtectedComponent(Statistics)} />
               <Route component={NotFound} />
