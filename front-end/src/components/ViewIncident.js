@@ -5,6 +5,7 @@ import { faArrowLeft, faEdit } from '@fortawesome/free-solid-svg-icons'
 import { Link } from 'react-router-dom'
 import '../css/controlpanel.css'
 import '../css/incidentform.css'
+import '../css/viewincident.css'
 import alert1 from '../icons/alert.png'
 import SideMenu from './SideMenu'
 import Incident from './Incident'
@@ -274,6 +275,30 @@ class ViewIncident extends Component
         })
     };
 
+    getComments()
+    {
+        let comments = [];
+        if (this.state.incident.comments){
+            var i;
+            for (i = 0; i < this.state.incident.comments.length; i++) {
+                comments[i] = <li className='list-group-item mt-2 pb-0 u-shadow-v18 g-bg-secondary rounded'>
+                    <div className="font-weight-bold" style={{opacity:'0.6' }}>{this.state.incident.comments[i].user}</div>
+                    <div className="text-wrap">
+                        {this.state.incident.comments[i].text}
+                    </div>
+                    
+                    <blockquote className="blockquote text-right">
+                        <footer className="blackquote-footer g-color-gray-dark-v4 g-font-size-12">{this.state.incident.comments[i].date}</footer>
+                    </blockquote>
+                </li>;
+            }
+        }
+        else {
+            console.log('oops')
+        }
+        return comments
+    }
+
 
 	render()
 	{
@@ -283,7 +308,6 @@ class ViewIncident extends Component
             formflag =  true
 
         let incident = this.state.incident
-    
 		return(
 			<div className = "hide-scroll">
 				<SideMenu /> 
@@ -305,10 +329,10 @@ class ViewIncident extends Component
                 ) : (
                    <p> </p>
                 )}
-
-                <Form  style={{ marginLeft: '15%', marginRight: '100px', marginTop: '20px', width: '70%', position: 'absolute'}}>
+                <Row>
+                <Form style={{ left: '10%', marginTop: '2%', position: 'absolute'}}>
                     <Row>
-                        <Col sm={5}>
+                        <Col sm={7}>
                             {!this.state.editing ? (
                                 <table>
                                     <tbody>
@@ -427,16 +451,17 @@ class ViewIncident extends Component
                             </FormGroup>
                         </Col>
                     </Row>
-
-                    <Container className="containerBox" style ={{textAlign: 'flex'}}>
                     
-                        {/*<FormGroup>
+
+                    {/* <Container className="containerBox" style ={{textAlign: 'flex'}}>
+                    
+                        <FormGroup>
                             <Col>
                             <Button disabled = {!formflag} onClick={this.handleSubmitmoreInfo}>Ολοκλήρωση</Button>
                             </Col>
                             </FormGroup>
-                        </Row> */}
-                    </Container>
+                        </Row> 
+                    </Container> */}
             
                 <br/>
                 {this.state.successSubmit === true ? (
@@ -447,13 +472,27 @@ class ViewIncident extends Component
                     <p> </p>
                 )}  
                 </Form>
-
-                {/* <h5 className = "head_ltitleInfo">Αναφορές</h5>
-        		<div className = "hrz_lineBack"></div> */}
+                </Row>
+                <Row style={{ left: '9%', marginTop: '28%', width: '70%', position: 'relative'}}>
+                    <h6 className = "head_ltitleInfo">Αναφορές</h6>
+                    <div className = "hrz_lineBack"></div>
+                    <Col sm={6} className="mt-1" >
+                        <ul className='list-group overflow-auto'>
+                            {this.getComments()}
+                        </ul>
+                    </Col>
+                    <Col sm={1} className="vrtcl_lineBack mt-2 p-0"></Col>
+                    <Col sm={5} className="mt-2">
+                        <Form>
+                            <FormGroup className="m-1">
+                                <textarea className="py-0" id="descriptionBox" type="text"  onChange={this.handleTextArea} name="description" placeholder="Προσθέστε σχόλιο..."/>
+                            </FormGroup>
+                            <Button className="float-right" style={{ backgroundColor: "#0063bf", borderColor: "#0063bf" }} disabled = {!formflag} onClick={this.handleSubmitmoreInfo}>Προσθήκη</Button>
+                        </Form>
+                    </Col>
+                   
+                </Row>
                 
-
-
-        	
             </div>
 		)
 	}
