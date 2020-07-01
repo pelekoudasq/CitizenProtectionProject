@@ -32,15 +32,10 @@ class App extends Component
         let token = localStorage.getItem("token")
         
         // if (this.state.token !== null) {
-        if (token !== null) {
-            // console.log("ime sti main if ",token)
+        if (token !== null) 
             return props => <ProtectedComponent {...props} />;
-        }
-
-        else {
-            // console.log("ime sti main else ",token)
-            return props => <Redirect to='/login' />;
-        }
+        else 
+            return props => <Redirect to='/login' />;       
     }
     render()
     {
