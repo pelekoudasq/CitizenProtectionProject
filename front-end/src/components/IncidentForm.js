@@ -300,7 +300,7 @@ class IncidentForm extends Component
                                 <CustomInput type="checkbox" id="mycheck" label="Ε.Κ.Α.Β." onClick={this.customInputValue.bind(this, "1")} />
                                 <CustomInput type="checkbox" id="2" label="ΕΛ.ΑΣ."  onClick={this.customInputValue.bind(this, "2")}/>
                                 <CustomInput type="checkbox" id="3" label="Λιμενικό"  onClick={this.customInputValue.bind(this, "3")}/>
-                                <CustomInput type="checkbox" id="4" label="Πυρεσβεστική"  onClick={this.customInputValue.bind(this, "4")}/>
+                                <CustomInput type="checkbox" id="4" label="Πυρoσβεστική"  onClick={this.customInputValue.bind(this, "4")}/>
                                 </div>
                                 </FormGroup>
                             </Col>
