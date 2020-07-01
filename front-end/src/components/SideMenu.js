@@ -37,9 +37,8 @@ class SideMenu extends Component
     render()
     {
         let usertype =  localStorage.getItem("usertype");
-        console.log(usertype);
 
-        if(usertype !== 3)
+        if(usertype != 3)
         {
             return (
                 <React.Fragment>

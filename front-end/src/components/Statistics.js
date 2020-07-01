@@ -2,7 +2,7 @@ import React, { Component/*, Container, Col, Row*/ } from 'react'
 import SideMenu from './SideMenu'
 import HeatMap from './HeatMap'
 import { withRouter } from 'react-router'
-import { LineChart, AreaChart, Area, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
+import { BarChart, Bar, LineChart, AreaChart, Area, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 
 import apiUrl from '../services/apiUrl'
 
@@ -15,6 +15,8 @@ const data = [
   { name: 'ΤΡΟΧΑΙΑ', Ανοιχτά: 1890, Κλειστά: 4800, amt: 2181, },
 ];
 
+
+
 class Statistics extends Component
 {
 	constructor(props)
@@ -25,7 +27,8 @@ class Statistics extends Component
 			showModal: false,
 			coordinates: [],
 			visiblePosts: 5,
-			isloading: false
+			isloading: false,
+            dates: []
 
 		}
 	}
@@ -50,10 +53,77 @@ class Statistics extends Component
             headers: this.authHeader(),
         }
 
-        let coordinate = {}; //object of coordinates
+        let coordinate = {} //object of coordinates
         let coordinates = [] //array of objects of coordinates
+        let date = {}
+        let stats_obj = {}
+        let stats = []
+        let dates = []
 
-		fetch(`${apiUrl}/incidents/all`, requestOptions)
+        dates = [
+             {  name: "Ιανουάριος",
+                "deaths": 0,
+                "arrested": 0,
+                "injured": 0
+            },
+            {   name: "Φεβρουάριος",
+                "deaths": 0,
+                "arrested": 0,
+                "injured": 0
+            },
+            {   name: "Μάρτιος",
+                "deaths": 0,
+                "arrested": 0,
+                "injured": 0
+            },
+            {   name: "Απρίλιος",
+                "deaths": 0,
+                "arrested": 0,
+                "injured": 0
+            },
+            {   name: "Μάϊος",
+                "deaths": 0,
+                "arrested": 0,
+                "injured": 0
+            },
+            {   name: "Ιούνιος",
+                "deaths": 0,
+                "arrested": 0,
+                "injured": 0
+            },
+            {   name: "Ιούλιος",
+                "deaths": 0,
+                "arrested": 0,
+                "injured": 0
+            },
+            {   name: "Αύγουστος",
+                "deaths": 0,
+                "arrested": 0,
+                "injured": 0
+            },
+            {   name: "Σεπτέμβριος",
+                "deaths": 0,
+                "arrested": 0,
+                "injured": 0
+            },
+            {   name: "Οκτώβριος",
+                "deaths": 0,
+                "arrested": 0,
+                "injured": 0
+            },
+            {   name: "Νοέμβριος",
+                "deaths": 0,
+                "arrested": 0,
+                "injured": 0
+            },
+            {   name: "Δεκέμβριος",
+                "deaths": 0,
+                "arrested": 0,
+                "injured": 0
+            }
+        ]
+
+		fetch(`${apiUrl}/incidents`, requestOptions)
             .then(response => response.json())
             .then(response => {
 
@@ -69,11 +139,77 @@ class Statistics extends Component
 						coordinate['lng'] = incident.location['longtitude']
 						coordinate['priority'] = incident.priority
 
+                        date = new Date(incident.date)
+
+                        switch (date.getMonth()) {
+                            case 0:
+                                dates[0].deaths += incident.stats['deaths'];
+                                dates[0].arrested += incident.stats['arrested'];
+                                dates[0].injured += incident.stats['injured'];
+                                break;
+                            case 1:
+                                dates[1].deaths += incident.stats['deaths'];
+                                dates[1].arrested += incident.stats['arrested'];
+                                dates[1].injured += incident.stats['injured'];
+                                break;
+                            case 2:
+                                dates[2].deaths += incident.stats['deaths'];
+                                dates[2].arrested += incident.stats['arrested'];
+                                dates[2].injured += incident.stats['injured'];
+                                break;
+                            case 3:
+                                dates[3].deaths += incident.stats['deaths'];
+                                dates[3].arrested += incident.stats['arrested'];
+                                dates[3].injured += incident.stats['injured'];
+                                break;
+                            case 4:
+                                dates[4].deaths += incident.stats['deaths'];
+                                dates[4].arrested += incident.stats['arrested'];
+                                dates[4].injured += incident.stats['injured'];
+                                break;
+                            case 5:
+                                dates[5].deaths += incident.stats['deaths'];
+                                dates[5].arrested += incident.stats['arrested'];
+                                dates[5].injured += incident.stats['injured'];
+                            case 6:
+                                dates[6].deaths += incident.stats['deaths'];
+                                dates[6].arrested += incident.stats['arrested'];
+                                dates[6].injured += incident.stats['injured'];
+                                break;
+                            case 7:
+                                dates[7].deaths += incident.stats['deaths'];
+                                dates[7].arrested += incident.stats['arrested'];
+                                dates[7].injured += incident.stats['injured'];
+                                break;
+                            case 8:
+                                dates[8].deaths += incident.stats['deaths'];
+                                dates[8].arrested += incident.stats['arrested'];
+                                dates[8].injured += incident.stats['injured'];
+                                break;
+                            case 9:
+                                dates[9].deaths += incident.stats['deaths'];
+                                dates[9].arrested += incident.stats['arrested'];
+                                dates[9].injured += incident.stats['injured'];
+                                break;
+                            case 10:
+                                dates[10].deaths += incident.stats['deaths'];
+                                dates[10].arrested += incident.stats['arrested'];
+                                dates[10].injured += incident.stats['injured'];
+                                break;
+                            case 11:
+                                dates[11].deaths += incident.stats['deaths'];
+                                dates[11].arrested += incident.stats['arrested'];
+                                dates[11].injured += incident.stats['injured'];
+                                break;
+                        }
+
 						/* Push it to the array of coordinates */
 						coordinates.push(coordinate)
+
 		    		})
                 this.setState({
-            		coordinates: coordinates
+            		coordinates: coordinates,
+                    dates: dates
             	})
         	});
 	}
@@ -101,6 +237,19 @@ class Statistics extends Component
 					    <Line type="monotone" dataKey="Κλειστά" stroke="#8884d8" activeDot={{ r: 8 }} />
 					    <Line type="monotone" dataKey="Ανοιχτά" stroke="#82ca9d" />
 					  </LineChart>
+
+
+                    <BarChart width={700} height={300} data={this.state.dates}
+                        margin={{top: 20, right: 30, left: 20, bottom: 5}}>
+                        <CartesianGrid strokeDasharray="3 3"/>
+                        <XAxis dataKey="name"/>
+                        <YAxis/>
+                        <Tooltip/>
+                        <Legend />
+                        <Bar dataKey="deaths" stackId="a" fill="#8884d8" />
+                        <Bar dataKey="injured" stackId="a" fill="#82ca9d" />
+                        <Bar dataKey="arrested" stackId="a" fill="#aadaff" />
+                    </BarChart>
 					<AreaChart width={700} height={250} data={data}
 					  margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
 					  <defs>
