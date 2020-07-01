@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 package com.example.theophilos.citizenprotectionproject;
 
 import android.content.Context;
@@ -28,3 +29,18 @@ public class IncidentsActivity extends AppCompatActivity {
 
     }
 }
+=======
+package com.example.theophilos.citizenprotectionproject;
+
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+
+public class IncidentsActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_incidents);
+    }
+}
+>>>>>>> 4301149fa36b4a8ac8220ba104ec68fef07b929a

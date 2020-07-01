@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 package com.example.theophilos.citizenprotectionproject;
 
 /**
@@ -20,3 +21,21 @@ public class UserInfo {
     }
 
 }
+=======
+package com.example.theophilos.citizenprotectionproject;
+
+/**
+ * Created by theophilos on 5/6/20.
+ */
+
+public class UserInfo {
+    String username;
+    String password;
+
+    public UserInfo(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+
+}
+>>>>>>> 4301149fa36b4a8ac8220ba104ec68fef07b929a
