@@ -13,6 +13,8 @@ import { Button }from 'reactstrap'
 
 import apiUrl from '../services/apiUrl'
 
+import { incidentService } from '../services/incidents.service';
+
 class ControlPanel extends Component
 {
 	constructor(props)
@@ -23,61 +25,41 @@ class ControlPanel extends Component
 			showModal: false,
 			coordinates: [],
 			visiblePosts: 5,
-			isloading: false
+			isloading: false,
 
 		}
 		this.loadmore = this.loadmore.bind(this)
 		
 	}	
 
-	authHeader() 
-	{
-	    // return authorization header with jwt token
-	    const token = localStorage.getItem('token');
-	    if (token) {
-	        return { Authorization: `Bearer ${token}` };
-	    } 
-	    else 
-	    {
-	        return {};
-	    }
-	}
 
 	componentDidMount()
 	{	
-
-		let requestOptions = {
-            method: 'GET',
-            headers: this.authHeader(),
-        }
-
         let coordinate = {}; //object of coordinates
         let coordinates = [] //array of objects of coordinates
 
-		fetch(`${apiUrl}/incidents`, requestOptions)
-            .then(response => response.json())
-            .then(response => {
+		incidentService.get_incidents(this.state.visiblePosts, 5)
+		.then( response => {
+			this.setState({
+				incidents: response,
+			})
+			//console.log(this.state.incidents)
+			
+			this.state.incidents.forEach(incident => { /*Loop through every row of the jsonfile and get the attributes*/
+					/*define the new coordinate */
+					coordinate = {}
+					coordinate['lat'] = incident.location['latitude']
+					coordinate['lng'] = incident.location['longtitude']    
+					coordinate['priority'] = incident.priority
 
-            	this.setState({
-            		incidents: response,
-            	})
-            	//console.log(this.state.incidents)
-            	
-            	this.state.incidents.forEach(incident => { /*Loop through every row of the jsonfile and get the attributes*/
-						/*define the new coordinate */
-        				coordinate = {}
-						coordinate['lat'] = incident.location['latitude']
-						coordinate['lng'] = incident.location['longtitude']    
-						coordinate['priority'] = incident.priority
+					/* Push it to the array of coordinates */
+					coordinates.push(coordinate)
+				})
 
-						/* Push it to the array of coordinates */
-						coordinates.push(coordinate)
-		    		})
-
-                this.setState({
-            		coordinates: coordinates
-            	})
-        	});	
+			this.setState({
+				coordinates: coordinates
+			})
+		});	
 
 	}
 
@@ -91,15 +73,18 @@ class ControlPanel extends Component
 		this.setState({
 			isloading: true
 		})
+		this.setState((prev) => {
+			return {visiblePosts: prev.visiblePosts + 5}
+		})
 
-		await this.sleep(300).then(() => {
-
+		incidentService.get_incidents(this.state.visiblePosts, 5)
+		.then (response => {
 			this.setState ({
 				isloading: false
 			})
-			this.setState((prev) => {
-				return {visiblePosts: prev.visiblePosts + 5}
-			})
+			this.setState(prevState => ({
+				incidents: [...prevState.incidents, response]
+			  }))
 		})
 
 	}
@@ -144,8 +129,6 @@ class ControlPanel extends Component
                 )}  
         		<div className = 'incident_line' style={{opacity: '1.0'}}></div>
         		
-
-
         		<div className = "scroll">
 		    		{incidents.slice(0, this.state.visiblePosts).map((incident, index) => { /*Loop through every row of the jsonfile and get the attributes*/
 		    			return (
