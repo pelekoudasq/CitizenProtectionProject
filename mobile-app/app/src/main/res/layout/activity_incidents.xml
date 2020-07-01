@@ -10,7 +10,6 @@
         android:id="@+id/textView"
         android:layout_width="257dp"
         android:layout_height="163dp"
-        android:text="SKOURA TON PAIRNEIS"
         android:textSize="30sp"
         tools:layout_editor_absoluteX="59dp"
         tools:layout_editor_absoluteY="111dp" />

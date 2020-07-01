@@ -7,10 +7,16 @@ package com.example.theophilos.citizenprotectionproject;
 public class UserInfo {
     String username;
     String password;
+    String token;
+
 
     public UserInfo(String username, String password) {
         this.username = username;
         this.password = password;
+    }
+
+    public String getToken() {
+        return token;
     }
 
 }

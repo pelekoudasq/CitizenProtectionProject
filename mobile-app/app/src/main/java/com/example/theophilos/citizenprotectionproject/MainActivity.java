@@ -1,6 +1,8 @@
 package com.example.theophilos.citizenprotectionproject;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -57,6 +59,13 @@ public class MainActivity extends AppCompatActivity {
                     textViewResult.setText("Code: " + response.code());
                     return;
                 }
+
+                //Save token here
+                UserInfo uInfo = response.body();
+                SharedPreferences preferences = MainActivity.this.getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
+                preferences.edit().putString("TOKEN",uInfo.getToken()).apply();
+
+
                 startActivity(intent);
 
             }
