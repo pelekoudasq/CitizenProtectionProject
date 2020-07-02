@@ -42,6 +42,7 @@ Each endpoint manipulates or displays information related to the `Users` collect
 * Delete User : `DELETE /control-center/api/admin/users/${USER_ID}`
 * Get Incident requests for User : `GET /control-center/api/admin/users/requests/${USER_ID}'`
 * Get accepted Incidents from User : `GET /control-center/api/admin/users/accepted/${USER_ID}'`
+* Authorities Enumeration : `GET /control-center/api/authorities`
 
 ### Incident related
 
@@ -53,3 +54,4 @@ Each endpoint manipulates or displays information related to the `Incidents` col
 * Get Incidents of Priority : `GET /control-center/api/incidents/${PRIORITY}`
 * Update Incident: `POST /control-center/api/incidents/update/${INCIDENT_ID}`
 * Accept Incident: `POST /control-center/api/incidents/accept`
+* Add Comment to Incident: `POST /control-center/api/incidents/comment`

@@ -16,7 +16,7 @@ const db = mongojs(config.dburi);
 
 //get all incidents
 router.get('/', function(req, res, next) {
-	console.log('incidents: get all');
+
 	const format = req.query.format;
 	const start = parseInt(req.query.start);
 	const count = parseInt(req.query.count);
@@ -38,8 +38,9 @@ router.get('/', function(req, res, next) {
 
 //get incident by id
 router.get('/:id', function(req, res, next) {
-	console.log('incidents: get by id');
+
 	const format = req.query.format;
+
 	db.Incidents.findOne({ _id: mongojs.ObjectID(req.params.id) }, function(err, incident) {
 		if (err) {
 			if (format && format === "xml")
@@ -58,7 +59,7 @@ router.get('/:id', function(req, res, next) {
 
 //get incident by priority
 router.get('/priority/:priority', function(req, res, next) {
-	console.log('incidents: get by priority');
+
 	db.Incidents.find({ priority: req.params.priority }, function(err, incidents) {
 		if (err) {
 			if (format && format === "xml")
@@ -77,10 +78,11 @@ router.get('/priority/:priority', function(req, res, next) {
 
 // POST new incident
 router.post('/', function(req, res, next) {
-	console.log('incidents: create new incident');
+
 	const incParam = req.body;
 	console.log(incParam);
 	var location;
+
 	opencage.geocode({q: incParam.address}).then(data => {
 		if (data.status.code == 200) {
 			if (data.results.length > 0) {
@@ -148,9 +150,10 @@ router.post('/', function(req, res, next) {
 
 //update incident
 router.post('/update/:id', function(req, res, next) {
-	console.log('incidents: update incident');
+
 	console.log(req.body);
 	const incParam = req.body;
+
 	db.Incidents.update(
 		{ _id: mongojs.ObjectID(req.params.id) },
 		{
@@ -171,10 +174,9 @@ router.post('/update/:id', function(req, res, next) {
 });
 
 
-// accept request
-router.post('/accept', function(req, res, next) {
-	
-	console.log('users: accept incident');
+// POST accept request
+router.post('/accept', function(req, res, next) {	
+
 	const user_id = mongojs.ObjectID(req.body.user_id);
 	const incident_id = mongojs.ObjectID(req.body.incident_id);
 
@@ -217,7 +219,37 @@ router.post('/accept', function(req, res, next) {
 			});
 		}
 	});
-})
+});
+
+// POST comment to incident
+router.post('/comment', function(req, res, next) {
+
+	const incident_id = mongojs.ObjectID(req.body.incident_id);
+	const user_id = mongojs.ObjectID(req.body.user_id);
+	const text = req.body.text;
+
+	db.Incidents.update(
+		{
+			_id: incident_id
+		},
+		{
+			$push: {
+				comments: {
+					user: user_id,
+					date: new Date(),
+					text: text				}
+			}
+		}
+	, function(err, ret) {
+		if (err) {
+			res.status(401).json(err);
+			return;
+		}
+		res.status(200).json({
+			msg : ret
+		});
+	});
+});
 
 
 module.exports = router;
