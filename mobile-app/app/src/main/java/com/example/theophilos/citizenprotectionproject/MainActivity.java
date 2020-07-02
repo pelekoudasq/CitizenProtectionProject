@@ -34,16 +34,11 @@ public class MainActivity extends AppCompatActivity {
 
     private TextView textViewResult;
 
-    public GsonConverterFactory gsonFactory = GsonConverterFactory.create();
-
-    public OkHttpClient client = getUnsafeOkHttpClient().build();
-
     public Retrofit retrofit = new Retrofit.Builder()
             .baseUrl("https://10.0.2.2:9000")
-            .addConverterFactory(gsonFactory)
-            .client(client)
+            .addConverterFactory(GsonConverterFactory.create())
+            .client( getUnsafeOkHttpClient().build())
             .build();
-
 
 
     public void login( View view ){
@@ -58,20 +53,22 @@ public class MainActivity extends AppCompatActivity {
 
 
         JsonApi jsonApi = retrofit.create(JsonApi.class);
-        Call<UserInfo> call = jsonApi.login(userInfo);
+        Call<SessionInfo> call = jsonApi.login(userInfo);
 
-        call.enqueue(new Callback<UserInfo>() {
+        call.enqueue(new Callback<SessionInfo>() {
             @Override
-            public void onResponse(Call<UserInfo> call, Response<UserInfo> response) {
+            public void onResponse(Call<SessionInfo> call, Response<SessionInfo> response) {
                 if(!response.isSuccessful()) {
                     textViewResult.setText("Code: " + response.code());
                     return;
                 }
 
                 //Save token here
-                UserInfo uInfo = response.body();
+                SessionInfo sInfo = response.body();
                 SharedPreferences preferences = MainActivity.this.getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
-                preferences.edit().putString("TOKEN",uInfo.getToken()).apply();
+                preferences.edit().putString("TOKEN",sInfo.getToken()).apply();
+                preferences.edit().putString("ID",sInfo.get_id()).apply();
+                preferences.edit().putString("USRNAME",sInfo.getUsername()).apply();
 
 
                 startActivity(intent);
@@ -79,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<UserInfo> call, Throwable t) {
+            public void onFailure(Call<SessionInfo> call, Throwable t) {
                 textViewResult.setText(t.getMessage());
             }
         });
