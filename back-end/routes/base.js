@@ -96,4 +96,23 @@ router.post('/login', function(req, res, next) {
 	});
 });
 
+// GET authorities enum
+router.get('/authorities/', function(req, res, next) {
+
+	const format = req.query.format;
+	db.Authorities.find({}, function(err, authorities){
+		if (err) {
+			if (format && format === "xml")
+				res.send(json2xml(err))
+			else
+				res.send(err);
+			return;
+		}
+		if (format && format === "xml")
+			res.send(json2xml(authorities))
+		else
+			res.json(authorities)
+	})
+});
+
 module.exports = router;
