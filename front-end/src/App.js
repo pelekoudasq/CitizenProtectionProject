@@ -38,6 +38,7 @@ class App extends Component
         else 
             return props => <Redirect to='/login' />;       
     }
+    
     render()
     {
     return (

@@ -24,12 +24,11 @@ class ControlPanel extends Component
 			incidents: [],
 			showModal: false,
 			coordinates: [],
-			visiblePosts: 5,
+			visiblePosts: 0,
 			isloading: false,
-
+			postsDone: false
 		}
 		this.loadmore = this.loadmore.bind(this)
-		
 	}	
 
 
@@ -40,10 +39,11 @@ class ControlPanel extends Component
 
 		incidentService.get_incidents(this.state.visiblePosts, 5)
 		.then( response => {
+			console.log("To response einai", response)
 			this.setState({
 				incidents: response,
+				visiblePosts: this.state.visiblePosts + 5
 			})
-			//console.log(this.state.incidents)
 			
 			this.state.incidents.forEach(incident => { /*Loop through every row of the jsonfile and get the attributes*/
 					/*define the new coordinate */
@@ -63,32 +63,62 @@ class ControlPanel extends Component
 
 	}
 
-	sleep(ms) 
-	{
-	    return new Promise(resolve => setTimeout(resolve, ms));
-   	}
-
-	async loadmore()
+	loadmore()
 	{
 		this.setState({
 			isloading: true
 		})
-		this.setState((prev) => {
-			return {visiblePosts: prev.visiblePosts + 5}
+		this.setState({
+			visiblePosts: this.state.visiblePosts + 5
 		})
+
+		console.log("Ta visible posts einai:",this.state.visiblePosts)
+		let coordinate = {} //object of coordinates
+        let coordinates = [] //array of objects of coordinates
 
 		incidentService.get_incidents(this.state.visiblePosts, 5)
 		.then (response => {
-			this.setState ({
-				isloading: false
-			})
-			this.setState(prevState => ({
-				incidents: [...prevState.incidents, response]
-			  }))
+			console.log(response)
+			console.log("To lenght tou response einai ",response.length)
+			if (response.length !== 0)
+			{
+				console.log("Beno sto if..." ,response.length)
+				this.setState ({
+					isloading: false
+				})
+
+				this.setState(prevState => ({
+					incidents: [...prevState.incidents, ...response]
+				}))
+
+				this.state.incidents.forEach(incident => { /*Loop through every row of the jsonfile and get the attributes*/
+					/*define the new coordinate */
+					coordinate = {}
+					coordinate['lat'] = incident.location['latitude']
+					coordinate['lng'] = incident.location['longtitude']    
+					coordinate['priority'] = incident.priority
+
+					/* Push it to the array of coordinates */
+					coordinates.push(coordinate)
+				})
+				this.setState(prevState => ({
+					coordinates: [...prevState.coordinates, ...coordinates]
+				}))
+
+
+			}
+			else if(response.length === 0)
+			{
+				console.log("Beno sto else")
+				this.setState({
+					incidents: [...this.state.incidents],
+					postsDone: true,
+					isloading: false
+				})
+			}
 		})
 
 	}
-
 
 	render()
 	{
@@ -104,36 +134,33 @@ class ControlPanel extends Component
         		{this.state.isloading ?
                     <div className="load-spin"></div> : console.log("")
                 }
-
 				<div className = "container-fluid" style={{marginLeft: '7.2%'}}>	
-        		<div className = "row">
-        			<div className = "col-sm-1">
-        				<FontAwesomeIcon icon={ faExclamationTriangle } style={{width: '50px', marginTop: '15px'}} />
-        			</div>
-        			<div className = "col-lg-2">
-        				<p style={{fontSize:'22px'}}>Ημερομηνία</p>
-        			</div>
-        			<div className = "col-lg-2">
-        				<p style={{fontSize:'22px'}}>Διεύθυνση</p>
-        			</div>        			        			
-        			<div className = "col-lg-1">
-        				<p style={{fontSize:'23px'}}>Τίτλος</p>
-        			</div>    
-        		</div>
+					<div className = "row">
+						<div className = "col-sm-1">
+							<FontAwesomeIcon icon={ faExclamationTriangle } style={{width: '50px', marginTop: '15px'}} />
+						</div>
+						<div className = "col-lg-2">
+							<p style={{fontSize:'22px'}}>Ημερομηνία</p>
+						</div>
+						<div className = "col-lg-2">
+							<p style={{fontSize:'22px'}}>Διεύθυνση</p>
+						</div>        			        			
+						<div className = "col-lg-1">
+							<p style={{fontSize:'23px'}}>Τίτλος</p>
+						</div>    
+					</div>
 				</div>
 				
-				{this.state.coordinates.length > 0 && !this.state.isloading ? (
-					<Gmap coordinates = {this.state.coordinates.slice(0, this.state.visiblePosts)} />
-                ) : (
-                   <p> </p>
+				{(this.state.coordinates.length > 0 && !this.state.isloading) && (
+					<Gmap coordinates = {this.state.coordinates} />
                 )}  
         		<div className = 'incident_line' style={{opacity: '1.0'}}></div>
         		
         		<div className = "scroll">
-		    		{incidents.slice(0, this.state.visiblePosts).map((incident, index) => { /*Loop through every row of the jsonfile and get the attributes*/
+		    		{incidents.map((incident, index) => { //Loop through every row of the jsonfile and get the attributes
 		    			return (
 		    				<div key = {incident._id}>
-		        				<Incident /* Render the same Component with different values each time */
+		        				<Incident //Render the same Component with different values each time 
 		       						incident = {incident}
 								/>
 							</div>
@@ -143,13 +170,9 @@ class ControlPanel extends Component
 				<div className = "inc_line" style= {{position: 'absolute'}}></div>
 				<br/>
 
-				{(incidents.length > 5 && incidents.length > this.state.visiblePosts) ?
-        			(<Button id = "load" className = "loadmore" onClick = {this.loadmore} style = {{position: 'absolute', marginLeft: '25%'}}>Φόρτωση Περισσοτέρων</Button>
-        			) : (
-        			<p></p>
-        		)}
-
-                </div>
+				{(!this.state.postsDone) && //if no more posts left, the dont display
+        			(<Button id = "load" className = "loadmore" onClick = {this.loadmore} style = {{position: 'absolute', marginLeft: '25%'}}>Φόρτωση Περισσοτέρων</Button>)}
+            </div>
 		)
 	}
 }

@@ -21,6 +21,11 @@ class LoginForm extends  Component
         };
     }
 
+    componentDidMount()
+	{	
+        authenticationService.logout();
+        this.props.history.push('/login');
+	}
 
 	static contextType = UserContext;
     username = React.createRef();

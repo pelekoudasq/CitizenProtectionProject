@@ -73,12 +73,22 @@ class Incidents extends Component
 
 		incidentService.get_incidents(this.state.visiblePosts, 5)
 		.then (response => {
-			this.setState ({
-				isloading: false
-			})
-			this.setState(prevState => ({
-				incidents: [...prevState.incidents, response]
-			  }))
+			if (response.title !== null)
+			{
+				console.log("Beo sto if")
+				this.setState ({
+					isloading: false
+				})
+				this.setState(prevState => ({
+					incidents: [...prevState.incidents, response]
+				}))
+			}
+			else
+			{
+				this.setState(prevState => ({
+					incidents: [prevState.incidents]
+				}))
+			}
 		})
 
 	}
