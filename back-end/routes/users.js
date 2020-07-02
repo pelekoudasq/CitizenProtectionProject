@@ -238,8 +238,15 @@ router.get('/accepted/:user_id', function(req, res, next) {
 			res.send(err);
 			return;
 		}
-		if (user.userType == 2)
-			res.json({ acceptedIncidents: user.acceptedIncidents});
+		if (user.userType == 2) {
+			db.Incidents.findOne({ _id: { $in: user.acceptedIncidents } }, function(err, incidents) {
+				if (err) {
+					res.send(err);
+					return;
+				}
+				res.json({incidents});
+			});
+		}
 		else
 			res.status(404).json({ error: 'User is not an officer in duty' });
 	});
