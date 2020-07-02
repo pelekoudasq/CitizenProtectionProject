@@ -275,6 +275,12 @@ class ViewIncident extends Component
         })
     };
 
+    handleComment = event => {
+        this.setState({
+            formLoading: true
+        })
+    }
+
     getComments()
     {
         let comments = [];
@@ -308,6 +314,9 @@ class ViewIncident extends Component
             formflag =  true
 
         let incident = this.state.incident
+        let usertype =  localStorage.getItem("usertype")
+        console.log(usertype)
+
 		return(
 			<div className = "hide-scroll">
 				<SideMenu /> 
@@ -332,7 +341,7 @@ class ViewIncident extends Component
                 <Row>
                 <Form style={{ left: '10%', marginTop: '2%', position: 'absolute'}}>
                     <Row>
-                        <Col sm={7}>
+                        <Col sm="auto">
                             {!this.state.editing ? (
                                 <table>
                                     <tbody>
@@ -364,7 +373,7 @@ class ViewIncident extends Component
                                             <td colspan="2">Περιγραφή:</td>
                                         </tr>
                                         <tr>
-                                            <td colspan="2" className="border rounded border-light">{incident.description} </td>
+                                            <td colspan="2" className="pborder rounded">{incident.description} </td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -379,7 +388,7 @@ class ViewIncident extends Component
                                             <td className="pr-3">Προτεραιότητα:</td>
                                             <td>
                                                 <FormGroup className="m-1">
-                                                <Input className="py-0" type="select" name="select" value={incident.priority} innerRef={incident.priority} id="exampleSelect" >
+                                                <Input className="py-0" size="sm" type="select" name="select" value={incident.priority} innerRef={incident.priority} id="exampleSelect" >
                                                     <option>Χαμηλή</option>
                                                     <option>Μέτρια</option>
                                                     <option>Υψηλή</option>
@@ -391,7 +400,7 @@ class ViewIncident extends Component
                                             <td className="pr-3">Όνομα Αναφέροντα:</td>
                                             <td>
                                                 <FormGroup className="m-1">
-                                                <Input className="py-0" type="text" name="fullname" innerRef={incident.callerName} defaultValue={incident.callerName} id="exampleFullname"/>
+                                                <Input className="py-0" size="sm" type="text" name="fullname" innerRef={incident.callerName} defaultValue={incident.callerName} id="exampleFullname"/>
                                                 </FormGroup>
                                             </td>
                                         </tr>
@@ -399,7 +408,7 @@ class ViewIncident extends Component
                                             <td className="pr-3">Τηλέφωνο Αναφέροντα:</td>
                                             <td>
                                                 <FormGroup className="m-1">
-                                                <Input className="py-0" type="tel" name="telephone" innerRef={incident.callerNumber} defaultValue={incident.callerNumber} id="exampleTelephone"/>
+                                                <Input className="py-0" size="sm" type="tel" name="telephone" innerRef={incident.callerNumber} defaultValue={incident.callerNumber} id="exampleTelephone"/>
                                                 </FormGroup>
                                             </td>
                                         </tr>
@@ -407,7 +416,7 @@ class ViewIncident extends Component
                                             <td className="pr-3">Διεύθυνση:</td>
                                             <td>
                                                 <FormGroup className="m-1">
-                                                <AutoCompleteLoc className="py-0" value={this.state.address} handleLocation={this.handleLocation} defaultValue={this.state.address} name="location"/>
+                                                <AutoCompleteLoc className="py-0" size="sm" value={this.state.address} handleLocation={this.handleLocation} defaultValue={this.state.address} name="location"/>
                                                 </FormGroup>
                                             </td>
                                         </tr>
@@ -415,7 +424,7 @@ class ViewIncident extends Component
                                             <td className="pr-3">Είδος συμβάντος:</td>
                                             <td>
                                                 <FormGroup className="m-1">
-                                                    <Multiselect dropDown data={['Φόνος','Ληστεία','Διάρρηξη','Τροχαίο']} ref={incident.incident_type} />
+                                                    <Multiselect  size="sm" dropDown data={['Φόνος','Ληστεία','Διάρρηξη','Τροχαίο']} ref={incident.incident_type} />
                                                 </FormGroup>
                                             </td>
                                         </tr>
@@ -425,7 +434,7 @@ class ViewIncident extends Component
                                         <tr>
                                             <td className="p-0" colspan="2">
                                                 <FormGroup className="m-1">
-                                                    <textarea className="py-0" id="descriptionBox" type="text" value={incident.description} onChange={this.handleTextArea} name="description" defaultValue="incident.keywords" placeholder=""/>
+                                                    <textarea className="py-0" size="sm" id="descriptionBox" type="text" value={incident.description} onChange={this.handleTextArea} name="description" defaultValue="incident.keywords" placeholder=""/>
                                                 </FormGroup>
                                             </td>
                                         </tr>
@@ -433,21 +442,21 @@ class ViewIncident extends Component
                                 </table>
                             )}
                         </Col>
-                        <FontAwesomeIcon icon={ faEdit } style={{ marginLeft:'4px'}} onClick={this.handleEdit} />
-                        <Col sm={4}>
-                            <FormGroup style={{ width:'40% !important'}}>
-                                <div style={{position:'relative', left:'8%'}}>
-                                    <Label for="exampleCheckbox">Φορείς</Label>
-                                    <div required className="CheckBox" innerref={incident.auth}> 
+                        <FontAwesomeIcon icon={ faEdit } className="ml-2 mt-1" onClick={this.handleEdit} />
+                        <Col sm="auto">
+                            <FormGroup style={{ width:'40% !important'}} className="mx-auto">
+                                <div>
+                                    <Label style={{ left: '12%', position: 'relative'}} for="exampleCheckbox">Φορείς</Label>
+                                    <div required className="CheckBox mx-auto" innerref={incident.auth}> 
                                         <CustomInput type="checkbox" id="mycheck" label="Ε.Κ.Α.Β." onClick={this.customInputValue.bind(this, "1")} />
                                         <CustomInput type="checkbox" id="2" label="ΕΛ.ΑΣ."  onClick={this.customInputValue.bind(this, "2")}/>
                                         <CustomInput type="checkbox" id="3" label="Λιμενικό"  onClick={this.customInputValue.bind(this, "3")}/>
                                         <CustomInput type="checkbox" id="4" label="Πυρoσβεστική"  onClick={this.customInputValue.bind(this, "4")}/>
                                     </div>
+                                    <button id="close-image" className="mx-auto">
+                                    <img src={alert1} alt='' style={{ width: '180px'}} onClick= {(formflag === true) ? this.handleSubmit : console.log(" ")} />
+                                    </button>
                                 </div>
-                                <button id="close-image">
-                                <img src={alert1} alt='' style={{ width: '180px'}} onClick= {(formflag === true) ? this.handleSubmit : console.log(" ")} />
-                                </button>
                             </FormGroup>
                         </Col>
                     </Row>
@@ -464,16 +473,14 @@ class ViewIncident extends Component
                     </Container> */}
             
                 <br/>
-                {this.state.successSubmit === true ? (
+                {this.state.successSubmit === true && (
                     <div className="alert alert-success" style = {{}}>
                         <strong>Οι αρμόδιοι Φορείς ενημερώθηκαν επιτυχώς για το συμβάν</strong>
                     </div>
-                ) : (
-                    <p> </p>
                 )}  
                 </Form>
                 </Row>
-                <Row style={{ left: '9%', marginTop: '28%', width: '70%', position: 'relative'}}>
+                <Row style={{ left: '9%', marginTop: '25%', width: '70%', position: 'relative'}}>
                     <h6 className = "head_ltitleInfo">Αναφορές</h6>
                     <div className = "hrz_lineBack"></div>
                     <Col sm={6} className="mt-1" >
@@ -483,12 +490,28 @@ class ViewIncident extends Component
                     </Col>
                     <Col sm={1} className="vrtcl_lineBack mt-2 p-0"></Col>
                     <Col sm={5} className="mt-2">
+                    {usertype == 0 && ( //control-center agent
+                        <p>control-center</p>
+                    )}
+                    {usertype == 1 && ( //authority department
                         <Form>
                             <FormGroup className="m-1">
                                 <textarea className="py-0" id="descriptionBox" type="text"  onChange={this.handleTextArea} name="description" placeholder="Προσθέστε σχόλιο..."/>
                             </FormGroup>
-                            <Button className="float-right" style={{ backgroundColor: "#0063bf", borderColor: "#0063bf" }} disabled = {!formflag} onClick={this.handleSubmitmoreInfo}>Προσθήκη</Button>
+                            <div>
+                            <Button className="float-right d-inline py-1" style={{ backgroundColor: "#0063bf", borderColor: "#0063bf" }} disabled = {!formflag} onClick={this.handleSubmitmoreInfo}>Προσθήκη</Button>
+                            <CustomInput className="float-right d-inline mr-2 mt-1" type="checkbox" id="report" label="Τελική Αναφορά" />
+                            </div>
                         </Form>
+                    )}
+                    {usertype == 2 && ( //department personnel
+                        <Form>
+                            <FormGroup className="m-1">
+                                <textarea className="py-0" id="descriptionBox" type="text"  onChange={this.handleTextArea} name="description" placeholder="Προσθέστε σχόλιο..."/>
+                            </FormGroup>
+                            <Button className="float-right" style={{ backgroundColor: "#0063bf", borderColor: "#0063bf" }} disabled = {!formflag} onClick={this.handleComment}>Προσθήκη</Button>
+                        </Form>
+                    )}
                     </Col>
                    
                 </Row>
