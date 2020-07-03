@@ -20,6 +20,8 @@ import static com.example.theophilos.citizenprotectionproject.MainActivity.getUn
 
 public class IncidentsActivity extends AppCompatActivity {
 
+    private TextView textviewResult;
+
     public Retrofit retrofit = new Retrofit.Builder()
             .baseUrl("https://10.0.2.2:9000")
             .addConverterFactory(GsonConverterFactory.create())
@@ -31,27 +33,34 @@ public class IncidentsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_incidents);
 
+        textviewResult = findViewById(R.id.textView);
 
         //Retrieve token wherever necessary
         SharedPreferences preferences = IncidentsActivity.this.getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
         String usrId  = preferences.getString("ID",null);
         String token  = preferences.getString("TOKEN",null);
 
-        Toast toast = Toast.makeText(getApplicationContext(), usrId, Toast.LENGTH_SHORT);
-        toast.show();
 
         JsonApi jsonApi = retrofit.create(JsonApi.class);
-        Call<Incident> call = jsonApi.getAcceptedIncidents( "Bearer "+token , usrId );
+        Call<AcceptedIncidents> call = jsonApi.getAcceptedIncidents( "Bearer "+token , usrId );
 
 
-        call.enqueue(new Callback<Incident>() {
+        call.enqueue(new Callback<AcceptedIncidents>() {
             @Override
-            public void onResponse(Call<Incident> call, Response<Incident> response) {
+            public void onResponse(Call<AcceptedIncidents> call, Response<AcceptedIncidents> response) {
                 if(!response.isSuccessful()) {
-                    Toast toast = Toast.makeText(getApplicationContext(), "FAILURE1", Toast.LENGTH_SHORT);
-                    toast.show();
+                    textviewResult.setText("Code: " + response.code());
                     return;
                 }
+
+                AcceptedIncidents incidents = response.body();
+
+                if ( incidents == null ){
+                    textviewResult.setText("NULL");
+                }
+
+                Incident inc = incidents.getAcceptedIncidents();
+                textviewResult.setText(inc.getTitle());
 
                 Toast toast = Toast.makeText(getApplicationContext(), "SUCCESS", Toast.LENGTH_SHORT);
                 toast.show();
@@ -59,38 +68,10 @@ public class IncidentsActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<Incident> call, Throwable t) {
-                Toast toast = Toast.makeText(getApplicationContext(), t.getMessage() , Toast.LENGTH_SHORT);
-                toast.show();
-                toast = Toast.makeText(getApplicationContext(), "fail2", Toast.LENGTH_SHORT);
-                toast.show();
+            public void onFailure(Call<AcceptedIncidents> call, Throwable t) {
+                textviewResult.setText(t.getMessage());
             }
         });
-
-//        Call<List<Incident>> call = jsonApi.getAllIncidents( "Bearer "+token  );
-//
-//        call.enqueue(new Callback<List<Incident>>() {
-//            @Override
-//            public void onResponse(Call<List<Incident>> call, Response<List<Incident>> response) {
-//                if(!response.isSuccessful()) {
-//                    Toast toast = Toast.makeText(getApplicationContext(), "FAILURE1", Toast.LENGTH_SHORT);
-//                    toast.show();
-//                    return;
-//                }
-//
-//                Toast toast = Toast.makeText(getApplicationContext(), "SUCCESS", Toast.LENGTH_SHORT);
-//                toast.show();
-//
-//            }
-//
-//            @Override
-//            public void onFailure(Call<List<Incident>> call, Throwable t) {
-//                Toast toast = Toast.makeText(getApplicationContext(), t.getMessage() , Toast.LENGTH_SHORT);
-//                toast.show();
-//                toast = Toast.makeText(getApplicationContext(), "fail2", Toast.LENGTH_SHORT);
-//                toast.show();
-//            }
-//        });
 
     }
 }

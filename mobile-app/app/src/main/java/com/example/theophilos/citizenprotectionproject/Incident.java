@@ -7,9 +7,9 @@ import java.util.List;
  */
 
 public class Incident {
-    List<String> acceptedIncidents;
+    String title;
 
-    public List<String> getAcceptedIncidents() {
-        return acceptedIncidents;
+    public String getTitle() {
+        return title;
     }
 }

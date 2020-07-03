@@ -22,9 +22,7 @@ public interface JsonApi {
     Call<SessionInfo> login(@Body UserInfo userinfo);
 
     @GET("control-center/api/admin/users/accepted/{id}")
-    Call<Incident> getAcceptedIncidents(@Header("Authorization") String token , @Path("id") String user_id );
+    Call<AcceptedIncidents> getAcceptedIncidents(@Header("Authorization") String token , @Path("id") String user_id );
 
-    @GET("control-center/api/incidents/")
-    Call<List<Incident>> getAllIncidents(@Header("Authorization") String token );
 
 }
