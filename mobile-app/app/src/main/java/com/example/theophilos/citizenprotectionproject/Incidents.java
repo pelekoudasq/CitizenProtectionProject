@@ -6,10 +6,10 @@ import java.util.List;
  * Created by theophilos on 3/7/20.
  */
 
-public class AcceptedIncidents {
-    Incident incidents;
+public class Incidents {
+    List<Incident> incidents;
 
-    public Incident getAcceptedIncidents() {
+    public List<Incident> getIncidents() {
         return incidents;
     }
 }

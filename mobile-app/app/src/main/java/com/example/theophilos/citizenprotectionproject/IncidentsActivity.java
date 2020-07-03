@@ -42,33 +42,33 @@ public class IncidentsActivity extends AppCompatActivity {
 
 
         JsonApi jsonApi = retrofit.create(JsonApi.class);
-        Call<AcceptedIncidents> call = jsonApi.getAcceptedIncidents( "Bearer "+token , usrId );
+        Call<Incidents> call = jsonApi.getAcceptedIncidents( "Bearer "+token , usrId );
 
 
-        call.enqueue(new Callback<AcceptedIncidents>() {
+        call.enqueue(new Callback<Incidents>() {
             @Override
-            public void onResponse(Call<AcceptedIncidents> call, Response<AcceptedIncidents> response) {
+            public void onResponse(Call<Incidents> call, Response<Incidents> response) {
                 if(!response.isSuccessful()) {
                     textviewResult.setText("Code: " + response.code());
                     return;
                 }
 
-                AcceptedIncidents incidents = response.body();
+                Incidents acceptedIncidents = response.body();
 
-                if ( incidents == null ){
+                if ( acceptedIncidents == null ){
                     textviewResult.setText("NULL");
                 }
 
-                Incident inc = incidents.getAcceptedIncidents();
-                textviewResult.setText(inc.getTitle());
-
-                Toast toast = Toast.makeText(getApplicationContext(), "SUCCESS", Toast.LENGTH_SHORT);
-                toast.show();
+                String content = "";
+                for (Incident inc : acceptedIncidents.getIncidents()){
+                    content += inc.getTitle() + " \n";
+                }
+                textviewResult.setText(content);
 
             }
 
             @Override
-            public void onFailure(Call<AcceptedIncidents> call, Throwable t) {
+            public void onFailure(Call<Incidents> call, Throwable t) {
                 textviewResult.setText(t.getMessage());
             }
         });

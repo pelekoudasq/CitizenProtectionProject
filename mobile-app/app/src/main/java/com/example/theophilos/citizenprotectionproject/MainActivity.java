@@ -48,8 +48,6 @@ public class MainActivity extends AppCompatActivity {
         EditText passText = (EditText) findViewById(R.id.passwordTextField);
         UserInfo userInfo = new UserInfo(userText.getText().toString(),passText.getText().toString());
 
-        Toast.makeText(this, userText.getText().toString(), Toast.LENGTH_SHORT).show();
-
 
 
         JsonApi jsonApi = retrofit.create(JsonApi.class);
@@ -88,7 +86,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        textViewResult = findViewById(R.id.text_view_result);
 
         JsonApi jsonApi = retrofit.create(JsonApi.class);
 
@@ -104,14 +101,10 @@ public class MainActivity extends AppCompatActivity {
 
                 HealthCheck check = response.body();
 
-//                textViewResult.setText(check.getStatus());
-
-
             }
 
             @Override
             public void onFailure(Call<HealthCheck> call, Throwable t) {
-                textViewResult.setText(t.getMessage());
             }
         });
     }
