@@ -239,7 +239,7 @@ router.get('/accepted/:user_id', function(req, res, next) {
 			return;
 		}
 		if (user.userType == 2) {
-			db.Incidents.findOne({ _id: { $in: user.acceptedIncidents } }, function(err, incidents) {
+			db.Incidents.find({ _id: { $in: user.acceptedIncidents } }, function(err, incidents) {
 				if (err) {
 					res.send(err);
 					return;

@@ -237,7 +237,8 @@ router.post('/comment', function(req, res, next) {
 				comments: {
 					user: user_id,
 					date: new Date(),
-					text: text				}
+					text: text
+				}
 			}
 		}
 	, function(err, ret) {
