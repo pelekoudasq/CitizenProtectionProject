@@ -3,8 +3,13 @@ package com.example.theophilos.citizenprotectionproject;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuInflater;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,6 +38,7 @@ public class IncidentsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_incidents);
 
+
         textviewResult = findViewById(R.id.textView);
 
         //Retrieve token wherever necessary
@@ -55,15 +61,32 @@ public class IncidentsActivity extends AppCompatActivity {
 
                 Incidents acceptedIncidents = response.body();
 
-                if ( acceptedIncidents == null ){
-                    textviewResult.setText("NULL");
+                List<Incident> incList = acceptedIncidents.getIncidents();
+                if ( incList.size() == 0 ){
+
+                    //Create text view
+                    LinearLayout.LayoutParams textViewParams = new LinearLayout.LayoutParams(Toolbar.LayoutParams.WRAP_CONTENT, Toolbar.LayoutParams.WRAP_CONTENT);
+                    TextView tv=new TextView(getApplicationContext());
+                    tv.setLayoutParams(textViewParams);
+                    tv.setText("Κανένα Τρέχων Συμβάν");
+                    //Create Reload Button
+                    LinearLayout mainLayout = (LinearLayout)findViewById(R.id.buttonlayout);
+                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                    Button addButton =new Button(getApplicationContext());
+                    addButton.setText("Επαναφόρτωση");
+                    //add textview and compnent to layout
+                    mainLayout.addView(tv, textViewParams);
+                    mainLayout.addView(addButton, lp);
+
+                }
+                else{
+                    String content = "";
+                    for (Incident inc : acceptedIncidents.getIncidents()){
+                        content += inc.getTitle() + " \n";
+                    }
+                    textviewResult.setText(content);
                 }
 
-                String content = "";
-                for (Incident inc : acceptedIncidents.getIncidents()){
-                    content += inc.getTitle() + " \n";
-                }
-                textviewResult.setText(content);
 
             }
 

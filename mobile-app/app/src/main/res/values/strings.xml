@@ -1,3 +1,5 @@
 <resources>
-    <string name="app_name">CitizenProtectionProject</string>
+    <string name="app_name">Πλατφόρμα Προστασίας Πολίτη</string>
+    <string name="option1">Επιλογή 1</string>
+    <string name="option2">Επιλογή 2</string>
 </resources>
