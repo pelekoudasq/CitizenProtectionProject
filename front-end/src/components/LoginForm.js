@@ -50,6 +50,7 @@ class LoginForm extends  Component
                     localStorage.setItem('usertype', user.userType)
                     localStorage.setItem('token', user.token);
                     localStorage.setItem('username', u);
+                    localStorage.setItem('userid', user._id);
                     //console.log("mpainei edw: ", this.state.flag)
                     if(user.userType === 3)
                         this.props.history.push('/statistics');

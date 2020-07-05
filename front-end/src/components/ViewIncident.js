@@ -17,6 +17,7 @@ import { withRouter } from 'react-router'
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import moment from 'moment'
+import { incidentService } from '../services/incidents.service';
 // import { Button }from 'reactstrap'
 
 class ViewIncident extends Component
@@ -27,6 +28,7 @@ class ViewIncident extends Component
 		this.state = {
             incident: "",
             address: "",
+            comment: "",
 			coordinates: {},
 			isloading: false,
             editing: false
@@ -279,6 +281,14 @@ class ViewIncident extends Component
         this.setState({
             formLoading: true
         })
+        console.log(this.state.comment)
+        incidentService.post_comment(this.state.comment, this.state.incident._id)
+        .then(response => {
+        	console.log(response)
+        	this.setState({
+            	formLoading: false
+        	})
+        })
     }
 
     getComments()
@@ -287,6 +297,14 @@ class ViewIncident extends Component
         if (this.state.incident.comments){
             var i;
             for (i = 0; i < this.state.incident.comments.length; i++) {
+            	var username
+            	incidentService.get_user(this.state.incident.comments[i].user)
+            	.then(response => {
+            		// this.state.incident.comments[i].username = response[0].username
+            		username = response[0].username
+            		console.log(username)
+            	})
+            	console.log(username)
                 comments[i] = <li className='list-group-item mt-2 pb-0 u-shadow-v18 g-bg-secondary rounded'>
                     <div className="font-weight-bold" style={{opacity:'0.6' }}>{this.state.incident.comments[i].user}</div>
                     <div className="text-wrap">
@@ -294,7 +312,7 @@ class ViewIncident extends Component
                     </div>
                     
                     <blockquote className="blockquote text-right">
-                        <footer className="blackquote-footer g-color-gray-dark-v4 g-font-size-12">{this.state.incident.comments[i].date}</footer>
+                        <footer className="blackquote-footer g-color-gray-dark-v4 g-font-size-12">{moment(this.state.incident.comments[i].date).format('DD-MM-YYYY')} {moment(this.state.incident.comments[i].date).format('HH:mm')}</footer>
                     </blockquote>
                 </li>;
             }
@@ -315,7 +333,7 @@ class ViewIncident extends Component
 
         let incident = this.state.incident
         let usertype =  localStorage.getItem("usertype")
-        console.log(usertype)
+        // console.log(usertype)
 
 		return(
 			<div className = "hide-scroll">
@@ -333,11 +351,11 @@ class ViewIncident extends Component
                     <div className="load-spin"></div> : console.log("")
                 }
 				
-				{this.state.coordinates !== {} && !this.state.isloading ? (
+				{/*this.state.coordinates !== {} && !this.state.isloading ? (
 					<Gmap coordinates = {this.state.coordinates} />
                 ) : (
                    <p> </p>
-                )}
+                )} */}
                 <Row>
                 <Form style={{ left: '10%', marginTop: '2%', position: 'absolute'}}>
                     <Row>
@@ -505,11 +523,11 @@ class ViewIncident extends Component
                         </Form>
                     )}
                     {usertype == 2 && ( //department personnel
-                        <Form>
+                        <Form onSubmit={this.handleComment}>
                             <FormGroup className="m-1">
-                                <textarea className="py-0" id="descriptionBox" type="text"  onChange={this.handleTextArea} name="description" placeholder="Προσθέστε σχόλιο..."/>
+                                <textarea className="py-0" id="descriptionBox" type="text" value={this.state.comment} onChange={this.handleTextArea} name="comment" placeholder="Προσθέστε σχόλιο..."/>
                             </FormGroup>
-                            <Button className="float-right" style={{ backgroundColor: "#0063bf", borderColor: "#0063bf" }} disabled = {!formflag} onClick={this.handleComment}>Προσθήκη</Button>
+                            <Button className="float-right" type="submit" style={{ backgroundColor: "#0063bf", borderColor: "#0063bf" }}>Προσθήκη</Button>
                         </Form>
                     )}
                     </Col>
