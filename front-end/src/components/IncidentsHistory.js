@@ -8,7 +8,9 @@ import SideMenu from './SideMenu'
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons'
 import Incident from './Incident'
 import Gmap from './Gmap'
-import { CustomInput, Col, Row, Button, Form, FormGroup, Label, Input, Container } from 'reactstrap'
+import { CustomInput, Col, Row, Button, Form, FormGroup, Label} from 'reactstrap'
+import { TextField } from '@material-ui/core';
+
 
 import { incidentService } from '../services/incidents.service';
 
@@ -39,11 +41,11 @@ class Incidents extends Component
         let coordinate = {}; //object of coordinates
         let coordinates = [] //array of objects of coordinates
 
-		incidentService.get_active_incidents(this.state.visiblePosts, 5)
+		incidentService.get_active_incidents(this.state.visiblePosts, 7)
 		.then( response => {
 			this.setState({
 				incidents: response,
-				visiblePosts: this.state.visiblePosts + 5
+				visiblePosts: this.state.visiblePosts + 7
 			})
 			
 			this.state.incidents.forEach(incident => { /*Loop through every row of the jsonfile and get the attributes*/
@@ -78,13 +80,13 @@ class Incidents extends Component
 			isloading: true
 		})
 		this.setState({
-			visiblePosts: this.state.visiblePosts + 5
+			visiblePosts: this.state.visiblePosts + 7
 		})
 
 		let coordinate = {} //object of coordinates
         let coordinates = [] //array of objects of coordinates
 
-		incidentService.get_active_incidents(this.state.visiblePosts, 5)
+		incidentService.get_active_incidents(this.state.visiblePosts, 7)
 		.then (response => {
 			if (response.length !== 0)
 			{
@@ -219,13 +221,13 @@ class Incidents extends Component
 
 				<br/>
 				<div className="row ml-4 pl-5"  style={{position: 'absolute'}}>
-					<div className="col-sm-2 py-1 pr-0" style={{position: 'absolute',  marginLeft: '70%', marginTop: '-40%'}}>
+					<div className="col-sm-2 py-1 pr-0" style={{position: 'absolute',  marginLeft: '50%', marginTop: '-40%'}}>
 						<div className="dropdown-divider"></div>
 						<Form>
-						<Row>
-							<Col sm={4}>
+						<Row >
+							<Col sm={4} style={{marginLeft: '-35%'}}>
 								<FormGroup>
-								<Label><h6>Προτεραιότητα</h6></Label>
+								<Label><h6 style={{marginLeft: '-5%'}}>Προτεραιότητα</h6></Label>
 								<div innerref={this.state.filter_priority}> 
 									<CustomInput type="checkbox" id="1" label="Χαμηλή" onClick={this.filterPriority.bind(this, "1")} />
 									<CustomInput type="checkbox" id="2" label="Μέτρια"  onClick={this.filterPriority.bind(this, "2")}/>
@@ -233,7 +235,7 @@ class Incidents extends Component
 								</div>
 								</FormGroup>
 							</Col>
-							<Col sm={4}>
+							<Col sm={4} style={{marginLeft: '-50%'}}>
 							<FormGroup>
 								<Label><h6>Κατάσταση</h6></Label>
 								<div innerref={this.state.filter_state}> 
@@ -243,10 +245,19 @@ class Incidents extends Component
 								</div>
 							</FormGroup>
 							</Col>
-							<br/>
+							<br/><br/><br/><br/>
 							<h6>Ημερομηνία</h6>
-							<div className="dropdown-divider"></div>
-							<input type="date" id="birthday" value={this.state.filter_date} name="filter_date" onChange={this.apply_filter}/>
+							<form noValidate>
+							<TextField
+								id="date"
+								label="Birthday"
+								type="date"
+								defaultValue="2017-05-24"
+								InputLabelProps={{
+								shrink: true,
+								}}
+							/>
+							</form>
 							<br/>
 							<button type="submit" className="btn btn-primary">Αναζήτηση</button>
 						</Row>
@@ -261,7 +272,7 @@ class Incidents extends Component
 						<div className = "col-sm-2" style={{marginLeft: '19%'}}>
 							<FontAwesomeIcon icon={ faExclamationTriangle } style={{width: '50px', marginTop: '15px'}} />
 						</div>
-						<div className = "col-lg-2" style={{marginLeft: '-10%'}}>
+						<div className = "col-lg-2" style={{marginLeft: '-11%'}}>
 							<p style={{fontSize:'22px'}}>Ημερομηνία</p>
 						</div>
 						<div className = "col-lg-2" style={{marginLeft: '-4%'}}>
@@ -280,7 +291,7 @@ class Incidents extends Component
 				<div className = 'incidents_line' style={{opacity: '1.0'}}></div>
 				
 				<div className = "scrolls">
-					{incidents.map((incident) => {//Loop through every row of the jsonfile and get the attributes
+					{incidents.map((incident) => {//Loop through every row of the json file and get the attributes
 						return (
 							<div key = {incident._id}>
 								<Incident // Render the same Component with different values each time 

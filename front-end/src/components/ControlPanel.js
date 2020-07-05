@@ -35,11 +35,11 @@ class ControlPanel extends Component
         let coordinate = {}; //object of coordinates
         let coordinates = [] //array of objects of coordinates
 
-		incidentService.get_active_incidents(this.state.visiblePosts, 5)
+		incidentService.get_active_incidents(this.state.visiblePosts, 6)
 		.then( response => {
 			this.setState({
 				incidents: response,
-				visiblePosts: this.state.visiblePosts + 5
+				visiblePosts: this.state.visiblePosts + 6
 			})
 			
 			this.state.incidents.forEach(incident => { /*Loop through every row of the jsonfile and get the attributes*/
@@ -66,12 +66,12 @@ class ControlPanel extends Component
 			isloading: true
 		})
 		this.setState({
-			visiblePosts: this.state.visiblePosts + 5
+			visiblePosts: this.state.visiblePosts + 6
 		})
 		let coordinate = {} //object of coordinates
         let coordinates = [] //array of objects of coordinates
 
-		incidentService.get_active_incidents(this.state.visiblePosts, 5)
+		incidentService.get_active_incidents(this.state.visiblePosts, 6)
 		.then (response => {
 			if (response.length !== 0)
 			{

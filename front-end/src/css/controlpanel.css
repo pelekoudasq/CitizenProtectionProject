@@ -43,13 +43,10 @@
 	top:110px;
 }
 
-.incident_box
+#inc_box
 {
-	  width: 80%;
-  	margin: 30px auto;
-  	background-color: grey;
-  	max-height: 300px;
-  	box-sizing: border-box;
+  margin: -1.1%;
+  box-sizing: content-box;
 }
 
 .container{
@@ -100,7 +97,7 @@
 .scroll
 {
   overflow-y: scroll;
-  height: 430px;
+  height: 4px;
   overflow-x: hidden;
   width: 60%;
 }
@@ -143,8 +140,8 @@
 
 .load-spin {
     position:fixed;
-    width:55%;
-    left:8%;right:15%;top:21%;bottom:5%;
+    width:75%;
+    left:5%;right:15%;top:19%;bottom:5%;
     background-color: rgba(255,255,255,0.7);
     z-index:9999;
 }
