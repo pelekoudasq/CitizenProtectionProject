@@ -118,13 +118,13 @@ class Incident extends Component
                             <Button style = {{marginTop: '26%', marginLeft: '2%'}} onClick={this.handleClick}>Περισσότερα</Button>
                         </div>
         			</Modal>
-					<div className = "container-fluid" style = {{marginLeft: '14%' }}>
+					<div className = "container-fluid" style = {{marginLeft: this.props.style.marginLeft}}>
 						<div className = "row">
-							<div  className="col-lg-2 mr-1">
+							<div  className="col-lg-2">
 								<img src={icon} alt= '' />
 							</div>
-							<div className="col-md-4 ml-1">{moment(this.props.incident.date).format('DD-MM-YY')}  {moment(this.props.incident.date).format('HH:mm')}</div>
-							<div className="col-sm-4 ml-1">{this.props.incident.location.address}</div>
+							<div className="col-md-3 ml-1">{moment(this.props.incident.date).format('DD-MM-YY')}  {moment(this.props.incident.date).format('HH:mm')}</div>
+							<div className="col-sm-4">{this.props.incident.location.address}</div>
 							<div className="col">{this.props.incident.title}</div>
 						</div>
 					</div>

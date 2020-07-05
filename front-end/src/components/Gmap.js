@@ -5,14 +5,6 @@ function GMap(props)
   const googleMapRef = useRef(null);
   let googleMap = null;
 
-  // list of icons
-  // const iconList = {
-  //   icon1: 'https://cdn1.iconfinder.com/data/icons/Map-Markers-Icons-Demo-PNG/256/Map-Marker-Flag--Right-Chartreuse.png',
-  //   icon2: 'https://cdn2.iconfinder.com/data/icons/IconsLandVistaMapMarkersIconsDemo/256/MapMarker_Marker_Outside_Chartreuse.png',
-  //   icon3: 'https://cdn1.iconfinder.com/data/icons/Map-Markers-Icons-Demo-PNG/256/Map-Marker-Ball-Right-Azure.png',
-  //   icon4: 'https://cdn1.iconfinder.com/data/icons/Map-Markers-Icons-Demo-PNG/256/Map-Marker-Marker-Outside-Pink.png'
-  // }
-
   // list of the marker object along with icon
   const markerList = props.coordinates
 
@@ -54,7 +46,7 @@ function GMap(props)
 
   return <div
     ref={googleMapRef}
-    style={{ width: '35%', height: '65%', marginLeft: '63%', position: 'absolute'}} />  
+    style={{width: props.size.width, height:props.size.height, marginLeft:props.size.marginLeft, position:props.size.position}} />  
 }
 
 export default GMap;

@@ -43,7 +43,7 @@ class IncidentForm extends Component
     }  
 
 
-    customInputValue(buttonName, e) {
+    customInputValue(buttonName) {
         let newChecked = `${buttonName}`;
         let newAuth = []
         if(this.state.auth.indexOf(newChecked) === -1){
@@ -105,10 +105,8 @@ class IncidentForm extends Component
         {
             //console.log('respone status is', response.status)
             if(response.status !== 200)
-            {
                 this.setState({flag: false, formLoading: false})
                 //console.log('flag in check fetch ', this.state.flag)
-            }
             return response;
         }
 
@@ -134,7 +132,7 @@ class IncidentForm extends Component
         .then(checkFetch)
         .then(response => response.json())
         .then( json => {
-            console.log(json);
+            // console.log(json);
             //console.log('flag after fetch', this.state.flag)
             if(this.state.flag)
             {
@@ -212,8 +210,6 @@ class IncidentForm extends Component
     };
 
     handleLocation =  (val) => {
-        
-        console.log(val.length);
         if (val.length > 0) 
             this.setState({
                 location: val,
@@ -227,8 +223,7 @@ class IncidentForm extends Component
     };
 
     handleNameChange = (val) => {
-        console.log("len is",this.state.title.current.value.length)
-
+        // console.log("len is",this.state.title.current.value.length)
         if(this.state.title.current.value.length > 0)
         {
             this.setState({
@@ -264,9 +259,7 @@ class IncidentForm extends Component
                 <h5 className = "head_ltitleInfo">Προσθήκη Νέου Συμβάντος</h5>
                 <div className = "hrz_lineBack"></div>
 
-                {this.state.formLoading ?
-                    <div className="cover-spin"></div> : console.log("")
-                }
+                {this.state.formLoading && <div className="cover-spin"></div>}
 
                 <div style={{ marginLeft: '15%', marginRight: '100px', width: '70%'}}>
                     <Row style={{ position: 'center', paddingLeft: '25px'}}>
@@ -352,12 +345,10 @@ class IncidentForm extends Component
                     </Row>
             
                 <br/>
-                {this.state.successSubmit === true ? (
+                {this.state.successSubmit === true &&(
                     <div className="alert alert-success" style = {{}}>
                         <strong>Οι αρμόδιοι Φορείς ενημερώθηκαν επιτυχώς για το συμβάν</strong>
                     </div>
-                ) : (
-                    <p> </p>
                 )}  
                 </Form>
 

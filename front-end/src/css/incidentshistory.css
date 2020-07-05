@@ -4,3 +4,40 @@
     height:30px;
     padding-left:25px;  
 }
+
+.scrolls
+{
+  overflow-y: scroll;
+  height: 430px;
+  overflow-x: hidden;
+  width: 72%;
+}
+
+.incidents_line
+{
+	width: 50%;
+  border-top: 1px solid black;
+  opacity: 0.4;
+  position: absolute;
+  left: 20%;
+}
+
+.incs_line
+{
+    width: 40%;
+    margin-left: 10%;
+    border-top: 2px solid grey;
+    opacity: 0.4;
+    left: 16%;
+    position: absolute;
+}
+
+.vertical_line
+{
+  border-left: 2px solid black;
+  height: 65%;
+  position: absolute;
+  left: 18%;
+  opacity: 0.3;
+  top: 19%;
+}

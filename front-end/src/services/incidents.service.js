@@ -1,7 +1,7 @@
 import apiUrl from './apiUrl'
 
 export const incidentService = {
-	get_incidents
+    get_active_incidents
 };
 
 
@@ -20,7 +20,7 @@ function authHeader()
 }
 
 
-function get_incidents(start, count) {
+function get_active_incidents(start, count) {
 
 	const requestOptions = {
 		mode: 'cors',
@@ -35,3 +35,4 @@ function get_incidents(start, count) {
     });	
 
 }
+
