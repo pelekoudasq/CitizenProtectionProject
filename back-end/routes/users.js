@@ -112,14 +112,14 @@ router.put('/:id', function(req, res, next) {
 		if (!role) { role = user.userType; }
 		if (!agency && user.details) { agency = user.details.authorityType; }
 
-        // keep prev details
-        var departmentId, area, lat, long;
-        if (user.details) {
-	        departmentId = user.details.departmentId;
-    	    area = user.details.area;
-        	lat = user.details.lat;
-        	long = user.details.long;
-        }
+		// keep prev details
+		var departmentId, area, lat, long;
+		if (user.details) {
+			departmentId = user.details.departmentId;
+			area = user.details.area;
+			lat = user.details.lat;
+			long = user.details.long;
+		}
 
 		if (password)
 			passwordHash = bcrypt.hashSync(password, 10);
@@ -221,8 +221,15 @@ router.get('/requests/:user_id', function(req, res, next) {
 			res.send(err);
 			return;
 		}
-		if (user.userType == 2)
-			res.json({ incidentRequests: user.incidentRequests});
+		if (user.userType == 2) {
+			db.Incidents.find({ _id: { $in: user.incidentRequests }, active: true }, function(err, incidents) {
+				if (err) {
+					res.send(err);
+					return;
+				}
+				res.json({ incidents });
+			});
+		}
 		else
 			res.status(404).json({ error: 'User is not an officer in duty' });
 	});
@@ -232,7 +239,7 @@ router.get('/requests/:user_id', function(req, res, next) {
 // GET accepted incidents
 router.get('/accepted/:user_id', function(req, res, next) {
 
-	console.log('users: get incident requests by user');
+	console.log('users: get accepted incidents by user');
 	db.Users.findOne({ _id: mongojs.ObjectID(req.params.user_id) }, function(err, user) {
 		if (err) {
 			res.send(err);
@@ -244,7 +251,7 @@ router.get('/accepted/:user_id', function(req, res, next) {
 					res.send(err);
 					return;
 				}
-				res.json({incidents});
+				res.json({ incidents });
 			});
 		}
 		else

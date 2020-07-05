@@ -35,6 +35,41 @@ router.get('/', function(req, res, next) {
 	});
 });
 
+//POST get auctions by filters
+router.post('/filter', function(req, res, next) {
+	
+	console.log("api: incidents via filters");
+	let query = {};
+	query['$and'] = [];
+	
+	if (req.body.text != null)
+		query['$and'].push({ $text: { $search: req.body.text }});
+	
+	// if (req.body.params.region != null)
+	// 	query['$and'].push({ $or: [ {location: { name: req.body.params.region } }, { country: req.body.params.region }] });
+	
+	// if (req.body.params.minprice != null && req.body.params.maxprice != null)
+	// 	query['$and'].push({ currently: { $gt: Number(req.body.params.minprice), $lt: Number(req.body.params.maxprice) }});
+	// else if (req.body.params.minprice != null)
+	// 	query['$and'].push({ currently: { $gt: Number(req.body.params.minprice) }});
+	// else if (req.body.params.maxprice != null)
+	// 	query['$and'].push({ currently: { $lt: Number(req.body.params.maxprice) }});
+	
+	// if (req.body.params.category != null)
+	// 	query['$and'].push({ categories: { $in: [req.body.params.category] }});
+	
+	if (req.body.status != null)
+		query['$and'].push({ status: req.body.status });
+	
+	db.Incidents.find(query, function(err, incidents) {
+		if (err) {
+			res.send(err);
+			return;
+		}
+		res.status(200).json(incidents);
+	});
+});
+
 
 //get incident by id
 router.get('/:id', function(req, res, next) {
