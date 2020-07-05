@@ -297,14 +297,14 @@ class ViewIncident extends Component
         if (this.state.incident.comments){
             var i;
             for (i = 0; i < this.state.incident.comments.length; i++) {
-            	var username
-            	incidentService.get_user(this.state.incident.comments[i].user)
-            	.then(response => {
-            		// this.state.incident.comments[i].username = response[0].username
-            		username = response[0].username
-            		console.log(username)
-            	})
-            	console.log(username)
+            	// var username
+            	// incidentService.get_user(this.state.incident.comments[i].user)
+            	// .then(response => {
+            	// 	// this.state.incident.comments[i].username = response[0].username
+            	// 	username = response[0].username
+            	// 	console.log(username)
+            	// })
+            	// console.log(username)
                 comments[i] = <li className='list-group-item mt-2 pb-0 u-shadow-v18 g-bg-secondary rounded'>
                     <div className="font-weight-bold" style={{opacity:'0.6' }}>{this.state.incident.comments[i].user}</div>
                     <div className="text-wrap">
