@@ -10,13 +10,13 @@ function HeatMap(props)
 		points[i] = new window.google.maps.LatLng(props.coordinates[i].lat, props.coordinates[i].lng);
 	}
 	const Heatmap = withGoogleMap(props => (
-		<GoogleMap defaultZoom ={9} center = {{ lat: 37.983810, lng: 23.727539 }}>
+		<GoogleMap defaultZoom ={7} center = {{ lat: 38.496594, lng: 22.530154 }}>
 			<HeatmapLayer data = {points} />
 		</GoogleMap>
 	));
 
 	return(
-		<div style={{ height: '88%', width: '35%', marginLeft: '55%', position: 'absolute' }}>
+		<div style={{ height: '106%', width: '35%', marginLeft: '58%', position: 'absolute' }}>
 			<Heatmap
 				containerElement = { <div style={{ height: `100%` }} /> }
 				mapElement = { <div style={{ height: `100%` }} /> }
