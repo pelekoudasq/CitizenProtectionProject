@@ -11,6 +11,8 @@ import '../css/sidemenu.css'
 import { withRouter } from 'react-router'
 
 
+
+
 class SideMenu extends Component
 {
     constructor(props, context)
@@ -42,11 +44,7 @@ class SideMenu extends Component
         {
             return (
                 <React.Fragment>
-                    {this.state.buttonPressed ?
-                        <div className="overlay" />
-                    : (
-                        <p> </p>
-                    )}
+                    {this.state.buttonPressed && <div className="overlay" />}
                     <SideNav  id="sidenav" className="sidebar">
                     <SideNav.Toggle onClick= {this.handleClick} />
                     <SideNav.Nav defaultSelected="home">

@@ -14,12 +14,12 @@
   overflow-y: scroll;
   height: 430px;
   overflow-x: hidden;
-  width: 72%;
+  width: 68%;
 }
 
 .incidents_line
 {
-	width: 50%;
+	width: 45%;
   border-top: 1px solid black;
   opacity: 0.4;
   position: absolute;
@@ -28,7 +28,7 @@
 
 .incs_line
 {
-    width: 40%;
+    width: 35%;
     margin-left: 10%;
     border-top: 2px solid grey;
     opacity: 0.4;

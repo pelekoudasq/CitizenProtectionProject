@@ -95,14 +95,14 @@
 
 .loginbutton 
 {
- width: 100%;
- min-width: 280px;
- color: #f5f5f5;
- padding: 12px;
- font-size: 14px;
- font-weight: bold;
- border: solid 2px ##e6ecf1;
- border-radius: 4px;
- background: #2c71af;
- cursor: pointer;
+  width: 100%;
+  min-width: 280px;
+  color: #f5f5f5;
+  padding: 12px;
+  font-size: 14px;
+  font-weight: bold;
+  border: solid 2px ##e6ecf1;
+  border-radius: 4px;
+  background: #2c71af;
+  cursor: pointer;
 }

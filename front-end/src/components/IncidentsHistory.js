@@ -41,30 +41,72 @@ class Incidents extends Component
 	componentDidMount()
 	{	
         let coordinate = {}; //object of coordinates
-        let coordinates = [] //array of objects of coordinates
+		let coordinates = [] //array of objects of coordinates
+		let usertype =  localStorage.getItem("usertype");
 
-		incidentService.get_active_incidents(this.state.visiblePosts, 8)
-		.then( response => {
-			this.setState({
-				incidents: response,
-				visiblePosts: this.state.visiblePosts + 8
-			})
-			
-			this.state.incidents.forEach(incident => { /*Loop through every row of the jsonfile and get the attributes*/
-					/*define the new coordinate */
-					coordinate = {}
-					coordinate['lat'] = incident.location['latitude']
-					coordinate['lng'] = incident.location['longtitude']    
-					coordinate['priority'] = incident.priority
-
-					/* Push it to the array of coordinates */
-					coordinates.push(coordinate)
+		if(usertype==0) //api call for control center
+		{	
+			incidentService.get_active_incidents(this.state.visiblePosts, 6)
+			.then( response => {
+				console.log("Response from control center is",response)
+				this.setState({
+					incidents: response,
+					visiblePosts: this.state.visiblePosts + 6
 				})
-
-			this.setState({
-				coordinates: coordinates
-			})
-		});	
+				
+				this.state.incidents.forEach(incident => { /*Loop through every row of the jsonfile and get the attributes*/
+						/*define the new coordinate */
+						coordinate = {}
+						coordinate['lat'] = incident.location['latitude']
+						coordinate['lng'] = incident.location['longtitude']    
+						coordinate['priority'] = incident.priority
+	
+						/* Push it to the array of coordinates */
+						coordinates.push(coordinate)
+					})
+	
+				this.setState({
+					coordinates: coordinates
+				})
+			});	
+		}
+		else if(usertype == 2) //api call for employees
+		{	
+			incidentService.get_user_accepted_incidents()
+			.then( response => {
+				if(response.incidents.length !==0)
+				{
+					console.log("Response from sofia is",response.incidents)
+					this.setState({
+						incidents: response.incidents,
+						visiblePosts: this.state.visiblePosts + 6
+					})
+					
+					this.state.incidents.forEach(incident => { /*Loop through every row of the jsonfile and get the attributes*/
+							/*define the new coordinate */
+							coordinate = {}
+							coordinate['lat'] = incident.location['latitude']
+							coordinate['lng'] = incident.location['longtitude']    
+							coordinate['priority'] = incident.priority
+		
+							/* Push it to the array of coordinates */
+							coordinates.push(coordinate)
+						})
+		
+					this.setState({
+						coordinates: coordinates
+					})
+				}
+				else if(response.incidents.length === 0)
+				{
+					console.log("To response einai adeio!!!")
+					this.setState=({
+						no_posts: true,
+						postsDone: true
+					})
+				}
+			});	
+		}
 
 	}
 
@@ -74,13 +116,13 @@ class Incidents extends Component
 			isloading: true
 		})
 		this.setState({
-			visiblePosts: this.state.visiblePosts + 8
+			visiblePosts: this.state.visiblePosts + 7
 		})
 
 		let coordinate = {} //object of coordinates
         let coordinates = [] //array of objects of coordinates
 
-		incidentService.get_active_incidents(this.state.visiblePosts, 8)
+		incidentService.get_active_incidents(this.state.visiblePosts, 7)
 		.then (response => {
 			if (response.length !== 0)
 			{
@@ -187,63 +229,69 @@ class Incidents extends Component
 
 	apply_filter(event) 
 	{
-		console.log(this.state.filter_text)
-		console.log(this.state.filter_priority)
-		console.log(this.state.filter_status)
-		console.log(this.state.filter_start_date)
-		console.log(this.state.filter_end_date)
-
+		
 		this.setState({
 			isloading: true,
 			no_result: false
 		})
 
 		let coordinate = {} //object of coordinates
-        let coordinates = [] //array of objects of coordinates
+		let coordinates = [] //array of objects of coordinates
+		let usertype =  localStorage.getItem("usertype");
 
-		incidentService.get_filtered_incidents(this.state.filter_text, this.state.filter_priority, this.state.filter_status, this.state.filter_date)
-		.then (response => {
-			if (response.length !== 0)
-			{
-				this.setState ({
-					isloading: false
-				})
+		if(usertype == 0)
+		{
 
-				this.setState({
-					incidents: response
-				})
+			incidentService.get_filtered_incidents(this.state.filter_text, this.state.filter_priority, this.state.filter_status, this.state.filter_start_date,  this.state.filter_start_date)
+			.then (response => {
+				if (response.length !== 0)
+				{
+					this.setState ({
+						isloading: false
+					})
 
-				this.state.incidents.forEach(incident => { /*Loop through every row of the jsonfile and get the attributes*/
-					/*define the new coordinate */
-					coordinate = {}
-					coordinate['lat'] = incident.location['latitude']
-					coordinate['lng'] = incident.location['longtitude']    
-					coordinate['priority'] = incident.priority
+					this.setState({
+						incidents: response
+					})
 
-					/* Push it to the array of coordinates */
-					coordinates.push(coordinate)
-				})
-				this.setState({
-					coordinates: coordinates,
-					postsDone: true
-				})
+					this.state.incidents.forEach(incident => { /*Loop through every row of the jsonfile and get the attributes*/
+						/*define the new coordinate */
+						coordinate = {}
+						coordinate['lat'] = incident.location['latitude']
+						coordinate['lng'] = incident.location['longtitude']    
+						coordinate['priority'] = incident.priority
 
-			}
-			else if(response.length === 0)
-			{
-				this.setState({
-					postsDone: true,
-					isloading: false,
-					no_result: true
-				})
-			}
-		})
+						/* Push it to the array of coordinates */
+						coordinates.push(coordinate)
+					})
+					this.setState({
+						coordinates: coordinates,
+						postsDone: true
+					})
+
+				}
+				else if(response.length === 0)
+				{
+					this.setState({
+						postsDone: true,
+						isloading: false,
+						no_result: true
+					})
+				}
+			})
+		}
+		else if(usertype == 2 || usertype == 1)
+		{
+			
+		}
 		event.preventDefault();
 	}
 
 	render()
 	{
 		let incidents = this.state.incidents
+		let usertype =  localStorage.getItem("usertype")
+
 		return(
 			<div>
         		<SideMenu/>
@@ -264,7 +312,7 @@ class Incidents extends Component
 
 						<div className="col-md-3">	
 							<form onSubmit={this.apply_filter}> 
-								<input type="text" value={this.state.filter_text} onChange={this.handleTextArea} name="filter_text" placeholder="Αναζήτηση Συμβάντων. . ." id = "search_bar" style={{width: '80%', marginTop: '-5px'}}></input>																
+								<input type="text" value={this.state.filter_text} onChange={this.handleTextArea} name="filter_text" placeholder="Αναζήτηση Συμβάντων. . ." id = "search_bar" style={{width: '90%', marginTop: '2px', marginLeft:'25%'}}></input>																
 							</form>
 						</div>
 					</div>
@@ -295,7 +343,7 @@ class Incidents extends Component
 								<div innerref={this.state.filter_status}> 
 									<CustomInput type="checkbox" id="4" label="Κλειστά" onClick={this.filterState.bind(this, "4")} />
 									<CustomInput type="checkbox" id="5" label="Εκκρεμή"  onClick={this.filterState.bind(this, "5")}/>
-									<CustomInput type="checkbox" id="6" label="Όλα"  onClick={this.filterState.bind(this, "5")}/>
+									<CustomInput type="checkbox" id="6" label="Όλα"  onClick={this.filterState.bind(this, "6")}/>
 								</div>
 							</FormGroup>
 							</Col>
@@ -341,23 +389,23 @@ class Incidents extends Component
 					<div className = "container-fluid">	
 						<div className = "row">
 							<div className = "col-sm-2" style={{marginLeft: '19%'}}>
-								<FontAwesomeIcon icon={ faExclamationTriangle } style={{width: '50px', marginTop: '15px'}} />
+								<FontAwesomeIcon icon={ faExclamationTriangle } style={{width: '50px', marginTop: '8px'}} />
 							</div>
-							<div className = "col-lg-2" style={{marginLeft: '-11%'}}>
-								<p style={{fontSize:'22px'}}>Ημερομηνία</p>
+							<div className = "col-lg-2" style={{marginLeft: '-15.5%'}}>
+								<p style={{fontSize:'19px'}}>Ημερομηνία</p>
 							</div>
-							<div className = "col-lg-2" style={{marginLeft: '-4%'}}>
-								<p style={{fontSize:'22px'}}>Διεύθυνση</p>
+							<div className = "col-lg-2" style={{marginLeft: '-5%'}}>
+								<p style={{fontSize:'19px'}}>Διεύθυνση</p>
 							</div>        			        			
-							<div className = "col-lg-1" style={{marginLeft: '4%'}}>
-								<p style={{fontSize:'23px'}}>Τίτλος</p>
+							<div className = "col-lg-1" style={{marginLeft: '3%'}}>
+								<p style={{fontSize:'20px'}}>Τίτλος</p>
 							</div>    
 						</div>
 					</div>
 				)}
 
 				{(this.state.coordinates.length > 0 && !this.state.isloading && !this.state.no_result) && (
-					<Gmap coordinates = {this.state.coordinates} size={{ width:'25%', height:'55%', marginLeft:'73%', position: 'absolute'}}/>
+					<Gmap coordinates = {this.state.coordinates} size={{ width:'30%', height:'60%', marginLeft:'69%', position: 'absolute'}}/>
 				)}  
 
 				<div className = 'incidents_line' style={{opacity: '1.0'}}></div>
@@ -369,7 +417,7 @@ class Incidents extends Component
 								<div key = {incident._id}>
 									<Incident // Render the same Component with different values each time 
 										incident = {incident}
-										style = {{marginLeft: '28%'}} 
+										style = {{marginLeft: '30%'}} 
 									/>
 								</div>
 							)     			
@@ -380,8 +428,8 @@ class Incidents extends Component
 				{!this.state.no_result && (<div className = "incs_line"></div>)}
 				<br/>
 
-				{(!this.state.postsDone) && //if no more posts left, the dont display
-					(<Button id = "load" className = "loadmore" onClick = {this.loadmore} style = {{position: 'absolute', marginLeft: '35%'}}>Φόρτωση Περισσοτέρων</Button>
+				{((!this.state.postsDone) && (usertype != 2)) && //if no more posts left, then dont display
+					(<Button id = "load" className = "loadmore" onClick = {this.loadmore} style = {{position: 'absolute', marginLeft: '35%', marginTop: '1%'}}>Φόρτωση Περισσοτέρων</Button>
 				)}
 
 			</div>

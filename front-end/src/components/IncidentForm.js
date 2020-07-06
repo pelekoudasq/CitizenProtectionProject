@@ -90,11 +90,11 @@ class IncidentForm extends Component
 
 
     handleSubmit = event => {
-        // console.log('IncidentForm...');
-        // console.log('Title: ',this.state.title.current.value);
-        // console.log('Location: ',this.state.location);
-        // console.log('Authorizations: ',this.state.auth);
-        // console.log('Priority: ',this.state.priority.current.value); 
+        console.log('IncidentForm...');
+        console.log('Title: ',this.state.title.current.value);
+        console.log('Location: ',this.state.location);
+        console.log('Authorizations: ',this.state.auth);
+        console.log('Priority: ',this.state.priority.current.value); 
         //console.log("i forma", this.state.formLoading)     
 
         this.setState({
@@ -289,10 +289,10 @@ class IncidentForm extends Component
                                 <FormGroup style={{ width:'40% !important' }}>
                                 <Label for="exampleCheckbox">Φορείς*</Label>
                                 <div required className="CheckBox" innerref={this.state.auth}> 
-                                <CustomInput type="checkbox" id="mycheck" label="Ε.Κ.Α.Β." onClick={this.customInputValue.bind(this, "1")} />
-                                <CustomInput type="checkbox" id="2" label="ΕΛ.ΑΣ."  onClick={this.customInputValue.bind(this, "2")}/>
-                                <CustomInput type="checkbox" id="3" label="Λιμενικό"  onClick={this.customInputValue.bind(this, "3")}/>
-                                <CustomInput type="checkbox" id="4" label="Πυρoσβεστική"  onClick={this.customInputValue.bind(this, "4")}/>
+                                    <CustomInput type="checkbox" id="0" label="Ε.Κ.Α.Β." onClick={this.customInputValue.bind(this, "0")} />
+                                    <CustomInput type="checkbox" id="1" label="ΕΛ.ΑΣ."  onClick={this.customInputValue.bind(this, "1")}/>
+                                    <CustomInput type="checkbox" id="2" label="Πυρoσβεστική"  onClick={this.customInputValue.bind(this, "2")}/>
+                                    <CustomInput type="checkbox" id="3" label="Λιμενικό"  onClick={this.customInputValue.bind(this, "3")}/>
                                 </div>
                                 </FormGroup>
                             </Col>
