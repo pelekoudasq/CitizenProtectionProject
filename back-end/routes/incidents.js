@@ -14,13 +14,34 @@ const db = mongojs(config.dburi);
 
 //routes
 
-//get all incidents
+//GET all incidents
 router.get('/', function(req, res, next) {
 
 	const format = req.query.format;
 	const start = parseInt(req.query.start);
 	const count = parseInt(req.query.count);
 	db.Incidents.find({}).limit(count).skip(start, function(err, incidents) {
+		if (err) {
+			if (format && format === "xml")
+				res.send(json2xml(err))
+			else
+				res.send(err);
+			return;
+		}
+		if (format && format === "xml")
+			res.send(json2xml(incidents))
+		else
+			res.json(incidents)
+	});
+});
+
+//GET active incidents
+router.get('/active', function(req, res, next) {
+
+	const format = req.query.format;
+	const start = parseInt(req.query.start);
+	const count = parseInt(req.query.count);
+	db.Incidents.find({ active: true }).limit(count).skip(start, function(err, incidents) {
 		if (err) {
 			if (format && format === "xml")
 				res.send(json2xml(err))
@@ -45,21 +66,23 @@ router.post('/filter', function(req, res, next) {
 	if (req.body.text != null)
 		query['$and'].push({ $text: { $search: req.body.text }});
 	
-	// if (req.body.params.region != null)
-	// 	query['$and'].push({ $or: [ {location: { name: req.body.params.region } }, { country: req.body.params.region }] });
+	if (req.body.priority != null) {
+
+	}
+	// 	query['$and'].push({ $or: [ {location: { name: req.body.region } }, { country: req.body.region }] });
 	
-	// if (req.body.params.minprice != null && req.body.params.maxprice != null)
-	// 	query['$and'].push({ currently: { $gt: Number(req.body.params.minprice), $lt: Number(req.body.params.maxprice) }});
-	// else if (req.body.params.minprice != null)
-	// 	query['$and'].push({ currently: { $gt: Number(req.body.params.minprice) }});
-	// else if (req.body.params.maxprice != null)
-	// 	query['$and'].push({ currently: { $lt: Number(req.body.params.maxprice) }});
+	// if (req.body.minprice != null && req.body.maxprice != null)
+	// 	query['$and'].push({ currently: { $gt: Number(req.body.minprice), $lt: Number(req.body.maxprice) }});
+	// else if (req.body.minprice != null)
+	// 	query['$and'].push({ currently: { $gt: Number(req.body.minprice) }});
+	// else if (req.body.maxprice != null)
+	// 	query['$and'].push({ currently: { $lt: Number(req.body.maxprice) }});
 	
-	// if (req.body.params.category != null)
-	// 	query['$and'].push({ categories: { $in: [req.body.params.category] }});
+	// if (req.body.category != null)
+	// 	query['$and'].push({ categories: { $in: [req.body.category] }});
 	
 	if (req.body.status != null)
-		query['$and'].push({ status: req.body.status });
+		query['$and'].push({ active: req.body.status });
 	
 	db.Incidents.find(query, function(err, incidents) {
 		if (err) {
@@ -141,7 +164,12 @@ router.post('/', function(req, res, next) {
 					active: true,
 					comments: [],
 					officers: [],
-					departments: []
+					departments: [],
+					stats: {
+						deaths: 0,
+						injured: 0,
+						arrested: 0
+					}
 				}, function(err, incident) {
 					if (err) {
 						res.send(err);
