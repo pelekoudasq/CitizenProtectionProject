@@ -58,16 +58,27 @@ router.get('/active', function(req, res, next) {
 
 //POST get auctions by filters
 router.post('/filter', function(req, res, next) {
-	
+
 	console.log("api: incidents via filters");
-	let query = {};
-	query['$and'] = [];
-	
-	if (req.body.text != null)
+	let query = {};	
+
+	if (req.body.text || req.body.priority.length)
+		query['$and'] = [];
+
+	if (req.body.text)
 		query['$and'].push({ $text: { $search: req.body.text }});
 	
-	if (req.body.priority != null) {
-
+	if (req.body.priority.length) {
+		prios = []
+		req.body.priority.forEach(priority => {
+			if (priority == "1")
+				prios.push({ priority: "Χαμηλή"})
+			if (priority == "2")
+				prios.push({ priority: "Μέτρια"})
+			if (priority == "3")
+				prios.push({ priority: "Υψηλή"})
+		});
+		query['$and'].push({ $or: prios })
 	}
 	// 	query['$and'].push({ $or: [ {location: { name: req.body.region } }, { country: req.body.region }] });
 	
@@ -85,8 +96,10 @@ router.post('/filter', function(req, res, next) {
 		query['$and'].push({ active: req.body.status });
 	
 	db.Incidents.find(query, function(err, incidents) {
+		// console.log(query);
 		if (err) {
 			res.send(err);
+			// console.log(err);
 			return;
 		}
 		res.status(200).json(incidents);
