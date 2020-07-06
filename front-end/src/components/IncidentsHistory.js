@@ -23,12 +23,14 @@ class Incidents extends Component
 			incidents: [],
 			showModal: false,
 			coordinates: [],
-			visiblePosts: 5,
+			visiblePosts: 0,
 			isloading: false,
-			query: React.createRef(), //represents the text based query of the user
-			filter_date: React.createRef(),
+			filter_text: "", //represents the text based query of the user
+			filter_start_date: "" ,
+			filter_end_date:"",
 			filter_priority: [],
-			filter_state: [] //true holds for pending incidents, false holds for closed
+			filter_status: [], //true holds for pending incidents, false holds for closed
+			no_result: false
 		}
 		this.loadmore = this.loadmore.bind(this)
 		this.apply_filter = this.apply_filter.bind(this);	
@@ -41,11 +43,11 @@ class Incidents extends Component
         let coordinate = {}; //object of coordinates
         let coordinates = [] //array of objects of coordinates
 
-		incidentService.get_active_incidents(this.state.visiblePosts, 7)
+		incidentService.get_active_incidents(this.state.visiblePosts, 8)
 		.then( response => {
 			this.setState({
 				incidents: response,
-				visiblePosts: this.state.visiblePosts + 7
+				visiblePosts: this.state.visiblePosts + 8
 			})
 			
 			this.state.incidents.forEach(incident => { /*Loop through every row of the jsonfile and get the attributes*/
@@ -66,27 +68,19 @@ class Incidents extends Component
 
 	}
 
-	apply_filter(event) //Generic function for
-	{
-		// const {name, value, type, checked} = event.target
-		// type==="checkbox" ? this.setState this.setState({
-		// 	[name]: value
-		// })
-	}
-
 	loadmore()
 	{
 		this.setState({
 			isloading: true
 		})
 		this.setState({
-			visiblePosts: this.state.visiblePosts + 7
+			visiblePosts: this.state.visiblePosts + 8
 		})
 
 		let coordinate = {} //object of coordinates
         let coordinates = [] //array of objects of coordinates
 
-		incidentService.get_active_incidents(this.state.visiblePosts, 7)
+		incidentService.get_active_incidents(this.state.visiblePosts, 8)
 		.then (response => {
 			if (response.length !== 0)
 			{
@@ -159,31 +153,93 @@ class Incidents extends Component
 	{
 		let newChecked = `${buttonName}`;
         let new_state = [];
-        if(this.state.filter_state.indexOf(newChecked) === -1){
-            new_state = [...this.state.filter_state, newChecked];
+        if(this.state.filter_status.indexOf(newChecked) === -1){
+            new_state = [...this.state.filter_status, newChecked];
         }
         else
         {     
-            let index = this.state.filter_state.indexOf(newChecked);
+            let index = this.state.filter_status.indexOf(newChecked);
 			if (index !== -1) 
-				this.state.filter_state.splice(index, 1);
-            new_state = this.state.filter_state
+				this.state.filter_status.splice(index, 1);
+            new_state = this.state.filter_status
         }
 
         if(Object.keys(new_state).length > 0)            
         {
             this.setState({
-                filter_state: new_state
+                filter_status: new_state
             });
         }
         else
         {
             this.setState({
-                filter_state: new_state
+                filter_status: new_state
             });
         }
-    }
+	}
+	
+	handleTextArea = event => {
+        const {name,value} = event.target;
+        this.setState({
+            [name]: value
+        })
+	};
 
+	apply_filter(event) 
+	{
+		console.log(this.state.filter_text)
+		console.log(this.state.filter_priority)
+		console.log(this.state.filter_status)
+		console.log(this.state.filter_start_date)
+		console.log(this.state.filter_end_date)
+
+		this.setState({
+			isloading: true,
+			no_result: false
+		})
+
+		let coordinate = {} //object of coordinates
+        let coordinates = [] //array of objects of coordinates
+
+		incidentService.get_filtered_incidents(this.state.filter_text, this.state.filter_priority, this.state.filter_status, this.state.filter_date)
+		.then (response => {
+			if (response.length !== 0)
+			{
+				this.setState ({
+					isloading: false
+				})
+
+				this.setState({
+					incidents: response
+				})
+
+				this.state.incidents.forEach(incident => { /*Loop through every row of the jsonfile and get the attributes*/
+					/*define the new coordinate */
+					coordinate = {}
+					coordinate['lat'] = incident.location['latitude']
+					coordinate['lng'] = incident.location['longtitude']    
+					coordinate['priority'] = incident.priority
+
+					/* Push it to the array of coordinates */
+					coordinates.push(coordinate)
+				})
+				this.setState({
+					coordinates: coordinates,
+					postsDone: true
+				})
+
+			}
+			else if(response.length === 0)
+			{
+				this.setState({
+					postsDone: true,
+					isloading: false,
+					no_result: true
+				})
+			}
+		})
+		event.preventDefault();
+	}
 
 	render()
 	{
@@ -207,17 +263,15 @@ class Incidents extends Component
 						</div>
 
 						<div className="col-md-3">	
-							<form>
-								<input type="search" placeholder="Αναζήτηση Συμβάντων. . ." id = "search_bar" style={{width: '80%', marginTop: '-5px'}}></input>																
+							<form onSubmit={this.apply_filter}> 
+								<input type="text" value={this.state.filter_text} onChange={this.handleTextArea} name="filter_text" placeholder="Αναζήτηση Συμβάντων. . ." id = "search_bar" style={{width: '80%', marginTop: '-5px'}}></input>																
 							</form>
 						</div>
 					</div>
 				</div>
         		<div className = "hrz_lineBack" style = {{marginTop: '2px'}}></div>	
 
-        		{this.state.isloading &&
-                    <div className="load-spin"></div>
-                }
+        		{this.state.isloading && <div className="load-spin"></div>}
 
 				<br/>
 				<div className="row ml-4 pl-5"  style={{position: 'absolute'}}>
@@ -238,7 +292,7 @@ class Incidents extends Component
 							<Col sm={4} style={{marginLeft: '-50%'}}>
 							<FormGroup>
 								<Label><h6>Κατάσταση</h6></Label>
-								<div innerref={this.state.filter_state}> 
+								<div innerref={this.state.filter_status}> 
 									<CustomInput type="checkbox" id="4" label="Κλειστά" onClick={this.filterState.bind(this, "4")} />
 									<CustomInput type="checkbox" id="5" label="Εκκρεμή"  onClick={this.filterState.bind(this, "5")}/>
 									<CustomInput type="checkbox" id="6" label="Όλα"  onClick={this.filterState.bind(this, "5")}/>
@@ -247,19 +301,35 @@ class Incidents extends Component
 							</Col>
 							<br/><br/><br/><br/>
 							<h6>Ημερομηνία</h6>
-							<form noValidate>
+							<div>
+								<TextField
+									id="start_date"
+									label="Από"
+									value={this.state.filter_start_date}
+									name="filter_start_date"
+									type="date"
+									onChange={this.handleTextArea}
+									InputLabelProps={{ //value={this.state.filter_text} onChange={this.handleTextArea} name="filter_text"
+									shrink: true,
+									}}
+								/>
+							</div>
+							<br/>
+							<div>
 							<TextField
-								id="date"
-								label="Birthday"
+								id="end_date"
+								label="Έως"
 								type="date"
-								defaultValue="2017-05-24"
+								value={this.state.filter_end_date}
+								name="filter_end_date"
+								onChange={this.handleTextArea}
 								InputLabelProps={{
 								shrink: true,
 								}}
 							/>
-							</form>
+							</div>
 							<br/>
-							<button type="submit" className="btn btn-primary">Αναζήτηση</button>
+							<button type="submit" className="btn btn-primary" onClick={this.apply_filter}>Αναζήτηση</button>
 						</Row>
 						</Form>
 					</div>
@@ -267,49 +337,53 @@ class Incidents extends Component
 
 				<div className = "vertical_line"></div>
 	
-				<div className = "container-fluid">	
-					<div className = "row">
-						<div className = "col-sm-2" style={{marginLeft: '19%'}}>
-							<FontAwesomeIcon icon={ faExclamationTriangle } style={{width: '50px', marginTop: '15px'}} />
+				{this.state.no_result ? (<p>Δε βρέθηκαν Αποτελέσματα στην Αναζήτησή σας</p>) : ( 
+					<div className = "container-fluid">	
+						<div className = "row">
+							<div className = "col-sm-2" style={{marginLeft: '19%'}}>
+								<FontAwesomeIcon icon={ faExclamationTriangle } style={{width: '50px', marginTop: '15px'}} />
+							</div>
+							<div className = "col-lg-2" style={{marginLeft: '-11%'}}>
+								<p style={{fontSize:'22px'}}>Ημερομηνία</p>
+							</div>
+							<div className = "col-lg-2" style={{marginLeft: '-4%'}}>
+								<p style={{fontSize:'22px'}}>Διεύθυνση</p>
+							</div>        			        			
+							<div className = "col-lg-1" style={{marginLeft: '4%'}}>
+								<p style={{fontSize:'23px'}}>Τίτλος</p>
+							</div>    
 						</div>
-						<div className = "col-lg-2" style={{marginLeft: '-11%'}}>
-							<p style={{fontSize:'22px'}}>Ημερομηνία</p>
-						</div>
-						<div className = "col-lg-2" style={{marginLeft: '-4%'}}>
-							<p style={{fontSize:'22px'}}>Διεύθυνση</p>
-						</div>        			        			
-						<div className = "col-lg-1" style={{marginLeft: '4%'}}>
-							<p style={{fontSize:'23px'}}>Τίτλος</p>
-						</div>    
 					</div>
-				</div>
-				
-				{(this.state.coordinates.length > 0 && !this.state.isloading) && (
+				)}
+
+				{(this.state.coordinates.length > 0 && !this.state.isloading && !this.state.no_result) && (
 					<Gmap coordinates = {this.state.coordinates} size={{ width:'25%', height:'55%', marginLeft:'73%', position: 'absolute'}}/>
 				)}  
 
 				<div className = 'incidents_line' style={{opacity: '1.0'}}></div>
-				
-				<div className = "scrolls">
-					{incidents.map((incident) => {//Loop through every row of the json file and get the attributes
-						return (
-							<div key = {incident._id}>
-								<Incident // Render the same Component with different values each time 
-									incident = {incident}
-									style = {{marginLeft: '28%'}} 
-								/>
-							</div>
-						)     			
-					})}
 					
-				</div>
+				{!this.state.no_result && ( 
+					<div className = "scrolls">
+						{incidents.map((incident) => {//Loop through every row of the json file and get the attributes
+							return (
+								<div key = {incident._id}>
+									<Incident // Render the same Component with different values each time 
+										incident = {incident}
+										style = {{marginLeft: '28%'}} 
+									/>
+								</div>
+							)     			
+						})}	
+					</div>
+				)}
 
-				<div className = "incs_line"></div>
+				{!this.state.no_result && (<div className = "incs_line"></div>)}
 				<br/>
 
 				{(!this.state.postsDone) && //if no more posts left, the dont display
 					(<Button id = "load" className = "loadmore" onClick = {this.loadmore} style = {{position: 'absolute', marginLeft: '35%'}}>Φόρτωση Περισσοτέρων</Button>
 				)}
+
 			</div>
 		)
 	}

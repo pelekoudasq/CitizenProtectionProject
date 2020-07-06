@@ -347,9 +347,7 @@ class ViewIncident extends Component
                 <h5 className = "head_ltitleInfo">{incident.title}</h5>
         		<div className = "hrz_lineBack"></div>
 
-        		{this.state.isloading ?
-                    <div className="load-spin"></div> : console.log("")
-                }
+        		{this.state.isloading && <div className="load-spin"></div> }
 				
 				{/*this.state.coordinates !== {} && !this.state.isloading ? (
 					<Gmap coordinates = {this.state.coordinates} />

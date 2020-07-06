@@ -7,6 +7,7 @@ import Modal from 'react-modal';
 import { Button }from 'reactstrap'
 import { withRouter } from 'react-router';
 import moment from 'moment'
+import logo from '../icons/modal_img.jpg'
 
 import apiUrl from '../services/apiUrl'
 
@@ -17,7 +18,7 @@ const customStyles = {
     top: '20%',
     left: '20%',
     right:'20%',
-    bottom:'20%',
+    bottom:'25%',
   }
 };
 
@@ -86,7 +87,6 @@ class Incident extends Component
 
     render()
     {
-
         let icon
         if(this.props.incident.priority === "Χαμηλή")
         	icon = low
@@ -94,8 +94,8 @@ class Incident extends Component
         	icon = medium
 
         if(this.props.incident.priority === "Υψηλή")
-        	icon = high
-
+			icon = high
+			
     	return(
     		<div>
     			<br/>
@@ -107,15 +107,40 @@ class Incident extends Component
            				isOpen={this.state.showModal}
            				contentLabel="onRequestClose"
            				onRequestClose={this.CloseModal}
-           				style={customStyles}
-        			>
-          				<p>Προεπισκόπηση Συμβάντος</p>
-                        <p>{this.props.incident.title}</p>
-
-                        <p>{this.props.incident.location.address}</p>
+           				style={customStyles}>
+						<h6 style={{fontSize: "25px", marginLeft: "35%" }}>Προεπισκόπηση Συμβάντος</h6>
+						<br/>
+						<img className="modal_img"
+            				src={logo}
+            				alt=''
+          				/>
+						<table style={{marginLeft: "35%"}}>
+							<tbody>
+								<tr>
+									<td className="pr-2" style={{fontSize: "20px"}}>Ημερομηνία - Ώρα:</td>
+									<td>{moment(this.props.incident.date).format('DD-MM-YYYY')} {moment(this.props.incident.date).format('HH:mm')}</td>
+								</tr>
+								<tr>
+									<td className="pr-2" style={{fontSize: "20px"}}>Προτεραιότητα:</td>
+									<td>{this.props.incident.priority}</td>
+								</tr>
+								<tr>
+									<td className="pr-2" style={{fontSize: "20px"}}>Όνομα Αναφέροντα:</td>
+									<td>{this.props.incident.callerName}</td>
+								</tr>
+								<tr>
+									<td className="pr-2" style={{fontSize: "20px"}}>Τηλέφωνο Αναφέροντα:</td>
+									<td>{this.props.incident.callerNumber}</td>
+								</tr>
+								<tr>
+									<td className="pr-2" style={{fontSize: "20px"}}>Διεύθυνση:</td>
+									<td>{this.props.incident.location.address}</td>
+								</tr>
+							</tbody>
+                        </table>
                         <div id="container">
-                            <Button style = {{marginTop: '26%', backgroundColor: 'white', color: 'black'}} onClick={this.CloseModal}>Κλείσιμο</Button>
-                            <Button style = {{marginTop: '26%', marginLeft: '2%'}} onClick={this.handleClick}>Περισσότερα</Button>
+                            <Button style = {{marginTop: '12%', backgroundColor: 'white', color: 'black'}} onClick={this.CloseModal}>Κλείσιμο</Button>
+                            <Button style = {{marginTop: '12%', marginLeft: '2%'}} onClick={this.handleClick}>Περισσότερα</Button>
                         </div>
         			</Modal>
 					<div className = "container-fluid" style = {{marginLeft: this.props.style.marginLeft}}>
@@ -123,9 +148,9 @@ class Incident extends Component
 							<div  className="col-lg-2">
 								<img src={icon} alt= '' />
 							</div>
-							<div className="col-md-3 ml-1">{moment(this.props.incident.date).format('DD-MM-YY')}  {moment(this.props.incident.date).format('HH:mm')}</div>
-							<div className="col-sm-4">{this.props.incident.location.address}</div>
-							<div className="col">{this.props.incident.title}</div>
+							<div className="col-md-3 ml-1" style={{marginLeft: '-100%'}}>{moment(this.props.incident.date).format('DD-MM-YY')}  {moment(this.props.incident.date).format('HH:mm')}</div>
+							<div className="col-sm-4" style={{marginLeft:  '-2%'}}>{this.props.incident.location.address}</div>
+							<div className="col" style={{marginLeft: "-1%"}}>{this.props.incident.title}</div>
 						</div>
 					</div>
     			</div>

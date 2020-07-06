@@ -223,7 +223,6 @@ class IncidentForm extends Component
     };
 
     handleNameChange = (val) => {
-        // console.log("len is",this.state.title.current.value.length)
         if(this.state.title.current.value.length > 0)
         {
             this.setState({

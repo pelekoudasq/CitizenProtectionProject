@@ -3,7 +3,8 @@ import apiUrl from './apiUrl'
 export const incidentService = {
     get_active_incidents,
     post_comment,
-    get_user
+    get_user,
+    get_filtered_incidents
 };
 
 
@@ -31,6 +32,30 @@ function get_active_incidents(start, count) {
 	};
 
     return fetch(`${apiUrl}/incidents?start=${start}&count=${count}`, requestOptions)
+    .then(response => response.json())
+    .then(response => {
+        return response;
+    });	
+
+}
+
+
+function get_filtered_incidents(text, priority, state, incident_date) {
+
+	const requestOptions = {
+		mode: 'cors',
+		method: 'POST',
+        headers: authHeader(),
+        body: JSON.stringify({
+            text,
+            priority,
+            state,
+            incident_date
+        }),
+	};
+    requestOptions.headers['Content-Type'] = 'application/json'    
+
+    return fetch(`${apiUrl}/incidents/filter`, requestOptions)
     .then(response => response.json())
     .then(response => {
         return response;
@@ -80,3 +105,5 @@ function get_user(userid) {
     }); 
 
 }
+
+

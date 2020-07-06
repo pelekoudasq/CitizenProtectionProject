@@ -45,7 +45,7 @@
 
 #inc_box
 {
-  margin: -1.1%;
+  margin: -1.5%;
   box-sizing: content-box;
 }
 
@@ -60,32 +60,31 @@
 }
 
 .Modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0,0,0,0.35);
-    z-index: 9998;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.35);
+  z-index: 9998;
 }
 
 .Modal-content {
-    display: relative;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    border: 1px solid #ccc;
-    background: rgb(38,38,38);
-    border: 1.5px solid rgb(45,45,45);
-    overflow: auto;
-    border-radius: 1px;
-    outline: none;
-    z-index: 9999;
-    width: 400px;
-    margin-left: -150px;
-    margin-right: -150px;
-    padding: 24px;
-    line-height: 16px;
+  display: relative;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border: 1px solid #ccc;
+  background: rgb(38,38,38);
+  border: 1.5px solid rgb(45,45,45);
+  border-radius: 1px;
+  outline: none;
+  z-index: 9999;
+  width: 300px;
+  margin-left: -150px;
+  margin-right: -150px;
+  padding: 24px;
+  line-height: 16px;
 }
 
 .Modal_button {
@@ -97,7 +96,7 @@
 .scroll
 {
   overflow-y: scroll;
-  height: 4px;
+  height: 430px;
   overflow-x: hidden;
   width: 60%;
 }
@@ -130,20 +129,20 @@
 
 .inc_line
 {
-    width: 40%;
-    margin-left: 10%;
-    border-top: 2px solid grey;
-    opacity: 0.4;
-    position: absolute;
+  width: 40%;
+  margin-left: 10%;
+  border-top: 2px solid grey;
+  opacity: 0.4;
+  position: absolute;
 }
 
 
 .load-spin {
-    position:fixed;
-    width:75%;
-    left:5%;right:15%;top:19%;bottom:5%;
-    background-color: rgba(255,255,255,0.7);
-    z-index:9999;
+  position:fixed;
+  width:75%;
+  left:5%;right:15%;top:19%;bottom:5%;
+  background-color: rgba(255,255,255,0.7);
+  z-index:9999;
 }
 
 @-webkit-keyframes spin {
@@ -158,23 +157,23 @@
 
 .load-spin::after 
 {
-    content:'';
-    display:block;
-    position:absolute;
-    left:48%;top:40%;
-    width:40px;height:40px;
-    border-style:solid;
-    border-color:black;
-    border-top-color:transparent;
-    border-width: 4px;
-    border-radius:10%;
-    -webkit-animation: spin .8s linear infinite;
-    animation: spin .8s linear infinite;
+  content:'';
+  display:block;
+  position:absolute;
+  left:48%;top:40%;
+  width:40px;height:40px;
+  border-style:solid;
+  border-color:black;
+  border-top-color:transparent;
+  border-width: 4px;
+  border-radius:10%;
+  -webkit-animation: spin .8s linear infinite;
+  animation: spin .8s linear infinite;
 }
 
 
 #container{
-    text-align: center;
+  text-align: center;
 }
 
 

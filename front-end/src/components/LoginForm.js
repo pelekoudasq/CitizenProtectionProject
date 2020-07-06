@@ -5,8 +5,6 @@ import logo from '../icons/login_img2.jpg'
 
 import { UserContext } from './UserContext'
 import { withRouter } from 'react-router'
-// import { faWindowRestore } from "@fortawesome/free-solid-svg-icons";
-
 import { authenticationService } from '../services/authentication.service';
 
 class LoginForm extends  Component
