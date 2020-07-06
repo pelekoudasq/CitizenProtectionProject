@@ -150,6 +150,8 @@ router.post('/', function(req, res, next) {
 					longtitude : place.geometry.lng,
 					latitude : place.geometry.lat
 				};
+				for (var i=0; i<incParam.auth.length; i++)
+					incParam.auth[i] = parseInt(incParam.auth[i]);
 				incident = db.Incidents.save({
 					title: incParam.title,
 					location: {
@@ -188,7 +190,7 @@ router.post('/', function(req, res, next) {
 							console.log(user);
 							db.Users.update(
 								{ _id: user._id },
-								{ $push: { incidentRequest : incident._id } },
+								{ $push: { incidentRequests : incident._id } },
 							function(err, incident) {
 								// if (incident) {
 								// 	res.send(incident);
