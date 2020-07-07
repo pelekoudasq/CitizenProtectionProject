@@ -62,8 +62,14 @@ router.post('/filter', function(req, res, next) {
 	console.log("api: incidents via filters");
 	let query = {};	
 
-	if (req.body.text || req.body.priority.length)
+	if (
+		req.body.text || 
+		req.body.priority.length || 
+		(req.body.state.length && !req.body.state.find(element => element === "6")) ||
+		(req.body.start_date && req.body.end_date)
+	) {
 		query['$and'] = [];
+	}
 
 	if (req.body.text)
 		query['$and'].push({ $text: { $search: req.body.text }});
@@ -80,26 +86,30 @@ router.post('/filter', function(req, res, next) {
 		});
 		query['$and'].push({ $or: prios })
 	}
-	// 	query['$and'].push({ $or: [ {location: { name: req.body.region } }, { country: req.body.region }] });
 	
-	// if (req.body.minprice != null && req.body.maxprice != null)
-	// 	query['$and'].push({ currently: { $gt: Number(req.body.minprice), $lt: Number(req.body.maxprice) }});
-	// else if (req.body.minprice != null)
-	// 	query['$and'].push({ currently: { $gt: Number(req.body.minprice) }});
-	// else if (req.body.maxprice != null)
-	// 	query['$and'].push({ currently: { $lt: Number(req.body.maxprice) }});
+	if (req.body.state.length) {
+		if (req.body.state.find(element => element === "4")) {
+			query['$and'].push({ active: false })
+		} else if (req.body.state.find(element => element === "5")) {
+			query['$and'].push({ active: true })
+		}
+	}
 	
-	// if (req.body.category != null)
-	// 	query['$and'].push({ categories: { $in: [req.body.category] }});
+	var date_1, date_2;
+
+	if (req.body.start_date)
+		date_1 = new Date(req.body.start_date)
+
+	if (req.body.end_date)
+		date_2 = new Date(req.body.end_date)
 	
-	if (req.body.status != null)
-		query['$and'].push({ active: req.body.status });
+	if (date_1 && date_2) {
+		query['$and'].push({ date: { $gte: date_1, $lt: date_2 }});
+	}
 	
 	db.Incidents.find(query, function(err, incidents) {
-		// console.log(query);
 		if (err) {
 			res.send(err);
-			// console.log(err);
 			return;
 		}
 		res.status(200).json(incidents);

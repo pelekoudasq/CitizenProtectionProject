@@ -242,7 +242,7 @@ class Incidents extends Component
 		if (Number(usertype) === 0)
 		{
 
-			incidentService.get_filtered_incidents(this.state.filter_text, this.state.filter_priority, this.state.filter_status, this.state.filter_start_date,  this.state.filter_start_date)
+			incidentService.get_filtered_incidents(this.state.filter_text, this.state.filter_priority, this.state.filter_status, this.state.filter_start_date,  this.state.filter_end_date)
 			.then (response => {
 				if (response.length !== 0)
 				{
