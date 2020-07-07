@@ -38,7 +38,7 @@ class ControlPanel extends Component
 		let coordinates = [] //array of objects of coordinates
 		
 
-		if(usertype==0) //api call for control center
+		if (Number(usertype) === 0) //api call for control center
 		{	
 			incidentService.get_active_incidents(this.state.visiblePosts, 8)
 			.then( response => {
@@ -64,7 +64,7 @@ class ControlPanel extends Component
 				})
 			});	
 		}
-		else if(usertype == 2) //api call for employees
+		else if (Number(usertype) === 2) //api call for employees
 		{	
 			incidentService.get_user_requested_incidents()
 			.then( response => {

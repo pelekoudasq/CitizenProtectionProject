@@ -44,7 +44,7 @@ class Incidents extends Component
 		let coordinates = [] //array of objects of coordinates
 		let usertype =  localStorage.getItem("usertype");
 
-		if(usertype==0) //api call for control center
+		if (Number(usertype) === 0) //api call for control center
 		{	
 			incidentService.get_active_incidents(this.state.visiblePosts, 6)
 			.then( response => {
@@ -70,7 +70,7 @@ class Incidents extends Component
 				})
 			});	
 		}
-		else if(usertype == 2) //api call for employees
+		else if(Number(usertype) === 2) //api call for employees
 		{	
 			incidentService.get_user_accepted_incidents()
 			.then( response => {
@@ -239,7 +239,7 @@ class Incidents extends Component
 		let coordinates = [] //array of objects of coordinates
 		let usertype =  localStorage.getItem("usertype");
 
-		if(usertype == 0)
+		if (Number(usertype) === 0)
 		{
 
 			incidentService.get_filtered_incidents(this.state.filter_text, this.state.filter_priority, this.state.filter_status, this.state.filter_start_date,  this.state.filter_start_date)
@@ -280,7 +280,7 @@ class Incidents extends Component
 				}
 			})
 		}
-		else if(usertype == 2 || usertype == 1)
+		else if(Number(usertype) === 2 || Number(usertype) === 1)
 		{
 			
 		}
@@ -428,7 +428,7 @@ class Incidents extends Component
 				{!this.state.no_result && (<div className = "incs_line"></div>)}
 				<br/>
 
-				{((!this.state.postsDone) && (usertype != 2)) && //if no more posts left, then dont display
+				{((!this.state.postsDone) && (Number(usertype) !== 2)) && //if no more posts left, then dont display
 					(<Button id = "load" className = "loadmore" onClick = {this.loadmore} style = {{position: 'absolute', marginLeft: '35%', marginTop: '1%'}}>Φόρτωση Περισσοτέρων</Button>
 				)}
 

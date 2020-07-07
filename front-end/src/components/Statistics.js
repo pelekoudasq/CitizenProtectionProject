@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
-import { Col, Row, Container } from 'reactstrap'
+// import { Col, Row, Container } from 'reactstrap'
 import SideMenu from './SideMenu'
 import HeatMap from './HeatMap'
 import { withRouter } from 'react-router'
 import '../css/statistics.css';
-import { PieChart, Pie, Sector, Cell, BarChart, Bar, LineChart, AreaChart, Area, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
+import { PieChart, Pie, /*Sector,*/ Cell, BarChart, Bar, /*LineChart,*/ AreaChart, Area, /*Line,*/ XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 import apiUrl from '../services/apiUrl'
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#FF8042'];
