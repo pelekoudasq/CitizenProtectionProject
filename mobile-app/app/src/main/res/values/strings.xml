@@ -2,4 +2,6 @@
     <string name="app_name">Πλατφόρμα Προστασίας Πολίτη</string>
     <string name="option1">Επιλογή 1</string>
     <string name="option2">Επιλογή 2</string>
+    <string name="navigation_drawer_open">Open Navigation Drawer</string>
+    <string name="navigation_drawer_close">Close Navigation Drawer</string>
 </resources>

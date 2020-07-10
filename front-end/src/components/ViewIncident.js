@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { CustomInput, Col, Row, Button, Form, FormGroup, Label, Input, Container } from 'reactstrap'
+import { CustomInput, Col, Row, Button, Form, FormGroup, Label, Input/*, Container*/ } from 'reactstrap'
 import { faArrowLeft, faEdit } from '@fortawesome/free-solid-svg-icons'
 import { Link } from 'react-router-dom'
 import '../css/controlpanel.css'
@@ -8,13 +8,13 @@ import '../css/incidentform.css'
 import '../css/viewincident.css'
 import alert1 from '../icons/alert.png'
 import SideMenu from './SideMenu'
-import Incident from './Incident'
-import Gmap from './Gmap'
+// import Incident from './Incident'
+// import Gmap from './Gmap'
 import apiUrl from '../services/apiUrl'
 import Multiselect from 'react-widgets/lib/Multiselect'
 import AutoCompleteLoc from './AutoCompleteLoc'
 import { withRouter } from 'react-router'
-import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons'
+// import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import moment from 'moment'
 import { incidentService } from '../services/incidents.service';
@@ -506,10 +506,10 @@ class ViewIncident extends Component
                     </Col>
                     <Col sm={1} className="vrtcl_lineBack mt-2 p-0"></Col>
                     <Col sm={5} className="mt-2">
-                    {usertype == 0 && ( //control-center agent
+                    {Number(usertype) === 0 && ( //control-center agent
                         <p>control-center</p>
                     )}
-                    {usertype == 1 && ( //authority department
+                    {Number(usertype) === 1 && ( //authority department
                         <Form>
                             <FormGroup className="m-1">
                                 <textarea className="py-0" id="descriptionBox" type="text"  onChange={this.handleTextArea} name="description" placeholder="Προσθέστε σχόλιο..."/>
@@ -520,7 +520,7 @@ class ViewIncident extends Component
                             </div>
                         </Form>
                     )}
-                    {usertype == 2 && ( //department personnel
+                    {Number(usertype) === 2 && ( //department personnel
                         <Form onSubmit={this.handleComment}>
                             <FormGroup className="m-1">
                                 <textarea className="py-0" id="descriptionBox" type="text" value={this.state.comment} onChange={this.handleTextArea} name="comment" placeholder="Προσθέστε σχόλιο..."/>

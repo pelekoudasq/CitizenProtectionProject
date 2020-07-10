@@ -3,7 +3,9 @@ package com.example.theophilos.citizenprotectionproject;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -27,6 +29,8 @@ public class IncidentsActivity extends AppCompatActivity {
 
     private TextView textviewResult;
 
+    private DrawerLayout drawer;
+
     public Retrofit retrofit = new Retrofit.Builder()
             .baseUrl("https://10.0.2.2:9000")
             .addConverterFactory(GsonConverterFactory.create())
@@ -38,6 +42,16 @@ public class IncidentsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_incidents);
 
+        Toolbar toolbar = findViewById(R.id.toolBar);
+        setSupportActionBar(toolbar);
+
+
+        drawer = findViewById(R.id.drawer_layout);
+
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,drawer,toolbar,
+                R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
 
         textviewResult = findViewById(R.id.textView);
 
@@ -96,6 +110,15 @@ public class IncidentsActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    @Override
+    public void onBackPressed(){
+        if (drawer.isDrawerOpen(GravityCompat.START)){
+            drawer.closeDrawer(GravityCompat.START);
+        } else{
+            super.onBackPressed();
+        }
     }
 }
 

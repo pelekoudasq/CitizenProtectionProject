@@ -162,7 +162,7 @@ class Incident extends Component
 							<div className="col-md-3 ml-1" style={{marginLeft: '-100%'}}>{moment(this.props.incident.date).format('DD-MM-YYYY')}  {moment(this.props.incident.date).format('HH:mm')}</div>
 							<div className="col-sm-4" style={{marginLeft:  '-4%'}}>{this.props.incident.location.address}</div>
 							<div className="col" style={{marginLeft: "6%"}}>{this.props.incident.title}</div>
-							{this.props.usertype == 2 && 
+							{Number(this.props.usertype) === 2 && 
 								<div className="col" style={{marginLeft: "-6%"}}>
 									<button type="button" className="btn btn-primary btn-sm" onClick={this.accept_incident}>Αποδοχή</button>
 								</div> }
