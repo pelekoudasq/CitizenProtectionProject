@@ -101,7 +101,6 @@ class ViewIncident extends Component
             	this.setState({
             		incident: response,
             	})
-            	console.log(this.state.incident)
             	
                 let coordinates = {}
                 coordinates['lat'] = response.location['latitude']
@@ -123,7 +122,7 @@ class ViewIncident extends Component
         // console.log('Location: ',this.state.location);
         // console.log('Authorizations: ',this.state.auth);
         // console.log('Priority: ',this.state.priority.current.value); 
-        //console.log("i forma", this.state.formLoading)     
+        //console.log("i forma", this.state.formLoading)
 
         this.setState({
             formLoading: true
@@ -320,7 +319,7 @@ class ViewIncident extends Component
         else {
             console.log('oops')
         }
-        return comments
+        return comments.reverse()
     }
 
 
@@ -333,7 +332,6 @@ class ViewIncident extends Component
 
         let incident = this.state.incident
         let usertype =  localStorage.getItem("usertype")
-        // console.log(usertype)
 
 		return(
 			<div className = "hide-scroll">
@@ -496,18 +494,32 @@ class ViewIncident extends Component
                 )}  
                 </Form>
                 </Row>
-                <Row style={{ left: '9%', marginTop: '25%', width: '70%', position: 'relative'}}>
+                <Row style={{ left: '9%', marginTop: '25%', width: '90%', position: 'relative'}}>
                     <h6 className = "head_ltitleInfo">Αναφορές</h6>
                     <div className = "hrz_lineBack"></div>
-                    <Col sm={6} className="mt-1" >
+                    <Col sm={6} className="mt-1 my-scroll scroll">
                         <ul className='list-group overflow-auto'>
                             {this.getComments()}
                         </ul>
                     </Col>
-                    <Col sm={1} className="vrtcl_lineBack mt-2 p-0"></Col>
-                    <Col sm={5} className="mt-2">
+                    {/* <Col sm={1} className="vrtcl_lineBack mt-2 p-0"></Col> */}
+                    <Col sm={5} className="mt-2 ml-5">
                     {Number(usertype) === 0 && ( //control-center agent
-                        <p>control-center</p>
+                        <Form>
+                            <FormGroup>
+                                <Label className="ml-1">Σακατεμένοι</Label>
+                                <CustomInput className="ml-2" type="number" name="number" id="exampleNumber" placeholder="0" style={{ width: "10%"}}/>
+                                <Label className="ml-5">Πεθαμένοι</Label>
+                                <CustomInput className="ml-2" type="number" name="number" id="exampleNumber" placeholder="0" style={{ width: "10%"}}/>
+                                <Label  className="ml-5">Στη ψειρού</Label>
+                                <CustomInput className="ml-2" type="number" name="number" id="exampleNumber" placeholder="0" style={{ width: "10%"}}/>
+                            </FormGroup>
+                            <FormGroup className="m-1">
+                                <textarea className="py-0" id="descriptionBox" type="text" value={this.state.comment} onChange={this.handleTextArea} name="comment" placeholder="Τελική Αναφορά"/>
+                            </FormGroup>
+                            <Button className="float-right" type="submit" style={{ backgroundColor: "#0063bf", borderColor: "#0063bf" }}>Ολοκλήρωση Συμβάντος</Button>
+
+                        </Form>
                     )}
                     {Number(usertype) === 1 && ( //authority department
                         <Form>

@@ -44,6 +44,8 @@ class LoginForm extends  Component
                 user => {
                     this.setState({flag: true})
                     let fullname = user.name['firstName'] + ' ' + (user.name['lastName'])
+                    if (user.userType === 1 )
+                        fullname = user.name
                     localStorage.setItem('fullname', fullname)
                     localStorage.setItem('usertype', user.userType)
                     localStorage.setItem('token', user.token);

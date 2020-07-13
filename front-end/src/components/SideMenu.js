@@ -48,14 +48,16 @@ class SideMenu extends Component
                     <SideNav  id="sidenav" className="sidebar">
                     <SideNav.Toggle onClick= {this.handleClick} />
                     <SideNav.Nav defaultSelected="home">
-                        <NavItem onClick={() => this.handleNavItem("/new_incident")}>
-                            <NavIcon>
-                                <FontAwesomeIcon icon={ faPlus } style={{ marginLeft:'4px', color: 'white' }} />
-                            </NavIcon>
-                            <NavText>
-                               Νέο Συμβάν
-                            </NavText>
-                        </NavItem>
+                        {Number(usertype) === 0 && (
+                            <NavItem onClick={() => this.handleNavItem("/new_incident")}>
+                                <NavIcon>
+                                    <FontAwesomeIcon icon={ faPlus } style={{ marginLeft:'4px', color: 'white' }} />
+                                </NavIcon>
+                                <NavText>
+                                Νέο Συμβάν
+                                </NavText>
+                            </NavItem>
+                        )}
                         <NavItem onClick={() => this.handleNavItem("/")}>
                             <NavIcon>
                                 <FontAwesomeIcon icon={ faHome } style={{ marginLeft:'4px', color: 'white' }} />
