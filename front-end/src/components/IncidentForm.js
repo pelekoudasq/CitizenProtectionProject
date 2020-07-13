@@ -260,20 +260,20 @@ class IncidentForm extends Component
 
                 {this.state.formLoading && <div className="cover-spin"></div>}
 
-                <div style={{ marginLeft: '15%', marginRight: '100px', width: '70%'}}>
-                    <Row style={{ position: 'center', paddingLeft: '25px'}}>
-                        <Col xs="6" style={{paddingRight: '30px'}}> 
+                <div className="titles">
+                    <Row className="pl-5 mt-3">
+                        <Col xs="6" className="pr-5"> 
                         <p className="Title">Ειδοποιήση Φορέων</p>
                         </Col>
-                        <Col xs="6" style={{paddingRight: '30px'}}> 
+                        <Col xs="6" className="pr-5"> 
                         <p className="Title">Λεπτομέρειες</p>
                         </Col>
                     </Row>
                 </div>
 
                 <Form className="incform">
-                    <Row style={{ position: 'center', paddingLeft: '25px', paddingBottom: '20px', marginBottom:'-40px', paddingTop: '2px'}}>
-                    <Col xs="6" style={{borderRight: '3px solid #cccccc', paddingLeft: '2px'}}> 
+                    <Row className="pl-4 pb-4 pt-3 mt-2">
+                    <Col xs="6" className="pl-1 borderline"> 
                     <Container>
                             <FormGroup>
                             <Label for="exampleTitle">Τίτλος*</Label>
@@ -314,7 +314,7 @@ class IncidentForm extends Component
                             </FormGroup>
                     </Container>
                     </Col>
-                    <Col xs="6" style={{paddingRight: '30px'}}>
+                    <Col xs="6" className="pr-5">
                     <Container>
                             <FormGroup>
                             <Label for="exampleTelephone">Τηλέφωνο Αναφέροντα</Label>
@@ -345,7 +345,7 @@ class IncidentForm extends Component
             
                 <br/>
                 {this.state.successSubmit === true &&(
-                    <div className="alert alert-success" style = {{}}>
+                    <div className="alert alert-success">
                         <strong>Οι αρμόδιοι Φορείς ενημερώθηκαν επιτυχώς για το συμβάν</strong>
                     </div>
                 )}  

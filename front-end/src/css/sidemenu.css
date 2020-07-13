@@ -34,3 +34,12 @@
 .svg-inline--fa.fa-w-16{
 	width: 1.5em;
 } */
+
+.icons {
+	margin-left: 4px !important;
+	color: white !important;
+}
+
+.w-30 {
+	width: 30% !important;
+}

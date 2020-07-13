@@ -8,7 +8,7 @@ class NotFound extends Component{
         return (
           <div>
             <body>
-            <img src={PageNotFound} alt=" " style={{ width: "42%", display: "block", margin: "0 auto" }}/>
+            <img src={PageNotFound} alt=" " id="notfoundimg"/>
             <p>Η Σελίδα αυτή δεν βρέθηκε. </p>
             <p style={{ fontSize: "1.5em" }}>Επιστρέψτε στην <Link to="/">Αρχική Σελίδα</Link>  </p>
 

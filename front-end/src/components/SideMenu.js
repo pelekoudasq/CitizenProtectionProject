@@ -51,7 +51,7 @@ class SideMenu extends Component
                         {Number(usertype) === 0 && (
                             <NavItem onClick={() => this.handleNavItem("/new_incident")}>
                                 <NavIcon>
-                                    <FontAwesomeIcon icon={ faPlus } style={{ marginLeft:'4px', color: 'white' }} />
+                                    <FontAwesomeIcon icon={ faPlus } className="icons" />
                                 </NavIcon>
                                 <NavText>
                                 Νέο Συμβάν
@@ -60,7 +60,7 @@ class SideMenu extends Component
                         )}
                         <NavItem onClick={() => this.handleNavItem("/")}>
                             <NavIcon>
-                                <FontAwesomeIcon icon={ faHome } style={{ marginLeft:'4px', color: 'white' }} />
+                                <FontAwesomeIcon icon={ faHome } className="icons" />
                             </NavIcon>
                             <NavText>
                                Πίνακας Ελέγχου
@@ -68,7 +68,7 @@ class SideMenu extends Component
                         </NavItem>
                         <NavItem onClick={() => this.handleNavItem("/incidents")}>
                             <NavIcon>
-                                <FontAwesomeIcon icon={ faIndent } style={{ marginLeft:'4px' , color: 'white' }} />
+                                <FontAwesomeIcon icon={ faIndent } className="icons" />
                             </NavIcon>
                             <NavText>
                                 Συμβάντα
@@ -95,7 +95,7 @@ class SideMenu extends Component
 
                     <NavItem onClick={() => this.handleNavItem("/statistics")}>
                         <NavIcon>
-                            <FontAwesomeIcon icon={ faChartLine } style={{ marginLeft:'4px' , color: 'white' }} />
+                            <FontAwesomeIcon icon={ faChartLine } className="icons" />
                         </NavIcon>
                         <NavText>
                             Συμβάντα
@@ -104,7 +104,7 @@ class SideMenu extends Component
 
                     <NavItem onClick={() => this.handleNavItem("/statistics")}>
                         <NavIcon>
-                            <FontAwesomeIcon icon={ faFilter } style={{ marginLeft:'4px' , color: 'white', width: '30px' }} />
+                            <FontAwesomeIcon icon={ faFilter } className="icons w-30" />
                         </NavIcon>
                         <NavText>
                             Σύνθετη Αναζήτηση

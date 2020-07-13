@@ -5,3 +5,9 @@ p {
   text-align: center;
   font-weight: 100;
 }
+
+#notfoundimg {
+  width: 42%;
+  display: block;
+  margin: 0 auto;
+}

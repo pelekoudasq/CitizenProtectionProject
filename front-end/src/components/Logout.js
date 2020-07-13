@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { UserContext } from './UserContext';
 // import apiUrl from '../services/apiUrl';
 // import { Button } from 'reactstrap';
+import '../css/App.css'
 import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem} from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons'
@@ -56,7 +57,7 @@ class Logout extends Component
     {
         return (
             <Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggle}>
-            <DropdownToggle caret style={{ backgroundColor: "#0063bf", borderColor: "#0063bf" }}>
+            <DropdownToggle caret className="buttonblue">
                 {this.state.name}
             </DropdownToggle>
               <DropdownMenu right>

@@ -1,4 +1,5 @@
-import React, {/* Component */} from 'react'
+import React from 'react'
+import '../css/heatmap.css'
 import { withGoogleMap, GoogleMap } from "react-google-maps"
 import HeatmapLayer from "react-google-maps/lib/components/visualization/HeatmapLayer";
 
@@ -16,10 +17,10 @@ function HeatMap(props)
 	));
 
 	return(
-		<div style={{ height: '106%', width: '35%', marginLeft: '58%', position: 'absolute' }}>
+		<div id="heatmap">
 			<Heatmap
-				containerElement = { <div style={{ height: `100%` }} /> }
-				mapElement = { <div style={{ height: `100%` }} /> }
+				containerElement = { <div className="h-100" /> }
+				mapElement = { <div className="h-100" /> }
 				center = {{ lat: -34.397, lng: 150.644 }}
 			/>
 		</div>
