@@ -7,7 +7,7 @@ body{
         margin-right: 1.07143rem !important;
     }
 }
-@media (min-width: 0){
+@media (min-width: 0) {
     .g-mt-3 {
         margin-top: 0.21429rem !important;
     }
@@ -21,7 +21,7 @@ body{
     width: 50px !important;
 }
 
-@media (min-width: 0){
+@media (min-width: 0) {
     .g-pa-30 {
         padding: 2.14286rem !important;
     }
@@ -60,15 +60,34 @@ body{
 	background-color: #F5F5F5;
 }
 
-.my-scroll::-webkit-scrollbar
-{
+.my-scroll::-webkit-scrollbar {
 	width: 12px;
 	background-color: #F5F5F5;
 }
 
-.my-scroll::-webkit-scrollbar-thumb
-{
+.my-scroll::-webkit-scrollbar-thumb {
 	border-radius: 10px;
 	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
 	background-color: rgb(155, 152, 152);
+}
+
+#incinfo {
+    left: 10%;
+    margin-top: 2%;
+    position: absolute;
+}
+
+#reports {
+    left: 9%;
+    margin-top: 25%;
+    width: 90%;
+    position: relative;
+}
+
+.w-40 {
+    width: 40% !important;
+}
+
+.w-10 {
+    width: 10% !important;
 }

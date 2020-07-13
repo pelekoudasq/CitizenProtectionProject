@@ -6,10 +6,11 @@ import { Link } from 'react-router-dom'
 import '../css/controlpanel.css'
 import '../css/incidentform.css'
 import '../css/viewincident.css'
+import '../css/App.css'
 import alert1 from '../icons/alert.png'
 import SideMenu from './SideMenu'
 // import Incident from './Incident'
-// import Gmap from './Gmap'
+import Gmap from './Gmap'
 import apiUrl from '../services/apiUrl'
 import Multiselect from 'react-widgets/lib/Multiselect'
 import AutoCompleteLoc from './AutoCompleteLoc'
@@ -49,7 +50,7 @@ class ViewIncident extends Component
             newAuth = [...this.state.auth, newChecked];
         }
         else
-        {     
+        {
             var index = this.state.auth.indexOf(newChecked);
             if (index !== -1) this.state.auth.splice(index, 1);
             newAuth = this.state.auth
@@ -71,14 +72,14 @@ class ViewIncident extends Component
         }
     }
 
-	authHeader() 
+	authHeader()
 	{
 	    // return authorization header with jwt token
 	    const token = localStorage.getItem('token');
 	    if (token) {
 	        return { Authorization: `Bearer ${token}` };
-	    } 
-	    else 
+	    }
+	    else
 	    {
 	        return {};
 	    }
@@ -93,6 +94,8 @@ class ViewIncident extends Component
         }
 
         let id = this.props.match.params["id"]
+        let coordinates = [] //array of objects of coordinates
+        let coordinate = {}
         console.log(id)
 		fetch(`${apiUrl}/incidents/${id}`, requestOptions)
             .then(response => response.json())
@@ -102,10 +105,12 @@ class ViewIncident extends Component
             		incident: response,
             	})
             	
-                let coordinates = {}
-                coordinates['lat'] = response.location['latitude']
-                coordinates['lng'] = response.location['longtitude']    
-                coordinates['priority'] = response.priority
+                
+                coordinate['lat'] = response.location['latitude']
+                coordinate['lng'] = response.location['longtitude']
+                coordinate['priority'] = response.priority
+
+                coordinates.push(coordinate)
 
                 this.setState({
                     address: response.location.address,
@@ -121,14 +126,14 @@ class ViewIncident extends Component
         // console.log('Title: ',this.state.title.current.value);
         // console.log('Location: ',this.state.location);
         // console.log('Authorizations: ',this.state.auth);
-        // console.log('Priority: ',this.state.priority.current.value); 
+        // console.log('Priority: ',this.state.priority.current.value);
         //console.log("i forma", this.state.formLoading)
 
         this.setState({
             formLoading: true
         }); 
 
-        let checkFetch = response => 
+        let checkFetch = response =>
         {
             //console.log('respone status is', response.status)
             if(response.status !== 200)
@@ -147,7 +152,7 @@ class ViewIncident extends Component
                 title: this.state.title.current.value,
                 address: this.state.location,
                 priority: this.state.priority.current.value,
-                auth: this.state.auth        
+                auth: this.state.auth
             }),
         }
 
@@ -189,10 +194,10 @@ class ViewIncident extends Component
         // console.log('Calling name: ', this.state.call_name.current.value);
         // console.log('Incident type: ', this.state.incident_type.current._values.value);
         // console.log('Description: ', this.state.description);
-        let checkFetch = response => 
+        let checkFetch = response =>
         {
             //console.log('respone status is', response.status)
-            if(response.status !== 200)                
+            if(response.status !== 200)
             {
                 //console.log('flag in check fetch ', this.state.flag)
             }
@@ -241,7 +246,7 @@ class ViewIncident extends Component
     handleLocation =  (val) => {
         
         console.log(val.length);
-        if (val.length > 0) 
+        if (val.length > 0)
             this.setState({
                 location: val,
                 locError: false
@@ -305,7 +310,7 @@ class ViewIncident extends Component
             	// })
             	// console.log(username)
                 comments[i] = <li className='list-group-item mt-2 pb-0 u-shadow-v18 g-bg-secondary rounded'>
-                    <div className="font-weight-bold" style={{opacity:'0.6' }}>{this.state.incident.comments[i].user}</div>
+                    <div className="font-weight-bold opacity6">{this.state.incident.comments[i].user}</div>
                     <div className="text-wrap">
                         {this.state.incident.comments[i].text}
                     </div>
@@ -346,14 +351,13 @@ class ViewIncident extends Component
         		<div className = "hrz_lineBack"></div>
 
         		{this.state.isloading && <div className="load-spin"></div> }
-				
-				{/*this.state.coordinates !== {} && !this.state.isloading ? (
-					<Gmap coordinates = {this.state.coordinates} />
-                ) : (
-                   <p> </p>
+
+				{/* {this.state.coordinates !== {} && !this.state.isloading && (
+                    <Gmap coordinates = { this.state.coordinates } size={{ width:'35%', height:'45%', marginLeft:'63%', position: 'absolute'}} />
                 )} */}
+
                 <Row>
-                <Form style={{ left: '10%', marginTop: '2%', position: 'absolute'}}>
+                <Form id="incinfo">
                     <Row>
                         <Col sm="auto">
                             {!this.state.editing ? (
@@ -458,9 +462,9 @@ class ViewIncident extends Component
                         </Col>
                         <FontAwesomeIcon icon={ faEdit } className="ml-2 mt-1" onClick={this.handleEdit} />
                         <Col sm="auto">
-                            <FormGroup style={{ width:'40% !important'}} className="mx-auto">
+                            <FormGroup className="mx-auto">
                                 <div>
-                                    <Label style={{ left: '12%', position: 'relative'}} for="exampleCheckbox">Φορείς</Label>
+                                    <Label className="pl-4" for="exampleCheckbox">Φορείς</Label>
                                     <div required className="CheckBox mx-auto" innerref={incident.auth}> 
                                         <CustomInput type="checkbox" id="mycheck" label="Ε.Κ.Α.Β." onClick={this.customInputValue.bind(this, "1")} />
                                         <CustomInput type="checkbox" id="2" label="ΕΛ.ΑΣ."  onClick={this.customInputValue.bind(this, "2")}/>
@@ -473,6 +477,9 @@ class ViewIncident extends Component
                                 </div>
                             </FormGroup>
                         </Col>
+                        {/* <Col sm="auto">
+                            
+                        </Col> */}
                     </Row>
                     
 
@@ -488,13 +495,13 @@ class ViewIncident extends Component
             
                 <br/>
                 {this.state.successSubmit === true && (
-                    <div className="alert alert-success" style = {{}}>
+                    <div className="alert alert-success">
                         <strong>Οι αρμόδιοι Φορείς ενημερώθηκαν επιτυχώς για το συμβάν</strong>
                     </div>
-                )}  
+                )}
                 </Form>
                 </Row>
-                <Row style={{ left: '9%', marginTop: '25%', width: '90%', position: 'relative'}}>
+                <Row id="reports">
                     <h6 className = "head_ltitleInfo">Αναφορές</h6>
                     <div className = "hrz_lineBack"></div>
                     <Col sm={6} className="mt-1 my-scroll scroll">
@@ -504,40 +511,54 @@ class ViewIncident extends Component
                     </Col>
                     {/* <Col sm={1} className="vrtcl_lineBack mt-2 p-0"></Col> */}
                     <Col sm={5} className="mt-2 ml-5">
-                    {Number(usertype) === 0 && ( //control-center agent
+                    {!incident.active &&(
+                       <table>
+                           <tbody>
+                               <tr>
+                                    <td>Τραυματισμοί:</td>
+                                    <td>Θάνατοι: </td>
+                                    <td>Συλλήψεις: </td>
+                               </tr>
+                               <tr>
+                                   <td>αναφορα εδωω</td>
+                               </tr>
+                           </tbody>
+                       </table>
+                    )}
+                    {Number(usertype) === 0 && incident.active && ( //control-center agent
                         <Form>
                             <FormGroup>
-                                <Label className="ml-1">Σακατεμένοι</Label>
-                                <CustomInput className="ml-2" type="number" name="number" id="exampleNumber" placeholder="0" style={{ width: "10%"}}/>
-                                <Label className="ml-5">Πεθαμένοι</Label>
-                                <CustomInput className="ml-2" type="number" name="number" id="exampleNumber" placeholder="0" style={{ width: "10%"}}/>
-                                <Label  className="ml-5">Στη ψειρού</Label>
-                                <CustomInput className="ml-2" type="number" name="number" id="exampleNumber" placeholder="0" style={{ width: "10%"}}/>
+                                <Label className="ml-2">Τραυματισμοί</Label>
+                                <CustomInput className="ml-2 mr-1 w-10" type="number" name="number" id="exampleNumber" placeholder="0"/>
+                                <Label className="ml-5">Θάνατοι</Label>
+                                <CustomInput className="ml-2 mr-1 w-10" type="number" name="number" id="exampleNumber" placeholder="0"/>
+                                <Label  className="ml-5">Συλλήψεις</Label>
+                                <CustomInput className="ml-2 w-10" type="number" name="number" id="exampleNumber" placeholder="0"/>
                             </FormGroup>
                             <FormGroup className="m-1">
                                 <textarea className="py-0" id="descriptionBox" type="text" value={this.state.comment} onChange={this.handleTextArea} name="comment" placeholder="Τελική Αναφορά"/>
                             </FormGroup>
-                            <Button className="float-right" type="submit" style={{ backgroundColor: "#0063bf", borderColor: "#0063bf" }}>Ολοκλήρωση Συμβάντος</Button>
+                            <Button className="float-right buttonblue" type="submit">Ολοκλήρωση Συμβάντος</Button>
 
                         </Form>
                     )}
-                    {Number(usertype) === 1 && ( //authority department
+                    {Number(usertype) === 1 && incident.active && ( //authority department
                         <Form>
                             <FormGroup className="m-1">
                                 <textarea className="py-0" id="descriptionBox" type="text"  onChange={this.handleTextArea} name="description" placeholder="Προσθέστε σχόλιο..."/>
                             </FormGroup>
                             <div>
-                            <Button className="float-right d-inline py-1" style={{ backgroundColor: "#0063bf", borderColor: "#0063bf" }} disabled = {!formflag} onClick={this.handleSubmitmoreInfo}>Προσθήκη</Button>
+                            <Button className="float-right d-inline py-1 buttonblue" disabled = {!formflag} onClick={this.handleSubmitmoreInfo}>Προσθήκη</Button>
                             <CustomInput className="float-right d-inline mr-2 mt-1" type="checkbox" id="report" label="Τελική Αναφορά" />
                             </div>
                         </Form>
                     )}
-                    {Number(usertype) === 2 && ( //department personnel
+                    {Number(usertype) === 2 && incident.active && ( //department personnel
                         <Form onSubmit={this.handleComment}>
                             <FormGroup className="m-1">
                                 <textarea className="py-0" id="descriptionBox" type="text" value={this.state.comment} onChange={this.handleTextArea} name="comment" placeholder="Προσθέστε σχόλιο..."/>
                             </FormGroup>
-                            <Button className="float-right" type="submit" style={{ backgroundColor: "#0063bf", borderColor: "#0063bf" }}>Προσθήκη</Button>
+                            <Button className="float-right buttonblue" type="submit">Προσθήκη</Button>
                         </Form>
                     )}
                     </Col>
