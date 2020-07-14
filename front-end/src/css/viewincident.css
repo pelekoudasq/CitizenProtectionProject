@@ -78,10 +78,9 @@ body{
 }
 
 #reports {
-    left: 9%;
-    margin-top: 25%;
+    margin-left: 8.5%;
+    margin-top: 22%;
     width: 90%;
-    position: relative;
 }
 
 .w-40 {

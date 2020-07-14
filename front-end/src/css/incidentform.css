@@ -153,3 +153,7 @@
     -webkit-animation: spin .8s linear infinite;
     animation: spin .8s linear infinite;
 }
+
+.w-40 {
+	width: 40% !important;
+}

@@ -340,5 +340,43 @@ router.post('/comment', function(req, res, next) {
 	});
 });
 
+// POST report to incident
+router.post('/report', function(req, res, next) {
+
+	const incident_id = mongojs.ObjectID(req.body.incident_id);
+	const user_id = mongojs.ObjectID(req.body.user_id);
+	const text = req.body.text;
+	const stats = req.body.stats;
+
+	db.Incidents.update(
+		{
+			_id: incident_id
+		},
+		{
+			$set:{
+				report: {
+					user: user_id,
+					date: new Date(),
+					text: text
+				},
+				stats: {
+					deaths: parseInt(stats.deaths),
+					injured: parseInt(stats.injured),
+					arrested: parseInt(stats.arrested)
+				},
+				active: false
+			}
+		}
+	, function(err, ret) {
+		if (err) {
+			res.status(401).json(err);
+			return;
+		}
+		res.status(200).json({
+			msg : ret
+		});
+	});
+});
+
 
 module.exports = router;

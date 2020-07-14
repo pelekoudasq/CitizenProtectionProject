@@ -286,7 +286,7 @@ class IncidentForm extends Component
                             </FormGroup>
                         <Row>
                             <Col sm={4}>
-                                <FormGroup style={{ width:'40% !important' }}>
+                                <FormGroup className="w-40">
                                 <Label for="exampleCheckbox">Φορείς*</Label>
                                 <div required className="CheckBox" innerref={this.state.auth}> 
                                     <CustomInput type="checkbox" id="0" label="Ε.Κ.Α.Β." onClick={this.customInputValue.bind(this, "0")} />

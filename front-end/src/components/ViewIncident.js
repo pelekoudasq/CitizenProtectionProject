@@ -30,16 +30,21 @@ class ViewIncident extends Component
             incident: "",
             address: "",
             comment: "",
-			coordinates: {},
+            report: "",
+            deaths: React.createRef(),
+            injured: React.createRef(),
+            arrested: React.createRef(),
+            coordinates: [],
 			isloading: false,
             editing: false
         }
         
         this.customInputValue = this.customInputValue.bind(this);
         // this.state.auth.current = [];
-        this.handleSubmit.bind(this);
-        this.handleNameChange = this.handleNameChange.bind(this)
-        this.handleLocation = this.handleLocation.bind(this)
+        // this.handleSubmit.bind(this);
+        this.handleReport = this.handleReport.bind(this);
+        this.handleNameChange = this.handleNameChange.bind(this);
+        this.handleLocation = this.handleLocation.bind(this);
 		
     }
 
@@ -114,127 +119,128 @@ class ViewIncident extends Component
 
                 this.setState({
                     address: response.location.address,
-            		coordinates: coordinates
+                    coordinates: coordinates
             	})
-        	});	
+            });	
+            console.log(coordinates)
 
 	}
 
 
-    handleSubmit = event => {
-        // console.log('IncidentForm...');
-        // console.log('Title: ',this.state.title.current.value);
-        // console.log('Location: ',this.state.location);
-        // console.log('Authorizations: ',this.state.auth);
-        // console.log('Priority: ',this.state.priority.current.value);
-        //console.log("i forma", this.state.formLoading)
+    // handleSubmit = event => {
+    //     // console.log('IncidentForm...');
+    //     // console.log('Title: ',this.state.title.current.value);
+    //     // console.log('Location: ',this.state.location);
+    //     // console.log('Authorizations: ',this.state.auth);
+    //     // console.log('Priority: ',this.state.priority.current.value);
+    //     //console.log("i forma", this.state.formLoading)
 
-        this.setState({
-            formLoading: true
-        }); 
+    //     this.setState({
+    //         formLoading: true
+    //     }); 
 
-        let checkFetch = response =>
-        {
-            //console.log('respone status is', response.status)
-            if(response.status !== 200)
-            {
-                this.setState({flag: false, formLoading: false})
-                //console.log('flag in check fetch ', this.state.flag)
-            }
-            return response;
-        }
+    //     let checkFetch = response =>
+    //     {
+    //         //console.log('respone status is', response.status)
+    //         if(response.status !== 200)
+    //         {
+    //             this.setState({flag: false, formLoading: false})
+    //             //console.log('flag in check fetch ', this.state.flag)
+    //         }
+    //         return response;
+    //     }
 
-        let requestOptions = {
-            mode: 'cors',
-            method: 'POST',
-            headers: this.authHeader(),
-            body: JSON.stringify({ 
-                title: this.state.title.current.value,
-                address: this.state.location,
-                priority: this.state.priority.current.value,
-                auth: this.state.auth
-            }),
-        }
+    //     let requestOptions = {
+    //         mode: 'cors',
+    //         method: 'POST',
+    //         headers: this.authHeader(),
+    //         body: JSON.stringify({ 
+    //             title: this.state.title.current.value,
+    //             address: this.state.location,
+    //             priority: this.state.priority.current.value,
+    //             auth: this.state.auth
+    //         }),
+    //     }
 
-        requestOptions.headers['Content-Type'] = 'application/json'
+    //     requestOptions.headers['Content-Type'] = 'application/json'
 
-        let request = `${apiUrl}/incidents/new`
-
-
-        fetch(request, requestOptions)
-
-        .then(checkFetch)
-        .then(response => response.json())
-        .then( json => {
-            console.log(json);
-            //console.log('flag after fetch', this.state.flag)
-            if(this.state.flag)
-            {
-                this.setState({
-                    id : json._id,
-                    formLoading: false,
-                    successSubmit: true
-                })
-            }
-            else
-                this.setState({
-                    id : null,
-                    formLoading: false,
-                    successSubmit: false
-                })
-                //console.log("id in first fetch", this.state.id)
-        }) 
-        event.preventDefault();
-    };
+    //     let request = `${apiUrl}/incidents/new`
 
 
-    handleSubmitmoreInfo = event => {
-        // console.log('IncidentFormmoreInfo...');
-        // console.log('Calling number: ', this.state.call_num.current.value);
-        // console.log('Calling name: ', this.state.call_name.current.value);
-        // console.log('Incident type: ', this.state.incident_type.current._values.value);
-        // console.log('Description: ', this.state.description);
-        let checkFetch = response =>
-        {
-            //console.log('respone status is', response.status)
-            if(response.status !== 200)
-            {
-                //console.log('flag in check fetch ', this.state.flag)
-            }
-            return response;
-        }
+    //     fetch(request, requestOptions)
 
-        let requestOptions = {
-            mode: 'cors',
-            method: 'POST',
-            headers: this.authHeader(),
-            body: JSON.stringify({
-                description : this.state.description,
-                callerName : this.state.call_name.current.value,
-                callerNumber : this.state.call_num.current.value,
-                keywords : this.state.incident_type.current._values.value
-            }),
-        }
-
-        requestOptions.headers['Content-Type'] = 'application/json'
-
-        let request = `${apiUrl}/incidents/update/${this.state.id}`
-
-        fetch(request, requestOptions)
-
-        .then(checkFetch)
-        .then(response => response.json())
-        .then( json => {
-            console.log(json);
-            console.log('flag', this.state.flag)
-        })
-
-        setTimeout(() => alert('Το Συμβαν Καταγράφηκε Επιτυχώς'), 10);
-        this.props.history.push("/")
+    //     .then(checkFetch)
+    //     .then(response => response.json())
+    //     .then( json => {
+    //         console.log(json);
+    //         //console.log('flag after fetch', this.state.flag)
+    //         if(this.state.flag)
+    //         {
+    //             this.setState({
+    //                 id : json._id,
+    //                 formLoading: false,
+    //                 successSubmit: true
+    //             })
+    //         }
+    //         else
+    //             this.setState({
+    //                 id : null,
+    //                 formLoading: false,
+    //                 successSubmit: false
+    //             })
+    //             //console.log("id in first fetch", this.state.id)
+    //     }) 
+    //     event.preventDefault();
+    // };
 
 
-    event.preventDefault();
-    };
+    // handleSubmitmoreInfo = event => {
+    //     // console.log('IncidentFormmoreInfo...');
+    //     // console.log('Calling number: ', this.state.call_num.current.value);
+    //     // console.log('Calling name: ', this.state.call_name.current.value);
+    //     // console.log('Incident type: ', this.state.incident_type.current._values.value);
+    //     // console.log('Description: ', this.state.description);
+    //     let checkFetch = response =>
+    //     {
+    //         //console.log('respone status is', response.status)
+    //         if(response.status !== 200)
+    //         {
+    //             //console.log('flag in check fetch ', this.state.flag)
+    //         }
+    //         return response;
+    //     }
+
+    //     let requestOptions = {
+    //         mode: 'cors',
+    //         method: 'POST',
+    //         headers: this.authHeader(),
+    //         body: JSON.stringify({
+    //             description : this.state.description,
+    //             callerName : this.state.call_name.current.value,
+    //             callerNumber : this.state.call_num.current.value,
+    //             keywords : this.state.incident_type.current._values.value
+    //         }),
+    //     }
+
+    //     requestOptions.headers['Content-Type'] = 'application/json'
+
+    //     let request = `${apiUrl}/incidents/update/${this.state.id}`
+
+    //     fetch(request, requestOptions)
+
+    //     .then(checkFetch)
+    //     .then(response => response.json())
+    //     .then( json => {
+    //         console.log(json);
+    //         console.log('flag', this.state.flag)
+    //     })
+
+    //     setTimeout(() => alert('Το Συμβαν Καταγράφηκε Επιτυχώς'), 10);
+    //     this.props.history.push("/")
+
+
+    // event.preventDefault();
+    // };
     
     handleTextArea = event => {
         const {name,value} = event.target;
@@ -327,6 +333,61 @@ class ViewIncident extends Component
         return comments.reverse()
     }
 
+    handleReport = event => {
+        this.setState({
+            formLoading: true
+        })
+
+        let stats = {
+            deaths: this.state.deaths.current.value,
+            injured: this.state.injured.current.value,
+            arrested: this.state.arrested.current.value
+        }
+
+        incidentService.post_report(this.state.report, this.state.incident._id, stats)
+        .then(response => {
+        	console.log(response)
+        	this.setState({
+            	formLoading: false
+        	})
+        })
+    }
+
+    getReport()
+    {
+        if(this.state.incident && !this.state.incident.active){
+            return (
+                <table className="table table-borderless">
+                <tbody>
+                    <tr className="border-bottom">
+                        <td className="pr-0">Τραυματισμοί:</td>
+                        <td className="pl-0">{ this.state.incident.stats.injured}</td>
+                        <td className="pr-0">Θάνατοι:</td>
+                        <td className="pl-0">{ this.state.incident.stats.deaths}</td>
+                        <td className="pr-0">Συλλήψεις:</td>
+                        <td className="pl-0">{ this.state.incident.stats.arrested}</td>
+                    </tr>
+                    <tr>
+                        <td colSpan="6">
+                            <div className="pt-3 p-1 u-shadow-v18 g-bg-secondary rounded">
+                                <div className="font-weight-bold opacity6">{this.state.incident.report.user}</div>
+                                <div className="text-wrap">
+                                    {this.state.incident.report.text}
+                                </div>
+                                
+                                <blockquote className="blockquote text-right">
+                                    <footer className="blackquote-footer g-color-gray-dark-v4 g-font-size-12">{moment(this.state.incident.report.date).format('DD-MM-YYYY')} {moment(this.state.incident.report.date).format('HH:mm')}</footer>
+                                </blockquote>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>)
+        }
+        else
+            return <p></p>
+    }
+
 
 	render()
 	{
@@ -352,9 +413,9 @@ class ViewIncident extends Component
 
         		{this.state.isloading && <div className="load-spin"></div> }
 
-				{/* {this.state.coordinates !== {} && !this.state.isloading && (
-                    <Gmap coordinates = { this.state.coordinates } size={{ width:'35%', height:'45%', marginLeft:'63%', position: 'absolute'}} />
-                )} */}
+				{this.state.coordinates !== [] &&(
+                    <Gmap coordinates = { this.state.coordinates } size={{ width:'35%', height:'45%', marginLeft:'58%', position: 'absolute'}} />
+                )}
 
                 <Row>
                 <Form id="incinfo">
@@ -388,10 +449,10 @@ class ViewIncident extends Component
                                             <td>{incident.keywords}</td>
                                         </tr>
                                         <tr>
-                                            <td colspan="2">Περιγραφή:</td>
+                                            <td colSpan="2">Περιγραφή:</td>
                                         </tr>
                                         <tr>
-                                            <td colspan="2" className="pborder rounded">{incident.description} </td>
+                                            <td colSpan="2" className="pborder rounded">{incident.description} </td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -432,29 +493,17 @@ class ViewIncident extends Component
                                         </tr>
                                         <tr>
                                             <td className="pr-3">Διεύθυνση:</td>
-                                            <td>
-                                                <FormGroup className="m-1">
-                                                <AutoCompleteLoc className="py-0" size="sm" value={this.state.address} handleLocation={this.handleLocation} defaultValue={this.state.address} name="location"/>
-                                                </FormGroup>
-                                            </td>
+                                            <td>{this.state.address}</td>
                                         </tr>
                                         <tr>
-                                            <td className="pr-3">Είδος συμβάντος:</td>
-                                            <td>
-                                                <FormGroup className="m-1">
-                                                    <Multiselect  size="sm" dropDown data={['Φόνος','Ληστεία','Διάρρηξη','Τροχαίο']} ref={incident.incident_type} />
-                                                </FormGroup>
-                                            </td>
+                                            <td className="pr-3">Είδος Συμβάντος:</td>
+                                            <td>{incident.keywords}</td>
                                         </tr>
                                         <tr>
-                                            <td colspan="2">Περιγραφή:</td>
+                                            <td colSpan="2">Περιγραφή:</td>
                                         </tr>
                                         <tr>
-                                            <td className="p-0" colspan="2">
-                                                <FormGroup className="m-1">
-                                                    <textarea className="py-0" size="sm" id="descriptionBox" type="text" value={incident.description} onChange={this.handleTextArea} name="description" defaultValue="incident.keywords" placeholder=""/>
-                                                </FormGroup>
-                                            </td>
+                                            <td colSpan="2" className="pborder rounded">{incident.description} </td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -465,21 +514,18 @@ class ViewIncident extends Component
                             <FormGroup className="mx-auto">
                                 <div>
                                     <Label className="pl-4" for="exampleCheckbox">Φορείς</Label>
-                                    <div required className="CheckBox mx-auto" innerref={incident.auth}> 
+                                    <div required className="CheckBox mx-auto px-2" innerref={incident.auth}> 
                                         <CustomInput type="checkbox" id="mycheck" label="Ε.Κ.Α.Β." onClick={this.customInputValue.bind(this, "1")} />
                                         <CustomInput type="checkbox" id="2" label="ΕΛ.ΑΣ."  onClick={this.customInputValue.bind(this, "2")}/>
                                         <CustomInput type="checkbox" id="3" label="Λιμενικό"  onClick={this.customInputValue.bind(this, "3")}/>
                                         <CustomInput type="checkbox" id="4" label="Πυρoσβεστική"  onClick={this.customInputValue.bind(this, "4")}/>
                                     </div>
                                     <button id="close-image" className="mx-auto">
-                                    <img src={alert1} alt='' style={{ width: '180px'}} onClick= {(formflag === true) ? this.handleSubmit : console.log(" ")} />
+                                    <img src={alert1} alt='' style={{ width: '180px'}} onClick= {(formflag === true) ? this.handleSubmit : console.log("")} />
                                     </button>
                                 </div>
                             </FormGroup>
                         </Col>
-                        {/* <Col sm="auto">
-                            
-                        </Col> */}
                     </Row>
                     
 
@@ -510,33 +556,20 @@ class ViewIncident extends Component
                         </ul>
                     </Col>
                     {/* <Col sm={1} className="vrtcl_lineBack mt-2 p-0"></Col> */}
-                    <Col sm={5} className="mt-2 ml-5">
-                    {!incident.active &&(
-                       <table>
-                           <tbody>
-                               <tr>
-                                    <td>Τραυματισμοί:</td>
-                                    <td>Θάνατοι: </td>
-                                    <td>Συλλήψεις: </td>
-                               </tr>
-                               <tr>
-                                   <td>αναφορα εδωω</td>
-                               </tr>
-                           </tbody>
-                       </table>
-                    )}
+                    <Col sm={5} className="mt-3 ml-5">
+                    {this.getReport()}
                     {Number(usertype) === 0 && incident.active && ( //control-center agent
-                        <Form>
+                        <Form onSubmit={this.handleReport}>
                             <FormGroup>
                                 <Label className="ml-2">Τραυματισμοί</Label>
-                                <CustomInput className="ml-2 mr-1 w-10" type="number" name="number" id="exampleNumber" placeholder="0"/>
+                                <CustomInput className="ml-2 mr-1 w-10" type="number" innerRef={this.state.injured} name="number" id="injured" placeholder="0"/>
                                 <Label className="ml-5">Θάνατοι</Label>
-                                <CustomInput className="ml-2 mr-1 w-10" type="number" name="number" id="exampleNumber" placeholder="0"/>
+                                <CustomInput className="ml-2 mr-1 w-10" type="number" innerRef={this.state.deaths} name="number" id="deaths" placeholder="0"/>
                                 <Label  className="ml-5">Συλλήψεις</Label>
-                                <CustomInput className="ml-2 w-10" type="number" name="number" id="exampleNumber" placeholder="0"/>
+                                <CustomInput className="ml-2 w-10" type="number" innerRef={this.state.arrested} name="number" id="arrested" placeholder="0"/>
                             </FormGroup>
                             <FormGroup className="m-1">
-                                <textarea className="py-0" id="descriptionBox" type="text" value={this.state.comment} onChange={this.handleTextArea} name="comment" placeholder="Τελική Αναφορά"/>
+                                <textarea className="py-0" id="descriptionBox" type="text" value={this.state.report} onChange={this.handleTextArea} name="report" placeholder="Τελική Αναφορά"/>
                             </FormGroup>
                             <Button className="float-right buttonblue" type="submit">Ολοκλήρωση Συμβάντος</Button>
 

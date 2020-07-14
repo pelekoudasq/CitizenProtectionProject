@@ -3,6 +3,7 @@ import apiUrl from './apiUrl'
 export const incidentService = {
     get_active_incidents,
     post_comment,
+    post_report,
     get_user,
     get_filtered_incidents,
     get_user_requested_incidents,
@@ -147,6 +148,32 @@ function post_comment(text, incident_id) {
     .then(response => {
         return response;
     }); 
+
+}
+
+function post_report(text, incident_id, stats) {
+
+    const user_id = localStorage.getItem('userid');
+
+    const requestOptions = {
+            mode: 'cors',
+            method: 'POST',
+            headers: authHeader(),
+            body: JSON.stringify({
+                text,
+                incident_id,
+                user_id,
+                stats
+            }),
+        }
+
+    requestOptions.headers['Content-Type'] = 'application/json'
+
+    return fetch(`${apiUrl}/incidents/report`, requestOptions)
+    .then(response => response.json())
+    .then(response => {
+        return response;
+    });
 
 }
 
