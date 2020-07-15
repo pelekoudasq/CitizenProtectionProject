@@ -68,9 +68,9 @@ class ControlPanel extends Component
 		{	
 			incidentService.get_user_requested_incidents()
 			.then( response => {
-				if(response.incidents.length !==0)
+				if( response.incidents && response.incidents.length !==0)
 				{
-					console.log("Response from sofia is",response.incidents)
+					// console.log("Response from sofia is",response.incidents)
 					this.setState({
 						incidents: response.incidents,
 						visiblePosts: this.state.visiblePosts + 8
@@ -91,7 +91,7 @@ class ControlPanel extends Component
 						coordinates: coordinates
 					})
 				}
-				else if(response.incidents.length === 0)
+				else if( response.incidents && response.incidents.length === 0)
 				{
 					console.log("To response einai adeio!!!")
 					this.setState=({

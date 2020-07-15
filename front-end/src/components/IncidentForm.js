@@ -152,55 +152,6 @@ class IncidentForm extends Component
         }) 
         event.preventDefault();
     };
-
-
-    handleSubmitmoreInfo = event => {
-        // console.log('IncidentFormmoreInfo...');
-        // console.log('Calling number: ', this.state.call_num.current.value);
-        // console.log('Calling name: ', this.state.call_name.current.value);
-        // console.log('Incident type: ', this.state.incident_type.current._values.value);
-        // console.log('Description: ', this.state.description);
-        let checkFetch = response => 
-        {
-            //console.log('respone status is', response.status)
-            if(response.status !== 200)                
-            {
-                //console.log('flag in check fetch ', this.state.flag)
-            }
-            return response;
-        }
-
-        let requestOptions = {
-            mode: 'cors',
-            method: 'POST',
-            headers: this.authHeader(),
-            body: JSON.stringify({
-                description : this.state.description,
-                callerName : this.state.call_name.current.value,
-                callerNumber : this.state.call_num.current.value,
-                keywords : this.state.incident_type.current._values.value
-            }),
-        }
-
-        requestOptions.headers['Content-Type'] = 'application/json'
-
-        let request = `${apiUrl}/incidents/update/${this.state.id}`
-
-        fetch(request, requestOptions)
-
-        .then(checkFetch)
-        .then(response => response.json())
-        .then( json => {
-            console.log(json);
-            console.log('flag', this.state.flag)
-        })
-
-        setTimeout(() => alert('Το Συμβαν Καταγράφηκε Επιτυχώς'), 10);
-        this.props.history.push("/")
-
-
-    event.preventDefault();
-    };
     
     handleTextArea = event => {
         const {name,value} = event.target;
@@ -236,9 +187,6 @@ class IncidentForm extends Component
             })
         }
     };
-// <Input type="text" name="location" innerRef={this.state.location} id="exampleLocation" placeholder=""/>
-// <Input type="text" name="typeOfIncident" innerRef={this.state.incident_type} id="exampleTypeOfIncident"/>
-
 
     render()
     {   
@@ -288,7 +236,7 @@ class IncidentForm extends Component
                             <Col sm={4}>
                                 <FormGroup className="w-40">
                                 <Label for="exampleCheckbox">Φορείς*</Label>
-                                <div required className="CheckBox" innerref={this.state.auth}> 
+                                <div required className="CheckBox"> 
                                     <CustomInput type="checkbox" id="0" label="Ε.Κ.Α.Β." onClick={this.customInputValue.bind(this, "0")} />
                                     <CustomInput type="checkbox" id="1" label="ΕΛ.ΑΣ."  onClick={this.customInputValue.bind(this, "1")}/>
                                     <CustomInput type="checkbox" id="2" label="Πυρoσβεστική"  onClick={this.customInputValue.bind(this, "2")}/>

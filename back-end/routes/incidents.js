@@ -261,6 +261,55 @@ router.post('/update/:id', function(req, res, next) {
 	});
 });
 
+//edit incident
+router.post('/edit', function(req, res, next) {
+
+	console.log(req.body);
+	const incParam = req.body;
+
+	db.Incidents.update(
+		{ _id: mongojs.ObjectID(incParam.incident_id) },
+		{
+			$set: {
+				callerName : incParam.callerName,
+				callerNumber : incParam.callerNumber,
+				priority : incParam.priority
+			}
+		}
+	,  function(err, incident) {
+		if (err) {
+			res.status(401).json(err);
+			return;
+		}
+		res.status(200).json({
+			msg : incident
+		});
+	});
+});
+
+//edit auth of incident
+router.post('/editAuth', function(req, res, next) {
+
+	console.log(req.body);
+	const incParam = req.body;
+	db.Incidents.update(
+		{ _id: mongojs.ObjectID(incParam.incident_id) },
+		{
+			$set: {
+				auth : incParam.auth
+			}
+		}
+	,  function(err, incident) {
+		if (err) {
+			res.status(401).json(err);
+			return;
+		}
+		res.status(200).json({
+			msg : incident
+		});
+	});
+});
+
 
 // POST accept request
 router.post('/accept', function(req, res, next) {	

@@ -2,13 +2,16 @@ import apiUrl from './apiUrl'
 
 export const incidentService = {
     get_active_incidents,
+    accept_incident,
+    get_user_accepted_incidents,
+    get_user_requested_incidents,
+    get_filtered_incidents,
+    edit_incident,
     post_comment,
     post_report,
     get_user,
-    get_filtered_incidents,
-    get_user_requested_incidents,
-    accept_incident,
-    get_user_accepted_incidents
+    get_incident,
+    change_auth
 };
 
 
@@ -114,7 +117,8 @@ function get_filtered_incidents(text, priority, state, start_date, end_date) {
             start_date,
             end_date
         }),
-	};
+    };
+    
     requestOptions.headers['Content-Type'] = 'application/json'    
 
     return fetch(`${apiUrl}/incidents/filter`, requestOptions)
@@ -125,21 +129,43 @@ function get_filtered_incidents(text, priority, state, start_date, end_date) {
 
 }
 
+function edit_incident(callerName, callerNumber, priority, incident_id) {
+
+    const requestOptions = {
+        mode: 'cors',
+        method: 'POST',
+        headers: authHeader(),
+        body: JSON.stringify({
+            incident_id,
+            callerName,
+            callerNumber,
+            priority
+        }),
+    };
+    
+    requestOptions.headers['Content-Type'] = 'application/json'
+
+    return fetch(`${apiUrl}/incidents/edit`, requestOptions)
+    .then(response => response.json())
+    .then(response => {
+        return response;
+    });
+}
 
 function post_comment(text, incident_id) {
 
     const user_id = localStorage.getItem('userid');
 
     const requestOptions = {
-            mode: 'cors',
-            method: 'POST',
-            headers: authHeader(),
-            body: JSON.stringify({
-                text,
-                incident_id,
-                user_id
-            }),
-        }
+        mode: 'cors',
+        method: 'POST',
+        headers: authHeader(),
+        body: JSON.stringify({
+            text,
+            incident_id,
+            user_id
+        }),
+    };
 
     requestOptions.headers['Content-Type'] = 'application/json'    
 
@@ -156,16 +182,16 @@ function post_report(text, incident_id, stats) {
     const user_id = localStorage.getItem('userid');
 
     const requestOptions = {
-            mode: 'cors',
-            method: 'POST',
-            headers: authHeader(),
-            body: JSON.stringify({
-                text,
-                incident_id,
-                user_id,
-                stats
-            }),
-        }
+        mode: 'cors',
+        method: 'POST',
+        headers: authHeader(),
+        body: JSON.stringify({
+            text,
+            incident_id,
+            user_id,
+            stats
+        }),
+    };
 
     requestOptions.headers['Content-Type'] = 'application/json'
 
@@ -194,4 +220,38 @@ function get_user(userid) {
 
 }
 
+function get_incident(incident_id) {
 
+    const requestOptions = {
+        mode: 'cors',
+        method: 'GET',
+        headers: authHeader(),
+    };
+
+    return fetch(`${apiUrl}/incidents/${incident_id}`, requestOptions)
+    .then(response => response.json())
+    .then(response => {
+        return response;
+    }); 
+}
+
+function change_auth(auth, incident_id) {
+
+    const requestOptions = {
+        mode: 'cors',
+        method: 'POST',
+        headers: authHeader(),
+        body: JSON.stringify({
+            incident_id,
+            auth
+        }),
+    };
+
+    requestOptions.headers['Content-Type'] = 'application/json'
+
+    return fetch(`${apiUrl}/incidents/editAuth`, requestOptions)
+    .then(response => response.json())
+    .then(response => {
+        return response;
+    });
+}

@@ -72,15 +72,11 @@ body{
 }
 
 #incinfo {
-    left: 10%;
     margin-top: 2%;
-    position: absolute;
 }
 
 #reports {
-    margin-left: 8.5%;
-    margin-top: 22%;
-    width: 90%;
+    margin-top: 2%;
 }
 
 .w-40 {
