@@ -79,6 +79,11 @@ body{
     margin-top: 2%;
 }
 
+#priority-icon {
+    width: 27px;
+    height: 15px;
+}
+
 .w-40 {
     width: 40% !important;
 }

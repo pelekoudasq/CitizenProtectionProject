@@ -6,6 +6,9 @@ import '../css/controlpanel.css'
 import '../css/incidentform.css'
 import '../css/viewincident.css'
 import '../css/App.css'
+import high from '../icons/high.png'
+import low from '../icons/low.png'
+import medium from '../icons/medium.png'
 import alert1 from '../icons/alert.png'
 import SideMenu from './SideMenu'
 import Gmap from './Gmap'
@@ -178,24 +181,31 @@ class ViewIncident extends Component
         if (this.state.incident.comments){
             var i;
             for (i = 0; i < this.state.incident.comments.length; i++) {
-            	// var username
+                
+                let comment = this.state.incident.comments[i]
+                // var username
             	// incidentService.get_user(this.state.incident.comments[i].user)
             	// .then(response => {
-            	// 	// this.state.incident.comments[i].username = response[0].username
-            	// 	username = response[0].username
-            	// 	console.log(username)
-            	// })
-            	// console.log(username)
+                //     // this.state.incident.comments[i].username = response[0].username
+                //     // console.log(response[0])
+            	// 	// username = response[0].username
+                //     // console.log(username)
+                //     return response[0].username
+            	// }).then(username => {
+                    
+                // })
+
                 comments[i] = <li className='list-group-item mt-2 pb-0 u-shadow-v18 g-bg-secondary rounded'>
-                    <div className="font-weight-bold opacity6">{this.state.incident.comments[i].user}</div>
+                    <div className="font-weight-bold opacity6">{comment.user}</div>
                     <div className="text-wrap">
-                        {this.state.incident.comments[i].text}
+                        {comment.text}
                     </div>
                     
                     <blockquote className="blockquote text-right">
-                        <footer className="blackquote-footer g-color-gray-dark-v4 g-font-size-12">{moment(this.state.incident.comments[i].date).format('DD-MM-YYYY')} {moment(this.state.incident.comments[i].date).format('HH:mm')}</footer>
+                        <footer className="blackquote-footer g-color-gray-dark-v4 g-font-size-12">{moment(comment.date).format('DD-MM-YYYY')} {moment(comment.date).format('HH:mm')}</footer>
                     </blockquote>
                 </li>;
+                
             }
         }
         else {
@@ -222,7 +232,6 @@ class ViewIncident extends Component
                 formLoading: false
         	})
         })
-        event.preventDefault();
     };
 
     getReport()
@@ -269,10 +278,18 @@ class ViewIncident extends Component
 
         let incident = this.state.incident
         let usertype =  localStorage.getItem("usertype")
+        let icon
+        if(this.state.incident.priority === "Χαμηλή")
+        	icon = low
+        else if(this.state.incident.priority === "Μέτρια")
+        	icon = medium
+
+        if(this.state.incident.priority === "Υψηλή")
+			icon = high
 
 		return(
 			<div className = "hide-scroll">
-				<SideMenu /> 
+				<SideMenu />
                 <Link to="/">
 		        <button className="btn btn-link" >
 		        <FontAwesomeIcon className="iconBack" icon={ faArrowLeft }/>
@@ -299,7 +316,7 @@ class ViewIncident extends Component
                                         </tr>
                                         <tr>
                                             <td className="pr-3">Προτεραιότητα:</td>
-                                            <td>{incident.priority}</td>
+                                            <td><img id="priority-icon" src={icon} alt= ''/> {incident.priority}</td>
                                         </tr>
                                         <tr>
                                             <td className="pr-3">Όνομα Αναφέροντα:</td>
@@ -397,7 +414,7 @@ class ViewIncident extends Component
                                 </Form>
                             )}
                         </Col>
-                        {incident.active && (
+                        {incident.active && (Number(usertype) === 0 || Number(usertype) === 1) && (
                             <FontAwesomeIcon icon={ faEdit } className="ml-2 mt-1" onClick={this.handleEdit} />
                         )}
                         <Col sm="auto">
@@ -406,26 +423,27 @@ class ViewIncident extends Component
                                     <div>
                                         <Label className="pl-4" for="exampleCheckbox">Φορείς</Label>
                                         <div required className="CheckBox mx-auto px-2" innerref={incident.auth}> 
-                                            <CustomInput type="checkbox" id="mycheck" label="Ε.Κ.Α.Β." onClick={this.customInputValue.bind(this, "1")} checked = {this.state.auth.includes(1)} disabled={!incident.active}/>
-                                            <CustomInput type="checkbox" id="2" label="ΕΛ.ΑΣ."  onClick={this.customInputValue.bind(this, "2")} checked = {this.state.auth.includes(2)} disabled={!incident.active}/>
-                                            <CustomInput type="checkbox" id="3" label="Λιμενικό"  onClick={this.customInputValue.bind(this, "3")} checked = {this.state.auth.includes(3)} disabled={!incident.active}/>
-                                            <CustomInput type="checkbox" id="4" label="Πυρoσβεστική"  onClick={this.customInputValue.bind(this, "4")} checked = {this.state.auth.includes(4)} disabled={!incident.active}/>
+                                            <CustomInput type="checkbox" id="mycheck" label="Ε.Κ.Α.Β." onClick={this.customInputValue.bind(this, "1")} checked = {this.state.auth.includes(1)} disabled={!incident.active || (Number(usertype) !== 0 && Number(usertype) !== 1) }/>
+                                            <CustomInput type="checkbox" id="2" label="ΕΛ.ΑΣ."  onClick={this.customInputValue.bind(this, "2")} checked = {this.state.auth.includes(2)} disabled={!incident.active || (Number(usertype) !== 0 && Number(usertype) !== 1) }/>
+                                            <CustomInput type="checkbox" id="3" label="Λιμενικό"  onClick={this.customInputValue.bind(this, "3")} checked = {this.state.auth.includes(3)} disabled={!incident.active || (Number(usertype) !== 0 && Number(usertype) !== 1) }/>
+                                            <CustomInput type="checkbox" id="4" label="Πυρoσβεστική"  onClick={this.customInputValue.bind(this, "4")} checked = {this.state.auth.includes(4)} disabled={!incident.active || (Number(usertype) !== 0 && Number(usertype) !== 1) }/>
                                         </div>
-                                        {incident.active && (
+                                        {incident.active && (Number(usertype) === 0 || Number(usertype) === 1) && (
                                             <button id="close-image" className="mx-auto">
                                             <img src={alert1} alt='' style={{ width: '180px'}} onClick= {(formflag === true) ? this.handleAuth : console.log("")} />
                                             </button>
                                         )}
                                     </div>
                                 </FormGroup>
-                                <br/>
-                                {this.state.successSubmit && (
-                                    <div className="alert alert-success">
-                                        <strong>Οι αρμόδιοι Φορείς ενημερώθηκαν επιτυχώς για το συμβάν</strong>
-                                    </div>
-                                )}
                             </Form>
                         </Col>
+                    </Row>
+                    <Row>
+                        {this.state.successSubmit && (
+                            <div className="alert alert-success mb-0 ml-5">
+                                <strong>Οι αρμόδιοι φορείς ενημερώθηκαν επιτυχώς για το συμβάν</strong>
+                            </div>
+                        )}
                     </Row>
                     <Row id="reports">
                         <h6 className = "head_ltitleInfo">Αναφορές</h6>
