@@ -3,18 +3,26 @@ package com.example.theophilos.citizenprotectionproject;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuInflater;
+import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.w3c.dom.Text;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -27,8 +35,7 @@ import static com.example.theophilos.citizenprotectionproject.MainActivity.getUn
 
 public class IncidentsActivity extends AppCompatActivity {
 
-    private TextView textviewResult;
-
+    private ArrayList<String> incidentNames = new ArrayList<>();
     private DrawerLayout drawer;
 
     public Retrofit retrofit = new Retrofit.Builder()
@@ -47,18 +54,27 @@ public class IncidentsActivity extends AppCompatActivity {
 
 
         drawer = findViewById(R.id.drawer_layout);
+        drawer.setScrimColor(Color.TRANSPARENT);
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,drawer,toolbar,
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        textviewResult = findViewById(R.id.textView);
+
+
 
         //Retrieve token wherever necessary
         SharedPreferences preferences = IncidentsActivity.this.getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
         String usrId  = preferences.getString("ID",null);
         String token  = preferences.getString("TOKEN",null);
+        String usrName = preferences.getString("USRNAME",null);
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        View hView =  navigationView.getHeaderView(0);
+        TextView nav_user = (TextView)hView.findViewById(R.id.accountName);
+        nav_user.setText(usrName);
+
 
 
         JsonApi jsonApi = retrofit.create(JsonApi.class);
@@ -69,7 +85,6 @@ public class IncidentsActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Incidents> call, Response<Incidents> response) {
                 if(!response.isSuccessful()) {
-                    textviewResult.setText("Code: " + response.code());
                     return;
                 }
 
@@ -78,27 +93,13 @@ public class IncidentsActivity extends AppCompatActivity {
                 List<Incident> incList = acceptedIncidents.getIncidents();
                 if ( incList.size() == 0 ){
 
-                    //Create text view
-                    LinearLayout.LayoutParams textViewParams = new LinearLayout.LayoutParams(Toolbar.LayoutParams.WRAP_CONTENT, Toolbar.LayoutParams.WRAP_CONTENT);
-                    TextView tv=new TextView(getApplicationContext());
-                    tv.setLayoutParams(textViewParams);
-                    tv.setText("Κανένα Τρέχων Συμβάν");
-                    //Create Reload Button
-                    LinearLayout mainLayout = (LinearLayout)findViewById(R.id.buttonlayout);
-                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                    Button addButton =new Button(getApplicationContext());
-                    addButton.setText("Επαναφόρτωση");
-                    //add textview and compnent to layout
-                    mainLayout.addView(tv, textViewParams);
-                    mainLayout.addView(addButton, lp);
 
                 }
                 else{
-                    String content = "";
-                    for (Incident inc : acceptedIncidents.getIncidents()){
-                        content += inc.getTitle() + " \n";
+                    for ( Incident i : incList ){
+                        incidentNames.add(i.getTitle());
                     }
-                    textviewResult.setText(content);
+                    initRecyclerView();
                 }
 
 
@@ -106,7 +107,6 @@ public class IncidentsActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Incidents> call, Throwable t) {
-                textviewResult.setText(t.getMessage());
             }
         });
 
@@ -119,6 +119,14 @@ public class IncidentsActivity extends AppCompatActivity {
         } else{
             super.onBackPressed();
         }
+    }
+
+
+    private void initRecyclerView(){
+        RecyclerView recyclerView = findViewById(R.id.recyclerView);
+        RecyclerViewAdapter adapter = new RecyclerViewAdapter(incidentNames,this);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 }
 
