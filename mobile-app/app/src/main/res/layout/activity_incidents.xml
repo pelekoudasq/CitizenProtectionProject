@@ -25,27 +25,64 @@
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
 
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="ΤΡΕΧΟΝΤΑ ΣΥΜΑΒΑΝΤΑ"
-                android:textSize="27sp"
-                android:textColor="#000"
-                android:textAlignment="center"/>
+            android:layout_height="match_parent">
 
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recyclerView"
+            <LinearLayout
+                android:id="@+id/recyclerLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:padding="30dp"></android.support.v7.widget.RecyclerView>
+                android:orientation="vertical"
+                android:visibility="invisible">
 
-        </LinearLayout>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="ΤΡΕΧΟΝΤΑ ΣΥΜΑΒΑΝΤΑ"
+                    android:textAlignment="center"
+                    android:textColor="#000"
+                    android:textSize="27sp" />
+
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="30dp"></android.support.v7.widget.RecyclerView>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:visibility="invisible"
+                android:id="@+id/buttonLayout">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="ΚΑΝΕΝΑ ΣΥΜΒΑΝ ΔΙΑΘΕΣΙΜΟ"
+                    android:textAlignment="center"
+                    android:textColor="#000"
+                    android:textSize="27sp" />
+
+                <Button
+                    android:id="@+id/button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="60dp"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="120dp"
+                    android:text="ΕΠΑΝΑΦΟΡΤΩΣΗ" />
+            </LinearLayout>
+
+
+
+        </RelativeLayout>
+
+
 
 
 

@@ -89,13 +89,17 @@ public class IncidentsActivity extends AppCompatActivity {
                 }
 
                 Incidents acceptedIncidents = response.body();
+                LinearLayout layout;
 
                 List<Incident> incList = acceptedIncidents.getIncidents();
                 if ( incList.size() == 0 ){
-
+                    layout = (LinearLayout) findViewById(R.id.buttonLayout);
+                    layout.setVisibility(View.VISIBLE);
 
                 }
                 else{
+                    layout = (LinearLayout) findViewById(R.id.recyclerLayout);
+                    layout.setVisibility(View.VISIBLE);
                     for ( Incident i : incList ){
                         incidentNames.add(i.getTitle());
                     }
