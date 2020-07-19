@@ -40,9 +40,9 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="ΤΡΕΧΟΝΤΑ ΣΥΜΑΒΑΝΤΑ"
+                    android:text="ΤΡΕΧΟΝΤΑ ΣΥΜΒΑΝΤΑ"
                     android:textAlignment="center"
-                    android:textColor="#000"
+                    android:textColor="@color/toolbarColor"
                     android:textSize="27sp" />
 
 
@@ -75,6 +75,7 @@
                     android:layout_height="60dp"
                     android:layout_gravity="center"
                     android:layout_marginTop="120dp"
+                    android:onClick="showIncidents"
                     android:text="ΕΠΑΝΑΦΟΡΤΩΣΗ" />
             </LinearLayout>
 

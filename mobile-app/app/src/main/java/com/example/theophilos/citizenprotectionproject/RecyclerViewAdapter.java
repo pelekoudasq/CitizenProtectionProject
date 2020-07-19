@@ -21,11 +21,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private static final String TAG = "RecyclerViewAdapter";
 
     private ArrayList<String> incidentNames = new ArrayList<>();
+    private ArrayList<String> incidentPriorities = new ArrayList<>();
     private Context context;
 
 
-    public RecyclerViewAdapter(ArrayList<String> iNames , Context cont ){
+    public RecyclerViewAdapter(ArrayList<String> iNames , ArrayList<String> iPriorities, Context cont ){
         incidentNames = iNames;
+        incidentPriorities = iPriorities;
         context = cont;
     }
 
@@ -41,6 +43,17 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public void onBindViewHolder(ViewHolder holder, final int position) {
         Log.d(TAG,"onBindViewGolder : called.");
         holder.incidentName.setText(incidentNames.get(position));
+        String p = incidentPriorities.get(position);
+
+        if ( p .equals("Υψηλή") ){
+            holder.image.setImageResource(R.drawable.high);
+        }
+        else if ( p.equals("Μέτρια") ){
+            holder.image.setImageResource(R.drawable.medium);
+        }
+        else if (p.equals("Χαμηλή") ){
+            holder.image.setImageResource(R.drawable.low);
+        }
         holder.parentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

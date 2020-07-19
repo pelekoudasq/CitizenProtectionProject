@@ -8,8 +8,13 @@ import java.util.List;
 
 public class Incident {
     String title;
+    String priority;
 
     public String getTitle() {
         return title;
+    }
+
+    public String getPriority() {
+        return priority;
     }
 }

@@ -4,6 +4,7 @@ package com.example.theophilos.citizenprotectionproject;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.nfc.Tag;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -13,6 +14,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuInflater;
 import android.view.View;
 import android.widget.Button;
@@ -36,6 +38,7 @@ import static com.example.theophilos.citizenprotectionproject.MainActivity.getUn
 public class IncidentsActivity extends AppCompatActivity {
 
     private ArrayList<String> incidentNames = new ArrayList<>();
+    private ArrayList<String> incidentPriorities = new ArrayList<>();
     private DrawerLayout drawer;
 
     public Retrofit retrofit = new Retrofit.Builder()
@@ -66,16 +69,35 @@ public class IncidentsActivity extends AppCompatActivity {
 
         //Retrieve token wherever necessary
         SharedPreferences preferences = IncidentsActivity.this.getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
-        String usrId  = preferences.getString("ID",null);
-        String token  = preferences.getString("TOKEN",null);
         String usrName = preferences.getString("USRNAME",null);
+
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         View hView =  navigationView.getHeaderView(0);
         TextView nav_user = (TextView)hView.findViewById(R.id.accountName);
         nav_user.setText(usrName);
 
+        showIncidents( this.getCurrentFocus() );
 
+
+    }
+
+    @Override
+    public void onBackPressed(){
+        if (drawer.isDrawerOpen(GravityCompat.START)){
+            drawer.closeDrawer(GravityCompat.START);
+        } else{
+            return;
+        }
+
+    }
+
+
+    public void showIncidents(View view){
+
+        SharedPreferences preferences = IncidentsActivity.this.getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
+        String usrId  = preferences.getString("ID",null);
+        String token  = preferences.getString("TOKEN",null);
 
         JsonApi jsonApi = retrofit.create(JsonApi.class);
         Call<Incidents> call = jsonApi.getAcceptedIncidents( "Bearer "+token , usrId );
@@ -89,19 +111,27 @@ public class IncidentsActivity extends AppCompatActivity {
                 }
 
                 Incidents acceptedIncidents = response.body();
-                LinearLayout layout;
+                LinearLayout buttonLayout,recyclerLayout;
 
                 List<Incident> incList = acceptedIncidents.getIncidents();
                 if ( incList.size() == 0 ){
-                    layout = (LinearLayout) findViewById(R.id.buttonLayout);
-                    layout.setVisibility(View.VISIBLE);
+                    recyclerLayout = findViewById(R.id.recyclerLayout);
+                    recyclerLayout.setVisibility(View.INVISIBLE);
+
+                    buttonLayout = findViewById(R.id.buttonLayout);
+                    buttonLayout.setVisibility(View.VISIBLE);
 
                 }
                 else{
-                    layout = (LinearLayout) findViewById(R.id.recyclerLayout);
-                    layout.setVisibility(View.VISIBLE);
+
+                    buttonLayout = findViewById(R.id.buttonLayout);
+                    buttonLayout.setVisibility(View.INVISIBLE);
+
+                    recyclerLayout = findViewById(R.id.recyclerLayout);
+                    recyclerLayout.setVisibility(View.VISIBLE);
                     for ( Incident i : incList ){
                         incidentNames.add(i.getTitle());
+                        incidentPriorities.add(i.getPriority());
                     }
                     initRecyclerView();
                 }
@@ -113,22 +143,12 @@ public class IncidentsActivity extends AppCompatActivity {
             public void onFailure(Call<Incidents> call, Throwable t) {
             }
         });
-
-    }
-
-    @Override
-    public void onBackPressed(){
-        if (drawer.isDrawerOpen(GravityCompat.START)){
-            drawer.closeDrawer(GravityCompat.START);
-        } else{
-            super.onBackPressed();
-        }
     }
 
 
     private void initRecyclerView(){
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(incidentNames,this);
+        RecyclerViewAdapter adapter = new RecyclerViewAdapter(incidentNames,incidentPriorities,this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
