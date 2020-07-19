@@ -423,10 +423,10 @@ class ViewIncident extends Component
                                     <div>
                                         <Label className="pl-4" for="exampleCheckbox">Φορείς</Label>
                                         <div required className="CheckBox mx-auto px-2" innerref={incident.auth}> 
-                                            <CustomInput type="checkbox" id="mycheck" label="Ε.Κ.Α.Β." onClick={this.customInputValue.bind(this, "1")} checked = {this.state.auth.includes(1)} disabled={!incident.active || (Number(usertype) !== 0 && Number(usertype) !== 1) }/>
-                                            <CustomInput type="checkbox" id="2" label="ΕΛ.ΑΣ."  onClick={this.customInputValue.bind(this, "2")} checked = {this.state.auth.includes(2)} disabled={!incident.active || (Number(usertype) !== 0 && Number(usertype) !== 1) }/>
-                                            <CustomInput type="checkbox" id="3" label="Λιμενικό"  onClick={this.customInputValue.bind(this, "3")} checked = {this.state.auth.includes(3)} disabled={!incident.active || (Number(usertype) !== 0 && Number(usertype) !== 1) }/>
-                                            <CustomInput type="checkbox" id="4" label="Πυρoσβεστική"  onClick={this.customInputValue.bind(this, "4")} checked = {this.state.auth.includes(4)} disabled={!incident.active || (Number(usertype) !== 0 && Number(usertype) !== 1) }/>
+                                            <CustomInput type="checkbox" id="mycheck" label="Ε.Κ.Α.Β." onClick={this.customInputValue.bind(this, "0")} checked = {this.state.auth.includes(0)} disabled={!incident.active || (Number(usertype) !== 0 && Number(usertype) !== 1) }/>
+                                            <CustomInput type="checkbox" id="2" label="ΕΛ.ΑΣ."  onClick={this.customInputValue.bind(this, "1")} checked = {this.state.auth.includes(1)} disabled={!incident.active || (Number(usertype) !== 0 && Number(usertype) !== 1) }/>
+                                            <CustomInput type="checkbox" id="3" label="Λιμενικό"  onClick={this.customInputValue.bind(this, "2")} checked = {this.state.auth.includes(2)} disabled={!incident.active || (Number(usertype) !== 0 && Number(usertype) !== 1) }/>
+                                            <CustomInput type="checkbox" id="4" label="Πυρoσβεστική"  onClick={this.customInputValue.bind(this, "3")} checked = {this.state.auth.includes(3)} disabled={!incident.active || (Number(usertype) !== 0 && Number(usertype) !== 1) }/>
                                         </div>
                                         {incident.active && (Number(usertype) === 0 || Number(usertype) === 1) && (
                                             <button id="close-image" className="mx-auto">
