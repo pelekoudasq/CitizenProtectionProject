@@ -152,7 +152,7 @@ function edit_incident(callerName, callerNumber, priority, incident_id) {
     });
 }
 
-function post_comment(text, incident_id) {
+function post_comment(text, incident_id, final) {
 
     const user_id = localStorage.getItem('userid');
 
@@ -163,7 +163,8 @@ function post_comment(text, incident_id) {
         body: JSON.stringify({
             text,
             incident_id,
-            user_id
+            user_id,
+            final
         }),
     };
 

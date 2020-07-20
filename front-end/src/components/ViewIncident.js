@@ -40,7 +40,10 @@ class ViewIncident extends Component
             callerNumber: React.createRef(),
             authError: true,
             auth: [],
-            successSubmit: false
+            successSubmit: false,
+            comments: [],
+            reportText: "",
+            final: false
         }
         
         this.customInputValue = this.customInputValue.bind(this);
@@ -84,6 +87,12 @@ class ViewIncident extends Component
         }
     }
 
+    CheckFinal = event => {
+        this.setState({
+            final: !this.state.final
+        });
+    }
+
 	componentDidMount()
 	{	
 
@@ -111,6 +120,9 @@ class ViewIncident extends Component
                 coordinates: coordinates,
                 auth: response.auth
             })
+
+            this.getComments();
+            this.getReport();
         })
 
 	}
@@ -160,58 +172,61 @@ class ViewIncident extends Component
         event.preventDefault();
     };
 
-
     handleComment = event => {
         this.setState({
             formLoading: true
         })
-        console.log(this.state.comment)
-        incidentService.post_comment(this.state.comment, this.state.incident._id)
-        .then(response => {
-        	console.log(response)
-        	this.setState({
-            	formLoading: false
-        	})
-        })
+
+        if (this.state.comment){
+            if (this.state.final)
+                incidentService.post_comment(this.state.comment, this.state.incident._id, 1)
+                .then(response => {
+                    console.log(response)
+                    this.setState({
+                        formLoading: false
+                    })
+                })
+            else
+                incidentService.post_comment(this.state.comment, this.state.incident._id, 0)
+                .then(response => {
+                    console.log(response)
+                    this.setState({
+                        formLoading: false
+                    })
+                })
+        }
+        else
+            event.preventDefault();
     };
 
     getComments()
     {
-        let comments = [];
         if (this.state.incident.comments){
             var i;
             for (i = 0; i < this.state.incident.comments.length; i++) {
-                
-                let comment = this.state.incident.comments[i]
-                // var username
-            	// incidentService.get_user(this.state.incident.comments[i].user)
-            	// .then(response => {
-                //     // this.state.incident.comments[i].username = response[0].username
-                //     // console.log(response[0])
-            	// 	// username = response[0].username
-                //     // console.log(username)
-                //     return response[0].username
-            	// }).then(username => {
-                    
-                // })
 
-                comments[i] = <li className='list-group-item mt-2 pb-0 u-shadow-v18 g-bg-secondary rounded'>
-                    <div className="font-weight-bold opacity6">{comment.user}</div>
-                    <div className="text-wrap">
-                        {comment.text}
-                    </div>
-                    
-                    <blockquote className="blockquote text-right">
-                        <footer className="blackquote-footer g-color-gray-dark-v4 g-font-size-12">{moment(comment.date).format('DD-MM-YYYY')} {moment(comment.date).format('HH:mm')}</footer>
-                    </blockquote>
-                </li>;
-                
+                let comment = this.state.incident.comments[i]
+
+            	incidentService.get_user(this.state.incident.comments[i].user)
+            	.then(response => {
+
+                    let com = <li className='list-group-item mt-2 pb-0 u-shadow-v18 g-bg-secondary rounded'>
+                        <div className="font-weight-bold opacity6">{response[0].username}</div>
+                        <div className="text-wrap">
+                            {comment.text}
+                        </div>
+                        
+                        <blockquote className="blockquote text-right">
+                            <footer className="blackquote-footer g-color-gray-dark-v4 g-font-size-12">{moment(comment.date).format('DD-MM-YYYY')} {moment(comment.date).format('HH:mm')}</footer>
+                        </blockquote>
+                    </li>;
+
+                    this.setState({
+                        comments: [com, ...this.state.comments]
+                    })
+                });
             }
-        }
-        else {
-            console.log('oops')
-        }
-        return comments.reverse()
+        }        
     }
 
     handleReport = event => {
@@ -225,48 +240,61 @@ class ViewIncident extends Component
             arrested: this.state.arrested.current.value
         }
 
-        incidentService.post_report(this.state.report, this.state.incident._id, stats)
-        .then(response => {
-        	console.log(response)
-        	this.setState({
-                formLoading: false
-        	})
-        })
+        if (this.state.report)
+            incidentService.post_report(this.state.report, this.state.incident._id, stats)
+            .then(response => {
+                console.log(response)
+                this.setState({
+                    formLoading: false
+                })
+            })
+        else
+            event.preventDefault();
     };
 
     getReport()
     {
-        if(this.state.incident && !this.state.incident.active){
-            return (
-                <table className="table table-borderless">
-                <tbody>
-                    <tr className="border-bottom">
-                        <td className="pr-0">Τραυματισμοί:</td>
-                        <td className="pl-0">{ this.state.incident.stats.injured}</td>
-                        <td className="pr-0">Θάνατοι:</td>
-                        <td className="pl-0">{ this.state.incident.stats.deaths}</td>
-                        <td className="pr-0">Συλλήψεις:</td>
-                        <td className="pl-0">{ this.state.incident.stats.arrested}</td>
-                    </tr>
-                    <tr>
-                        <td colSpan="6">
-                            <div className="pt-3 p-1 u-shadow-v18 g-bg-secondary rounded">
-                                <div className="font-weight-bold opacity6">{this.state.incident.report.user}</div>
-                                <div className="text-wrap">
-                                    {this.state.incident.report.text}
-                                </div>
-                                
-                                <blockquote className="blockquote text-right">
-                                    <footer className="blackquote-footer g-color-gray-dark-v4 g-font-size-12">{moment(this.state.incident.report.date).format('DD-MM-YYYY')} {moment(this.state.incident.report.date).format('HH:mm')}</footer>
-                                </blockquote>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>)
+        if(this.state.incident && !this.state.incident.active && this.state.incident.report){
+            let incident = this.state.incident
+            incidentService.get_user(this.state.incident.report.user)
+            .then(response => {
+                let report = <table className="table table-borderless">
+                        <tbody>
+                            <tr className="border-bottom">
+                                <td className="pr-0">Τραυματισμοί:</td>
+                                <td className="pl-0">{ incident.stats.injured}</td>
+                                <td className="pr-0">Θάνατοι:</td>
+                                <td className="pl-0">{ incident.stats.deaths}</td>
+                                <td className="pr-0">Συλλήψεις:</td>
+                                <td className="pl-0">{ incident.stats.arrested}</td>
+                            </tr>
+                            <tr>
+                                <td colSpan="6">
+                                    <div className="pt-3 p-1 u-shadow-v18 g-bg-secondary rounded">
+                                        <div className="font-weight-bold opacity6">{response[0].username}</div>
+                                        <div className="text-wrap">
+                                            {incident.report.text}
+                                        </div>
+                                        
+                                        <blockquote className="blockquote text-right">
+                                            <footer className="blackquote-footer g-color-gray-dark-v4 g-font-size-12">{moment(incident.report.date).format('DD-MM-YYYY')} {moment(incident.report.date).format('HH:mm')}</footer>
+                                        </blockquote>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>;
+                this.setState({
+                    reportText: report
+                })
+            });
         }
-        else
-            return <p></p>
+        else{
+            this.setState({
+                reportText: <p></p>
+            })
+        }
+        
     }
 
 	render()
@@ -450,12 +478,12 @@ class ViewIncident extends Component
                         <div className = "hrz_lineBack"></div>
                         <Col sm={6} className="mt-1 my-scroll scroll">
                             <ul className='list-group overflow-auto'>
-                                {this.getComments()}
+                                {this.state.comments}
                             </ul>
                         </Col>
                         {/* <Col sm={1} className="vrtcl_lineBack mt-2 p-0"></Col> */}
                         <Col sm={5} className="mt-3 ml-5">
-                        {this.getReport()}
+                        {this.state.reportText}
                         {Number(usertype) === 0 && incident.active && ( //control-center agent
                             <Form onSubmit={this.handleReport}>
                                 <FormGroup>
@@ -474,13 +502,13 @@ class ViewIncident extends Component
                             </Form>
                         )}
                         {Number(usertype) === 1 && incident.active && ( //authority department
-                            <Form>
+                            <Form onSubmit={this.handleComment}>
                                 <FormGroup className="m-1">
-                                    <textarea className="py-0" id="descriptionBox" type="text"  onChange={this.handleTextArea} name="description" placeholder="Προσθέστε σχόλιο..."/>
+                                    <textarea className="py-0" id="descriptionBox" type="text" value={this.state.comment} onChange={this.handleTextArea} name="comment" placeholder="Προσθέστε σχόλιο..."/>
                                 </FormGroup>
                                 <div>
-                                <Button className="float-right d-inline py-1 buttonblue" onClick={this.handleFinalComment}>Προσθήκη</Button>
-                                <CustomInput className="float-right d-inline mr-2 mt-1" type="checkbox" id="report" label="Τελική Αναφορά" />
+                                <Button className="float-right d-inline py-1 buttonblue" type="submit">Προσθήκη</Button>
+                                <CustomInput className="float-right d-inline mr-2 mt-1" type="checkbox" id="report" onClick={this.CheckFinal} label="Τελική Αναφορά" />
                                 </div>
                             </Form>
                         )}
