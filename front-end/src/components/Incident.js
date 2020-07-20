@@ -8,6 +8,8 @@ import { Button }from 'reactstrap'
 import { withRouter } from 'react-router';
 import moment from 'moment'
 import logo from '../icons/modal_img.jpg'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faEye } from '@fortawesome/free-solid-svg-icons'
 
 import apiUrl from '../services/apiUrl'
 
@@ -90,7 +92,7 @@ class Incident extends Component
 
 	accept_incident()
 	{
-		console.log("Accepted")
+		// console.log("Accepted")
 		incidentService.accept_incident(this.props.incident._id)
 		window.location.reload(false);
 	}
@@ -109,50 +111,51 @@ class Incident extends Component
     	return(
     		<div>
     			<br/>
-    			<div className="row" id="inc_box" onClick={this.OpenModal}>
+				
+    			<div className="row" id="inc_box" onClick={this.handleClick}>
 					<Modal
-							overlayClassName={{
-								base: 'Modal-overlay'
-							}}
-							isOpen={this.state.showModal}
-							contentLabel="onRequestClose"
-							onRequestClose={this.CloseModal}
-							style={customStyles}>
-							<h6 style={{fontSize: "25px", marginLeft: "35%" }}>Προεπισκόπηση Συμβάντος</h6>
-							<br/>
-							<img className="modal_img"
-								src={logo}
-								alt=''
-							/>
-							<table style={{marginLeft: "35%"}}>
-								<tbody>
-									<tr>
-										<td className="pr-2" style={{fontSize: "20px"}}>Ημερομηνία - Ώρα:</td>
-										<td>{moment(this.props.incident.date).format('DD-MM-YYYY')} {moment(this.props.incident.date).format('HH:mm')}</td>
-									</tr>
-									<tr>
-										<td className="pr-2" style={{fontSize: "20px"}}>Προτεραιότητα:</td>
-										<td>{this.props.incident.priority}</td>
-									</tr>
-									<tr>
-										<td className="pr-2" style={{fontSize: "20px"}}>Όνομα Αναφέροντα:</td>
-										<td>{this.props.incident.callerName}</td>
-									</tr>
-									<tr>
-										<td className="pr-2" style={{fontSize: "20px"}}>Τηλέφωνο Αναφέροντα:</td>
-										<td>{this.props.incident.callerNumber}</td>
-									</tr>
-									<tr>
-										<td className="pr-2" style={{fontSize: "20px"}}>Διεύθυνση:</td>
-										<td>{this.props.incident.location.address}</td>
-									</tr>
-								</tbody>
-							</table>
-							<div id="container">
-								<Button style = {{marginTop: '12%', backgroundColor: 'white', color: 'black'}} onClick={this.CloseModal}>Κλείσιμο</Button>
-								<Button style = {{marginTop: '12%', marginLeft: '2%'}} onClick={this.handleClick}>Περισσότερα</Button>
-							</div>
-						</Modal>
+						overlayClassName={{
+							base: 'Modal-overlay'
+						}}
+						isOpen={this.state.showModal}
+						contentLabel="onRequestClose"
+						onRequestClose={this.CloseModal}
+						style={customStyles}>
+						<h6 style={{fontSize: "25px", marginLeft: "35%" }}>Προεπισκόπηση Συμβάντος</h6>
+						<br/>
+						<img className="modal_img"
+							src={logo}
+							alt=''
+						/>
+						<table style={{marginLeft: "35%"}}>
+							<tbody>
+								<tr>
+									<td className="pr-2" style={{fontSize: "20px"}}>Ημερομηνία - Ώρα:</td>
+									<td>{moment(this.props.incident.date).format('DD-MM-YYYY')} {moment(this.props.incident.date).format('HH:mm')}</td>
+								</tr>
+								<tr>
+									<td className="pr-2" style={{fontSize: "20px"}}>Προτεραιότητα:</td>
+									<td>{this.props.incident.priority}</td>
+								</tr>
+								<tr>
+									<td className="pr-2" style={{fontSize: "20px"}}>Όνομα Αναφέροντα:</td>
+									<td>{this.props.incident.callerName}</td>
+								</tr>
+								<tr>
+									<td className="pr-2" style={{fontSize: "20px"}}>Τηλέφωνο Αναφέροντα:</td>
+									<td>{this.props.incident.callerNumber}</td>
+								</tr>
+								<tr>
+									<td className="pr-2" style={{fontSize: "20px"}}>Διεύθυνση:</td>
+									<td>{this.props.incident.location.address}</td>
+								</tr>
+							</tbody>
+						</table>
+						<div id="container">
+							<Button style = {{marginTop: '12%', backgroundColor: 'white', color: 'black'}} onClick={this.CloseModal}>Κλείσιμο</Button>
+							<Button style = {{marginTop: '12%', marginLeft: '2%'}} onClick={this.handleClick}>Περισσότερα</Button>
+						</div>
+					</Modal>
     			
 					<div className = "container-fluid" style = {{marginLeft: this.props.style.marginLeft}}>
 						<div className = "row">
@@ -166,6 +169,7 @@ class Incident extends Component
 								<div className="col" style={{marginLeft: "-6%"}}>
 									<button type="button" className="btn btn-primary btn-sm" onClick={this.accept_incident}>Αποδοχή</button>
 								</div> }
+							<div className="col" style={{marginLeft: "-11%"}}><FontAwesomeIcon className="iconBack" icon={ faEye } style={{height: '16px'}} onClick={this.OpenModal}/></div>
 						</div>
 					</div>
     			</div>

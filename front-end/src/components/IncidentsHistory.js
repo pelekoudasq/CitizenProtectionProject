@@ -307,7 +307,7 @@ class Incidents extends Component
 						</div>
 						
 						<div className = "col-md-5">
-							<h5 className = "head_ltitleInfo">Ιστορικό Συμβάντων</h5>
+							<h5  style={{marginTop: '6px'}}>Ιστορικό Συμβάντων</h5>
 						</div>
 
 						<div className="col-md-3">	
@@ -351,6 +351,7 @@ class Incidents extends Component
 							<h6>Ημερομηνία</h6>
 							<div>
 								<TextField
+									style={{width: "80%"}}
 									id="start_date"
 									label="Από"
 									value={this.state.filter_start_date}
@@ -365,6 +366,7 @@ class Incidents extends Component
 							<br/>
 							<div>
 							<TextField
+								style={{width: "80%"}}
 								id="end_date"
 								label="Έως"
 								type="date"

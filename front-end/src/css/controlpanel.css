@@ -47,7 +47,7 @@
 
 #inc_box
 {
-  margin: -1.5%;
+  margin: -1.8%;
   box-sizing: content-box;
 }
 
@@ -102,6 +102,7 @@
   overflow-x: hidden;
   width: 60%;
 }
+
 
 
 /* .scroll::-webkit-scrollbar {

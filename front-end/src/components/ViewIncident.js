@@ -318,7 +318,7 @@ class ViewIncident extends Component
 		return(
 			<div className = "hide-scroll">
 				<SideMenu />
-                <Link to="/">
+                <Link to="/incidents">
 		        <button className="btn btn-link" >
 		        <FontAwesomeIcon className="iconBack" icon={ faArrowLeft }/>
 		        </button>

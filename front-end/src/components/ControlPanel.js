@@ -36,16 +36,20 @@ class ControlPanel extends Component
 		let usertype =  localStorage.getItem("usertype");
 		let coordinate = {}; //object of coordinates
 		let coordinates = [] //array of objects of coordinates
-		
 
-		if (Number(usertype) === 0) //api call for control center
+		this.setState({
+			no_posts:true
+		})
+
+		if(Number(usertype==0)) //api call for control center
 		{	
-			incidentService.get_active_incidents(this.state.visiblePosts, 8)
+			incidentService.get_active_incidents(this.state.visiblePosts, 7)
 			.then( response => {
 				console.log("Response from control center is",response)
 				this.setState({
 					incidents: response,
-					visiblePosts: this.state.visiblePosts + 8
+					visiblePosts: this.state.visiblePosts + 8,
+					no_posts:false
 				})
 				
 				this.state.incidents.forEach(incident => { /*Loop through every row of the jsonfile and get the attributes*/
@@ -64,16 +68,16 @@ class ControlPanel extends Component
 				})
 			});	
 		}
-		else if (Number(usertype) === 2) //api call for employees
+		else if(Number(usertype == 2)) //api call for employees
 		{	
+
 			incidentService.get_user_requested_incidents()
 			.then( response => {
-				if( response.incidents && response.incidents.length !==0)
+				if(response.incidents.length !==0)
 				{
-					// console.log("Response from sofia is",response.incidents)
 					this.setState({
 						incidents: response.incidents,
-						visiblePosts: this.state.visiblePosts + 8
+						visiblePosts: this.state.visiblePosts + 7
 					})
 					
 					this.state.incidents.forEach(incident => { /*Loop through every row of the jsonfile and get the attributes*/
@@ -91,16 +95,21 @@ class ControlPanel extends Component
 						coordinates: coordinates
 					})
 				}
-				else if( response.incidents && response.incidents.length === 0)
+				else if(response.incidents.length === 0)
 				{
 					console.log("To response einai adeio!!!")
 					this.setState=({
-						no_posts: true,
+						no_posts: false,
 						postsDone: true
 					})
 				}
 			});	
 		}
+	}
+
+	refresh()
+	{
+		window.location.reload(false);
 	}
 
 	loadmore()
@@ -109,12 +118,12 @@ class ControlPanel extends Component
 			isloading: true
 		})
 		this.setState({
-			visiblePosts: this.state.visiblePosts + 6
+			visiblePosts: this.state.visiblePosts + 10
 		})
 		let coordinate = {} //object of coordinates
         let coordinates = [] //array of objects of coordinates
 
-		incidentService.get_active_incidents(this.state.visiblePosts, 6)
+		incidentService.get_active_incidents(this.state.visiblePosts, 10)
 		.then (response => {
 			if (response.length !== 0)
 			{
@@ -158,22 +167,23 @@ class ControlPanel extends Component
 	{
 		let incidents = this.state.incidents
 		let usertype =  localStorage.getItem("usertype");
-		console.log(this.state.no_posts)
+
 		return(
 			<div>
 				<SideMenu /> 
 		        <h5 className = "head_ltitle">Τρέχοντα Συμβάντα</h5>
 		        <h5 className = "head_rtitle">Χάρτης Συμβάντων</h5>
-        		<div className = "hrz_line"></div>
+				<div><button onClick = {this.refresh} className="refresh_btn" id="" style = {{position: 'absolute', marginLeft: '40%', marginTop: "5px"}}>Ανανέωση</button>)</div>
+        		<div className = "hrz_line"  style = {{marginTop: '1.5%'}}></div>
         		<br/><br/><br/>
       			
         		{this.state.isloading && <div className="load-spin"></div>}
 
 				{!this.state.no_posts &&
-					<div className = "container-fluid">	
+					<div className = "container-fluid" style={{marginTop: "-20px"}}>	
 						<div className = "row">
 							<div className = "col-sm-2" style={{marginLeft: '7%'}}>
-								<FontAwesomeIcon icon={ faExclamationTriangle } style={{ marginTop: '8px'}} />
+								<FontAwesomeIcon icon={ faExclamationTriangle } style={{width: '50px', marginTop: '8px'}} />
 							</div>
 							<div className = "col-lg-2" style={{marginLeft: '-15.5%'}}>
 								<p style={{fontSize:'19px'}}>Ημερομηνία</p>
@@ -220,7 +230,7 @@ class ControlPanel extends Component
 				{!this.state.no_posts && <div className = "inc_line" style= {{position: 'absolute'}}></div>}
 				<br/>
 
-				{(!this.state.postsDone && !this.state.no_posts) && //if no more posts left, the dont display
+				{(!this.state.postsDone && !this.state.no_posts) && //if no more posts left, then dont display
         			(<Button id = "load" className = "loadmore" onClick = {this.loadmore} style = {{position: 'absolute', marginLeft: '25%'}}>Φόρτωση Περισσοτέρων</Button>)}
             </div>
 		)
