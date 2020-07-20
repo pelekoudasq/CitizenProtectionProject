@@ -1,11 +1,9 @@
-
 package com.example.theophilos.citizenprotectionproject;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.nfc.Tag;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -13,22 +11,10 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import org.w3c.dom.Text;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -38,11 +24,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 import static com.example.theophilos.citizenprotectionproject.MainActivity.getUnsafeOkHttpClient;
 
-public class IncidentsActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class IncidentPreviewActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    private ArrayList<String> incidentNames = new ArrayList<>();
-    private ArrayList<String> incidentPriorities = new ArrayList<>();
-    private ArrayList<String> incidentIds = new ArrayList<>();
     private DrawerLayout drawer;
 
     public Retrofit retrofit = new Retrofit.Builder()
@@ -54,7 +37,7 @@ public class IncidentsActivity extends AppCompatActivity implements NavigationVi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_incidents);
+        setContentView(R.layout.activity_incident_preview);
 
         Toolbar toolbar = findViewById(R.id.toolBar);
         setSupportActionBar(toolbar);
@@ -72,11 +55,8 @@ public class IncidentsActivity extends AppCompatActivity implements NavigationVi
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-
-
-
         //Retrieve token wherever necessary
-        SharedPreferences preferences = IncidentsActivity.this.getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
+        SharedPreferences preferences = IncidentPreviewActivity.this.getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
         String usrName = preferences.getString("USRNAME",null);
 
 
@@ -84,17 +64,24 @@ public class IncidentsActivity extends AppCompatActivity implements NavigationVi
         TextView nav_user = (TextView)hView.findViewById(R.id.accountName);
         nav_user.setText(usrName);
 
-        showIncidents( this.getCurrentFocus() );
+        Intent myIntent = getIntent();
+        String title = myIntent.getStringExtra("title");
+        TextView nameView;
+        nameView = findViewById(R.id.incidentName);
+        nameView.setText(title);
+
 
 
     }
+
+
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item ){
 
         switch (item.getItemId()){
             case R.id.nav_logout:
-                SharedPreferences preferences = IncidentsActivity.this.getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
+                SharedPreferences preferences = IncidentPreviewActivity.this.getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
                 String token  = preferences.getString("TOKEN",null);
                 JsonApi jsonApi = retrofit.create(JsonApi.class);
                 SharedPreferences.Editor editor = preferences.edit();
@@ -123,76 +110,14 @@ public class IncidentsActivity extends AppCompatActivity implements NavigationVi
         return true;
     }
 
+
     @Override
     public void onBackPressed(){
         if (drawer.isDrawerOpen(GravityCompat.START)){
             drawer.closeDrawer(GravityCompat.START);
-        } else{
-            return;
         }
-
-    }
-
-
-    public void showIncidents(View view){
-
-        SharedPreferences preferences = IncidentsActivity.this.getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
-        String usrId  = preferences.getString("ID",null);
-        String token  = preferences.getString("TOKEN",null);
-
-        JsonApi jsonApi = retrofit.create(JsonApi.class);
-        Call<Incidents> call = jsonApi.getAcceptedIncidents( "Bearer "+token , usrId );
-
-
-        call.enqueue(new Callback<Incidents>() {
-            @Override
-            public void onResponse(Call<Incidents> call, Response<Incidents> response) {
-                if(!response.isSuccessful()) {
-                    return;
-                }
-
-                Incidents acceptedIncidents = response.body();
-                LinearLayout buttonLayout,recyclerLayout;
-
-                List<Incident> incList = acceptedIncidents.getIncidents();
-                if ( incList.size() == 0 ){
-                    recyclerLayout = findViewById(R.id.recyclerLayout);
-                    recyclerLayout.setVisibility(View.INVISIBLE);
-
-                    buttonLayout = findViewById(R.id.buttonLayout);
-                    buttonLayout.setVisibility(View.VISIBLE);
-
-                }
-                else{
-
-                    buttonLayout = findViewById(R.id.buttonLayout);
-                    buttonLayout.setVisibility(View.INVISIBLE);
-
-                    recyclerLayout = findViewById(R.id.recyclerLayout);
-                    recyclerLayout.setVisibility(View.VISIBLE);
-                    for ( Incident i : incList ){
-                        incidentNames.add(i.getTitle());
-                        incidentPriorities.add(i.getPriority());
-                        incidentIds.add(i.getId());
-                    }
-                    initRecyclerView();
-                }
-
-
-            }
-
-            @Override
-            public void onFailure(Call<Incidents> call, Throwable t) {
-            }
-        });
-    }
-
-
-    private void initRecyclerView(){
-        RecyclerView recyclerView = findViewById(R.id.recyclerView);
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(incidentNames,incidentPriorities,incidentIds,this);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        else{
+            IncidentPreviewActivity.this.finish();
+        }
     }
 }
-

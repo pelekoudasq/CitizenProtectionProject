@@ -4,6 +4,7 @@ package com.example.theophilos.citizenprotectionproject;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.v4.view.GravityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -57,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<SessionInfo> call, Response<SessionInfo> response) {
                 if(!response.isSuccessful()) {
-                    textViewResult.setText("Code: " + response.code());
+                    Toast.makeText(getApplicationContext(),"Αποτυχία Σύνδεσης",Toast.LENGTH_LONG).show();
                     return;
                 }
 
@@ -75,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<SessionInfo> call, Throwable t) {
-                textViewResult.setText(t.getMessage());
+                Toast.makeText(getApplicationContext(),"Αποτυχία Σύνδεσης",Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -156,6 +157,11 @@ public class MainActivity extends AppCompatActivity {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public void onBackPressed(){
+        return;
     }
 }
 

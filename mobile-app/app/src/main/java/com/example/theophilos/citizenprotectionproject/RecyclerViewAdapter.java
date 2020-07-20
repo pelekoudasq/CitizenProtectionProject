@@ -1,6 +1,7 @@
 package com.example.theophilos.citizenprotectionproject;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,12 +23,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     private ArrayList<String> incidentNames = new ArrayList<>();
     private ArrayList<String> incidentPriorities = new ArrayList<>();
+    private ArrayList<String> incidentIds = new ArrayList<>();
     private Context context;
 
 
-    public RecyclerViewAdapter(ArrayList<String> iNames , ArrayList<String> iPriorities, Context cont ){
+    public RecyclerViewAdapter(ArrayList<String> iNames , ArrayList<String> iPriorities, ArrayList<String> iIds , Context cont ){
         incidentNames = iNames;
         incidentPriorities = iPriorities;
+        incidentIds = iIds;
         context = cont;
     }
 
@@ -57,7 +60,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         holder.parentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(context,incidentNames.get(position),Toast.LENGTH_SHORT).show();
+                final Intent intent = new Intent(context,IncidentPreviewActivity.class);
+                intent.putExtra("id",incidentIds.get(position));
+                intent.putExtra("title",incidentNames.get(position));
+                context.startActivity(intent);
             }
         });
     }
