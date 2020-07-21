@@ -35,7 +35,7 @@
     "yup": "^0.28.4"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "HTTPS=true SSL_CRT_FILE=server.crt SSL_KEY_FILE=server.key react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
