@@ -52,9 +52,6 @@ public class IncidentPreviewActivity extends AppCompatActivity implements Naviga
 
     private DrawerLayout drawer;
     private MapView mapView;
-    private LatLngBounds mapBoundary;
-    private UserLocation userLocation;
-    public LocationManager locationManager;
 
     public Retrofit retrofit = new Retrofit.Builder()
             .baseUrl("https://10.0.2.2:9000")
@@ -63,12 +60,6 @@ public class IncidentPreviewActivity extends AppCompatActivity implements Naviga
             .build();
 
     private static final String MAPVIEW_BUNDLE_KEY = "MapViewBundleKey";
-
-    // The minimum distance to change Updates in meters
-    private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10; // 10 meters
-
-    // The minimum time between updates in milliseconds
-    private static final long MIN_TIME_BW_UPDATES = 1000 * 60 * 1; // 1 minute
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -147,7 +138,12 @@ public class IncidentPreviewActivity extends AppCompatActivity implements Naviga
                 });
 
 
-                final Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
+                break;
+
+            case R.id.nav_account:
+                intent = new Intent(getApplicationContext(), UserInfoActivity.class);
                 startActivity(intent);
                 break;
         }
@@ -199,10 +195,8 @@ public class IncidentPreviewActivity extends AppCompatActivity implements Naviga
         double d1 = Double.parseDouble(lat);
 
 
-
-
         CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(d1,23.7032915));
-        CameraUpdate zoom=CameraUpdateFactory.zoomTo(12);
+        CameraUpdate zoom=CameraUpdateFactory.zoomTo(10);
         googleMap.moveCamera(center);
         googleMap.animateCamera(zoom);
 

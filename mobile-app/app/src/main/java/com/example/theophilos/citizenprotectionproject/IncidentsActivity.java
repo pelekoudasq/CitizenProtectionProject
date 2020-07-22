@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
 
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -110,8 +111,13 @@ public class IncidentsActivity extends AppCompatActivity implements NavigationVi
                 });
 
 
-                final Intent intent = new Intent(getApplicationContext(),MainActivity.class);
+                Intent intent = new Intent(getApplicationContext(),MainActivity.class);
                 startActivity(intent);
+                break;
+
+            case R.id.nav_account:
+                Intent intent2 = new Intent(getApplicationContext(), UserInfoActivity.class);
+                startActivity(intent2);
                 break;
         }
 
