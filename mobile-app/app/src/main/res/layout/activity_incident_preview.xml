@@ -24,15 +24,40 @@
             android:elevation="4dp"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
 
-        <TextView
-            android:id="@+id/incidentName"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="346dp" />
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-        <com.google.android.gms.maps.MapView
-            android:id="@+id/mapview"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="50"
+                android:id="@+id/infoContainer">
+
+                <TextView
+                    android:id="@+id/incidentName"
+                    android:layout_width="match_parent"
+                    android:layout_height="346dp" />
+
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="50"
+                android:id="@+id/mapContainer">
+
+                <com.google.android.gms.maps.MapView
+                    android:id="@+id/mapview"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+
+            </RelativeLayout>
+
+
+        </LinearLayout>
+
 
     </LinearLayout>
 

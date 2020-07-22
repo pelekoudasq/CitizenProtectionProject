@@ -9,6 +9,7 @@ public class SessionInfo {
     String _id;
     String token;
     String username;
+    UserDetails details;
 
     public String get_id() {
         return _id;
@@ -20,6 +21,10 @@ public class SessionInfo {
 
     public String getUsername() {
         return username;
+    }
+
+    public UserDetails getDetails() {
+        return details;
     }
 }
 
