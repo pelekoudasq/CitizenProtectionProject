@@ -12,7 +12,8 @@ export const incidentService = {
     post_report,
     get_user,
     get_incident,
-    change_auth
+    change_auth,
+    get_department_incidents 
 };
 
 
@@ -114,6 +115,24 @@ function get_user_requested_incidents() //only employees make this call
 	};
 
     return fetch(`${apiUrl}/admin/users/requests/${user_id}`, requestOptions)
+    .then(response => response.json())
+    .then(response => {
+        return response;
+    });	
+
+}
+
+
+function get_department_incidents(start, count) //only departments make this call
+{
+    const department_id = localStorage.getItem('userid'); 
+	const requestOptions = {
+		mode: 'cors',
+		method: 'GET',
+		headers: authHeader(),
+	};
+
+    return fetch(`${apiUrl}/incidents/department/${department_id}?start=${start}&count=${count}`, requestOptions)
     .then(response => response.json())
     .then(response => {
         return response;

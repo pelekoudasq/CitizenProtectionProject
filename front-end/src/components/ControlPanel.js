@@ -105,6 +105,44 @@ class ControlPanel extends Component
 				}
 			});	
 		}
+		else if(Number(usertype) === 1) //api call for departments
+		{	
+			incidentService.get_department_incidents(this.state.visiblePosts, 9)
+			.then( response => {
+				console.log("Eimai apo atpf me response", response)
+				if(response.length !==0)
+				{
+					this.setState({
+						incidents: response,
+						visiblePosts: this.state.visiblePosts + 7,
+						no_posts:false
+					})
+					
+					this.state.incidents.forEach(incident => { /*Loop through every row of the jsonfile and get the attributes*/
+							/*define the new coordinate */
+							coordinate = {}
+							coordinate['lat'] = incident.location['latitude']
+							coordinate['lng'] = incident.location['longtitude']    
+							coordinate['priority'] = incident.priority
+		
+							/* Push it to the array of coordinates */
+							coordinates.push(coordinate)
+						})
+		
+					this.setState({
+						coordinates: coordinates
+					})
+				}
+				else if(response.incidents.length === 0)
+				{
+					console.log("To response einai adeio!!!")
+					this.setState=({
+						no_posts: true,
+						postsDone: true
+					})
+				}
+			});	
+		}
 	}
 
 	refresh()

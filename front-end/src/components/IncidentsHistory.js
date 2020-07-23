@@ -239,6 +239,7 @@ class Incidents extends Component
 		let coordinate = {} //object of coordinates
 		let coordinates = [] //array of objects of coordinates
 		let usertype =  localStorage.getItem("usertype");
+		let user_id = localStorage.getItem("userid");
 		let temp_incidents = []
 
 
@@ -260,9 +261,9 @@ class Incidents extends Component
 						coordinates.push(coordinate)
 						temp_incidents.push(incident)
 					}
-					else if(Number(usertype) === 2 || Number(usertype) === 1 )
+					else if(Number(usertype) === 2)
 					{
-						if(incident.auth.includes(1))
+						if(incident.auth.includes(1) && incident.officers.includes(user_id))
 						{
 							console.log("Edo beno me incident", incident)
 							coordinate = {}

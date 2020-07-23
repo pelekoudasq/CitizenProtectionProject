@@ -57,14 +57,14 @@ router.get('/active', function(req, res, next) {
 });
 
 //GET active incidents DEPARTMENT
-router.get('/department', function(req, res, next) {
+router.get('/department/:department_id', function(req, res, next) {
 
 	const format = req.query.format;
 	const start = parseInt(req.query.start);
 	const count = parseInt(req.query.count);
 	// const dept_id = ObjectID(req.body.dept_id);
 
-	db.Incidents.find({ active: true, departments: req.body.dept_id }).limit(count).skip(start, function(err, incidents) {
+	db.Incidents.find({ active: true, departments: req.params.department_id }).limit(count).skip(start, function(err, incidents) {
 		if (err) {
 			if (format && format === "xml")
 				res.send(json2xml(err))

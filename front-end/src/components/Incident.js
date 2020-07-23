@@ -111,7 +111,7 @@ class Incident extends Component
     		<div>
     			<br/>
 				
-    			<div className="row" id="inc_box" onClick={this.handleClick}>
+    			<div className="row">
 					<Modal
 						overlayClassName={{
 							base: 'Modal-overlay'
@@ -157,7 +157,7 @@ class Incident extends Component
 					</Modal>
     			
 					<div className = "container-fluid" style = {{marginLeft: this.props.style.marginLeft}}>
-						<div className = "row">
+						<div className = "row"  id="inc_box" onClick={this.handleClick}>
 							<div  className="col-lg-1">
 								<img src={icon} alt= ''/>
 							</div>
