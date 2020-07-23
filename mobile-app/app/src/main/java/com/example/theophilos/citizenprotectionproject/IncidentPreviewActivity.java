@@ -9,11 +9,13 @@ import android.graphics.Color;
 
 import androidx.annotation.NonNull;
 
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.navigation.NavigationView;
 
@@ -23,13 +25,20 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 
 import androidx.appcompat.widget.Toolbar;
 
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.ScaleAnimation;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -39,19 +48,18 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 import static com.example.theophilos.citizenprotectionproject.MainActivity.getUnsafeOkHttpClient;
 
-public class IncidentPreviewActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener , OnMapReadyCallback {
+public class IncidentPreviewActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback {
 
     private DrawerLayout drawer;
     private MapView mapView;
-    private GoogleMap map;
-
-    private static final String MAPVIEW_BUNDLE_KEY = "MapViewBundleKey";
 
     public Retrofit retrofit = new Retrofit.Builder()
             .baseUrl("https://10.0.2.2:9000")
             .addConverterFactory(GsonConverterFactory.create())
             .client(getUnsafeOkHttpClient().build())
             .build();
+
+    private static final String MAPVIEW_BUNDLE_KEY = "MapViewBundleKey";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,12 +98,11 @@ public class IncidentPreviewActivity extends AppCompatActivity implements Naviga
         nameView = findViewById(R.id.incidentName);
         nameView.setText(title);
 
-
     }
 
-    private void initGoogleMap( Bundle savedInstanceState ){
+    private void initGoogleMap(Bundle savedInstanceState) {
         Bundle mapViewBundle = null;
-        if ( savedInstanceState != null ){
+        if (savedInstanceState != null) {
             mapViewBundle = savedInstanceState.getBundle(MAPVIEW_BUNDLE_KEY);
         }
         mapView = (MapView) findViewById(R.id.mapview);
@@ -131,7 +138,12 @@ public class IncidentPreviewActivity extends AppCompatActivity implements Naviga
                 });
 
 
-                final Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
+                break;
+
+            case R.id.nav_account:
+                intent = new Intent(getApplicationContext(), UserInfoActivity.class);
                 startActivity(intent);
                 break;
         }
@@ -177,6 +189,41 @@ public class IncidentPreviewActivity extends AppCompatActivity implements Naviga
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        googleMap.addMarker(new MarkerOptions().position(new LatLng(0,0)).title("Marker"));
+        SharedPreferences preferences = IncidentPreviewActivity.this.getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
+        String lat = preferences.getString("LAT", null);
+        String lon = preferences.getString("LON", null);
+        double d1 = Double.parseDouble(lat);
+
+
+        CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(d1,23.7032915));
+        CameraUpdate zoom=CameraUpdateFactory.zoomTo(10);
+        googleMap.moveCamera(center);
+        googleMap.animateCamera(zoom);
+
+        googleMap.addMarker(new MarkerOptions().position(new LatLng(d1,23.7032915)).title("Marker"));
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        googleMap.setMyLocationEnabled(true);
     }
+
+
+    public static LatLng midPoint(double lat1,double lon1,double lat2,double lon2){
+
+        double dLon = Math.toRadians(lon2 - lon1);
+
+        //convert to radians
+        lat1 = Math.toRadians(lat1);
+        lat2 = Math.toRadians(lat2);
+        lon1 = Math.toRadians(lon1);
+
+        double Bx = Math.cos(lat2) * Math.cos(dLon);
+        double By = Math.cos(lat2) * Math.sin(dLon);
+        double lat3 = Math.atan2(Math.sin(lat1) + Math.sin(lat2), Math.sqrt((Math.cos(lat1) + Bx) * (Math.cos(lat1) + Bx) + By * By));
+        double lon3 = lon1 + Math.atan2(By, Math.cos(lat1) + Bx);
+
+        return new LatLng(lat3,lon3);
+    }
+
+
 }

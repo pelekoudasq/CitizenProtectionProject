@@ -65,6 +65,9 @@ public class MainActivity extends AppCompatActivity {
                 preferences.edit().putString("TOKEN",sInfo.getToken()).apply();
                 preferences.edit().putString("ID",sInfo.get_id()).apply();
                 preferences.edit().putString("USRNAME",sInfo.getUsername()).apply();
+                preferences.edit().putString("LAT",sInfo.getDetails().getLat()).apply();
+                preferences.edit().putString("LON",sInfo.getDetails().getLon()).apply();
+
 
 
                 startActivity(intent);

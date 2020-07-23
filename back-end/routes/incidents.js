@@ -56,6 +56,29 @@ router.get('/active', function(req, res, next) {
 	});
 });
 
+//GET active incidents DEPARTMENT
+router.get('/department', function(req, res, next) {
+
+	const format = req.query.format;
+	const start = parseInt(req.query.start);
+	const count = parseInt(req.query.count);
+	// const dept_id = ObjectID(req.body.dept_id);
+
+	db.Incidents.find({ active: true, departments: req.body.dept_id }).limit(count).skip(start, function(err, incidents) {
+		if (err) {
+			if (format && format === "xml")
+				res.send(json2xml(err))
+			else
+				res.send(err);
+			return;
+		}
+		if (format && format === "xml")
+			res.send(json2xml(incidents))
+		else
+			res.json(incidents)
+	});
+});
+
 //POST get auctions by filters
 router.post('/filter', function(req, res, next) {
 
@@ -175,6 +198,20 @@ router.post('/', function(req, res, next) {
 				};
 				for (var i=0; i<incParam.auth.length; i++)
 					incParam.auth[i] = parseInt(incParam.auth[i]);
+				var spots;
+				if (incParam.auth === "Χαμηλή") {
+					console.log(incParam.auth)
+					spots = 2
+				}
+				else if (incParam.auth === "Μέτρια") {
+					console.log(incParam.auth)
+					spots = 4
+				}
+				else {
+					console.log(incParam.auth)
+					spots = 6
+				}
+				spots *= incParam.auth.length
 				incident = db.Incidents.save({
 					title: incParam.title,
 					location: {
@@ -185,11 +222,12 @@ router.post('/', function(req, res, next) {
 					priority: incParam.priority,
 					date: new Date(),
 					auth: incParam.auth,
-					spots: 5,
+					spots: spots,
 					active: true,
 					comments: [],
 					officers: [],
 					departments: [],
+					departmentReports: 0,
 					stats: {
 						deaths: 0,
 						injured: 0,
@@ -276,7 +314,7 @@ router.post('/edit', function(req, res, next) {
 				priority : incParam.priority
 			}
 		}
-	,  function(err, incident) {
+	, function(err, incident) {
 		if (err) {
 			res.status(401).json(err);
 			return;
@@ -299,7 +337,7 @@ router.post('/editAuth', function(req, res, next) {
 				auth : incParam.auth
 			}
 		}
-	,  function(err, incident) {
+	, function(err, incident) {
 		if (err) {
 			res.status(401).json(err);
 			return;
@@ -310,51 +348,60 @@ router.post('/editAuth', function(req, res, next) {
 	});
 });
 
-
 // POST accept request
 router.post('/accept', function(req, res, next) {	
 
 	const user_id = mongojs.ObjectID(req.body.user_id);
 	const incident_id = mongojs.ObjectID(req.body.incident_id);
 
-	db.Incidents.update(
-		{
-			_id: incident_id,
-			spots: { $gt: 0 },
-		},
-		{
-			$inc: { spots: -1 },
-			$push: { officers: user_id }
-		}
-	, function(err, ret) {
+	db.Users.findOne({ _id: user_id}, function(err, user) {
 		if (err) {
 			res.status(401).json(err);
 			return;
 		}
-		if (ret.nModified !== 0) {
-			db.Users.update(
-				{
-					_id: user_id,
-					userType: { $eq: 2 },
+		console.log(user.details)
+		db.Incidents.update(
+			{
+				_id: incident_id,
+				spots: { $gt: 0 },
+			},
+			{
+				$inc: { spots: -1 },
+				$push: {
+					officers: user_id,
+					departments: user.details.departmentId
 				},
-				{
-					$push: { acceptedIncidents: incident_id },
-					$pull: { incidentRequests: incident_id }
-				}
-			, function(err, user) {
-				if (err) {
-					res.status(401).json(err);
-					return;
-				}
-				res.status(200).json({
-					msg : "Επιτυχής αποδοχή συμβάντος από τον χρήστη"
+			}
+		, function(err, ret) {
+			if (err) {
+				res.status(401).json(err);
+				return;
+			}
+			if (ret.nModified !== 0) {
+				db.Users.update(
+					{
+						_id: user_id,
+						userType: { $eq: 2 },
+					},
+					{
+						$push: { acceptedIncidents: incident_id },
+						$pull: { incidentRequests: incident_id }
+					}
+				, function(err, user) {
+					if (err) {
+						res.status(401).json(err);
+						return;
+					}
+					res.status(200).json({
+						msg : "Επιτυχής αποδοχή συμβάντος από τον χρήστη"
+					});
 				});
-			});
-		} else {
-			res.status(401).json({
-				error: `Η ανάγκη για προσωπικό έχει καλυφθεί για το συμβάν!`
-			});
-		}
+			} else {
+				res.status(401).json({
+					error: `Η ανάγκη για προσωπικό έχει καλυφθεί για το συμβάν!`
+				});
+			}
+		});
 	});
 });
 
@@ -376,6 +423,9 @@ router.post('/comment', function(req, res, next) {
 					date: new Date(),
 					text: text
 				}
+			},
+			$inc: {
+				departmentReports: req.body.final
 			}
 		}
 	, function(err, ret) {
@@ -389,7 +439,7 @@ router.post('/comment', function(req, res, next) {
 	});
 });
 
-// POST report to incident
+// POST KE report to incident
 router.post('/report', function(req, res, next) {
 
 	const incident_id = mongojs.ObjectID(req.body.incident_id);
@@ -413,7 +463,8 @@ router.post('/report', function(req, res, next) {
 					injured: parseInt(stats.injured),
 					arrested: parseInt(stats.arrested)
 				},
-				active: false
+				active: false,
+				end_date: new Date()
 			}
 		}
 	, function(err, ret) {

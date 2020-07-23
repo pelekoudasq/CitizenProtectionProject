@@ -49,8 +49,9 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recyclerView"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:padding="30dp"></androidx.recyclerview.widget.RecyclerView>
+                    android:layout_height="500dp"
+                    android:padding="30dp"
+                    ></androidx.recyclerview.widget.RecyclerView>
 
             </LinearLayout>
 
@@ -64,19 +65,23 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="ΚΑΝΕΝΑ ΣΥΜΒΑΝ ΔΙΑΘΕΣΙΜΟ"
+                    android:layout_marginTop="10dp"
+                    android:text="Κανένα Συμβάν Διαθέσιμο"
                     android:textAlignment="center"
-                    android:textColor="#000"
+                    android:textColor="@color/toolbarColor"
                     android:textSize="27sp" />
 
                 <Button
-                    android:id="@+id/button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="60dp"
+                    android:layout_width="90dp"
+                    android:layout_height="90dp"
                     android:layout_gravity="center"
                     android:layout_marginTop="120dp"
+                    android:background="@drawable/round_button"
+                    android:drawableBottom="@drawable/ic_baseline_refresh_24"
+                    android:gravity="center_vertical|center_horizontal"
                     android:onClick="showIncidents"
-                    android:text="ΕΠΑΝΑΦΟΡΤΩΣΗ" />
+                    android:text="hello"
+                    android:textColor="#fff" />
             </LinearLayout>
 
 

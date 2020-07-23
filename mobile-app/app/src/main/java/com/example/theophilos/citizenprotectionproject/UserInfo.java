@@ -19,6 +19,5 @@ public class UserInfo {
     public String getToken() {
         return token;
     }
-
 }
 
