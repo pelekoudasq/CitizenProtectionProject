@@ -1,14 +1,13 @@
 import React, {Component} from 'react'
 import { Switch, Route , Redirect} from 'react-router-dom'
-import ControlPanel from './components/ControlPanel'
 import IncidentsHistory from './components/IncidentsHistory'
 import NavBar from './components/NavBar'
 import IncidentForm from './components/IncidentForm'
 import LoginForm from './components/LoginForm'
-import Statistics from './components/Statistics'
 import NotFound from './components/NotFound'
 import { withRouter } from 'react-router'
 import ViewIncident from './components/ViewIncident'
+import MainPage from './components/MainPage'
 
 
 class App extends Component
@@ -31,9 +30,7 @@ class App extends Component
     renderProtectedComponent(ProtectedComponent) 
     {   
         let token = localStorage.getItem("token")
-        
-        // if (this.state.token !== null) {
-        if (token !== null) 
+        if (token) 
             return props => <ProtectedComponent {...props} />;
         else 
             return props => <Redirect to='/login' />;       
@@ -41,18 +38,20 @@ class App extends Component
     
     render()
     {
+    let usertype = localStorage.getItem("usertype")
+    console.log("EImai i vasia me",usertype)
     return (
         <div>
-        <NavBar />
-        <Switch >
-              <Route exact path='/' component={this.renderProtectedComponent(ControlPanel)} history={this.props.history} />
-              <Route path='/login' component={LoginForm} />
-              <Route path='/incidents' component={this.renderProtectedComponent(IncidentsHistory)} />
-              <Route path= '/incident/:id' component={this.renderProtectedComponent(ViewIncident)} />
-              <Route path='/new_incident' component={this.renderProtectedComponent(IncidentForm)} />
-              <Route path='/statistics' component={this.renderProtectedComponent(Statistics)} />
-              <Route component={NotFound} />
-        </Switch>
+            <NavBar />
+            <Switch >
+                <Route exact path='/' component={this.renderProtectedComponent(MainPage)} history={this.props.history} />
+                <Route path='/login' component={LoginForm} />
+                <Route path='/incidents' component={this.renderProtectedComponent(IncidentsHistory)} />
+                <Route path= '/incident/:id' component={this.renderProtectedComponent(ViewIncident)} />
+                {Number(usertype) === 0 &&
+                    <Route path='/new_incident' component={this.renderProtectedComponent(IncidentForm)} />}
+                <Route component={NotFound} />
+            </Switch>
         </div>
     );
     }
