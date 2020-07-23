@@ -12,8 +12,6 @@ import medium from '../icons/medium.png'
 import alert1 from '../icons/alert.png'
 import SideMenu from './SideMenu'
 import Gmap from './Gmap'
-import apiUrl from '../services/apiUrl'
-import Multiselect from 'react-widgets/lib/Multiselect'
 import { withRouter } from 'react-router'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import moment from 'moment'
@@ -329,9 +327,6 @@ class ViewIncident extends Component
 
         		{this.state.isloading && <div className="load-spin"></div> }
 
-				{this.state.coordinates !== [] && (
-                    <Gmap coordinates = { this.state.coordinates } size={{ width:'35%', height:'45%', marginLeft:'58%', position: 'absolute'}} />
-                )}
                 <Container>
                     <Row id="incinfo">
                         <Col sm="auto">
@@ -464,6 +459,11 @@ class ViewIncident extends Component
                                     </div>
                                 </FormGroup>
                             </Form>
+                        </Col>
+                        <Col>
+                            {this.state.coordinates.length > 0 && (
+                                <Gmap coordinates = { this.state.coordinates } size={{ width:'95%', height:'100%', marginLeft:'0%', position: 'absolute'}} />
+                            )}
                         </Col>
                     </Row>
                     <Row>

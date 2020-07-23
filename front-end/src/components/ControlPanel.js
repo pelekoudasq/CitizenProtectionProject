@@ -41,7 +41,7 @@ class ControlPanel extends Component
 			no_posts:true
 		})
 
-		if(Number(usertype==0)) //api call for control center
+		if(Number(usertype) === 0) //api call for control center
 		{	
 			incidentService.get_active_incidents(this.state.visiblePosts, 9)
 			.then( response => {
@@ -68,7 +68,7 @@ class ControlPanel extends Component
 				})
 			});	
 		}
-		else if(Number(usertype == 2)) //api call for employees
+		else if(Number(usertype) === 2) //api call for employees
 		{	
 			incidentService.get_user_requested_incidents()
 			.then( response => {
@@ -78,6 +78,7 @@ class ControlPanel extends Component
 						incidents: response.incidents,
 						visiblePosts: this.state.visiblePosts + 7,
 						no_posts:false
+
 					})
 					
 					this.state.incidents.forEach(incident => { /*Loop through every row of the jsonfile and get the attributes*/
@@ -208,7 +209,7 @@ class ControlPanel extends Component
 
 		return(
 			<div>
-				<SideMenu /> 
+				<SideMenu />
 				<div className="container">
 					<div className="row" style={{marginTop: '10px', marginLeft: '-25%'}}>
 						<div className="col-md"></div>
