@@ -71,7 +71,6 @@ class Incident extends Component
 
     handleClick()
     {
-    
         let requestOptions = {
                 method: 'GET',
                 headers: this.authHeader(),
@@ -166,10 +165,11 @@ class Incident extends Component
 							<div className="col-sm-4" style={{marginLeft:  '-4%'}}>{this.props.incident.location.address}</div>
 							<div className="col" style={{marginLeft: "6%"}}>{this.props.incident.title}</div>
 							{Number(this.props.usertype) === 2 && 
-								<div className="col" style={{marginLeft: "-6%"}}>
+								<div className="col-md" style={{marginLeft: "-3%"}}>
 									<button type="button" className="btn btn-primary btn-sm" onClick={this.accept_incident}>Αποδοχή</button>
-								</div> }
-							<div className="col" style={{marginLeft: "-11%"}}><FontAwesomeIcon className="iconBack" icon={ faEye } style={{height: '16px'}} onClick={this.OpenModal}/></div>
+								</div>
+							}
+							<div className="col" style={{marginLeft: "-10%"}}><FontAwesomeIcon className="iconBack" icon={ faEye } style={{height: '16px'}} onClick={this.OpenModal}/></div>
 						</div>
 					</div>
     			</div>

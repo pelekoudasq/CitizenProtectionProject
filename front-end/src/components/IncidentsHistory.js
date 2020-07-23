@@ -46,12 +46,12 @@ class Incidents extends Component
 
 		if (Number(usertype) === 0) //api call for control center
 		{	
-			incidentService.get_active_incidents(this.state.visiblePosts, 6)
+			incidentService.get_all_incidents(this.state.visiblePosts, 8)
 			.then( response => {
 				console.log("Response from control center is",response)
 				this.setState({
 					incidents: response,
-					visiblePosts: this.state.visiblePosts + 6
+					visiblePosts: this.state.visiblePosts + 8
 				})
 				
 				this.state.incidents.forEach(incident => { /*Loop through every row of the jsonfile and get the attributes*/
@@ -73,10 +73,12 @@ class Incidents extends Component
 		else if(Number(usertype) === 2) //api call for employees
 		{	
 			incidentService.get_user_accepted_incidents()
+			
 			.then( response => {
+				console.log("To response einaiiiii", response)
 				if(response.incidents.length !==0)
 				{
-					console.log("Response from sofia is",response.incidents)
+					// console.log("Response from sofia is",response.incidents)
 					this.setState({
 						incidents: response.incidents,
 						visiblePosts: this.state.visiblePosts + 6
@@ -228,8 +230,7 @@ class Incidents extends Component
 	};
 
 	apply_filter(event) 
-	{
-		
+	{		
 		this.setState({
 			isloading: true,
 			no_result: false
@@ -238,24 +239,18 @@ class Incidents extends Component
 		let coordinate = {} //object of coordinates
 		let coordinates = [] //array of objects of coordinates
 		let usertype =  localStorage.getItem("usertype");
+		let temp_incidents = []
 
-		if (Number(usertype) === 0)
-		{
 
-			incidentService.get_filtered_incidents(this.state.filter_text, this.state.filter_priority, this.state.filter_status, this.state.filter_start_date,  this.state.filter_end_date)
-			.then (response => {
-				if (response.length !== 0)
-				{
-					this.setState ({
-						isloading: false
-					})
-
-					this.setState({
-						incidents: response
-					})
-
-					this.state.incidents.forEach(incident => { /*Loop through every row of the jsonfile and get the attributes*/
-						/*define the new coordinate */
+		incidentService.get_filtered_incidents(this.state.filter_text, this.state.filter_priority, this.state.filter_status, this.state.filter_start_date,  this.state.filter_end_date)
+		.then (response => {
+			console.log("response without filter is ", response)
+			if (response.length !== 0)
+			{
+					response.forEach(incident => { /*Loop through every row of the jsonfile and get the attributes*/
+					/*define the new coordinate */
+					if (Number(usertype) === 0)
+					{
 						coordinate = {}
 						coordinate['lat'] = incident.location['latitude']
 						coordinate['lng'] = incident.location['longtitude']    
@@ -263,27 +258,45 @@ class Incidents extends Component
 
 						/* Push it to the array of coordinates */
 						coordinates.push(coordinate)
-					})
-					this.setState({
-						coordinates: coordinates,
-						postsDone: true
-					})
+						temp_incidents.push(incident)
+					}
+					else if(Number(usertype) === 2 || Number(usertype) === 1 )
+					{
+						if(incident.auth.includes(1))
+						{
+							console.log("Edo beno me incident", incident)
+							coordinate = {}
+							coordinate['lat'] = incident.location['latitude']
+							coordinate['lng'] = incident.location['longtitude']    
+							coordinate['priority'] = incident.priority
 
-				}
-				else if(response.length === 0)
-				{
-					this.setState({
-						postsDone: true,
-						isloading: false,
-						no_result: true
-					})
-				}
-			})
-		}
-		else if(Number(usertype) === 2 || Number(usertype) === 1)
-		{
-			
-		}
+							/* Push it to the array of coordinates */
+							coordinates.push(coordinate)
+							temp_incidents.push(incident)
+						}
+					}
+				})
+				console.log("incidents after filter are ", temp_incidents)
+				this.setState({
+					coordinates: coordinates,
+					postsDone: true,
+					incidents: temp_incidents,
+					isloading: false
+				})
+
+
+			}
+			else if(response.length === 0)
+			{
+				console.log("response is 0")
+				this.setState({
+					postsDone: true,
+					isloading: false,
+					no_result: true
+				})
+			}
+		})
+
 		event.preventDefault();
 	}
 

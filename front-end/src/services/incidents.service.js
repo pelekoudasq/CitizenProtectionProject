@@ -1,6 +1,7 @@
 import apiUrl from './apiUrl'
 
 export const incidentService = {
+    get_all_incidents,
     get_active_incidents,
     accept_incident,
     get_user_accepted_incidents,
@@ -39,6 +40,23 @@ function get_active_incidents(start, count) { //only control center makes this c
 	};
 
     return fetch(`${apiUrl}/incidents/active?start=${start}&count=${count}`, requestOptions)
+    .then(response => response.json())
+    .then(response => {
+        return response;
+    });	
+
+}
+
+
+function get_all_incidents(start, count) { //only control center makes this call
+
+	const requestOptions = {
+		mode: 'cors',
+		method: 'GET',
+		headers: authHeader(),
+	};
+
+    return fetch(`${apiUrl}/incidents/?start=${start}&count=${count}`, requestOptions)
     .then(response => response.json())
     .then(response => {
         return response;

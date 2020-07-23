@@ -43,12 +43,12 @@ class ControlPanel extends Component
 
 		if(Number(usertype==0)) //api call for control center
 		{	
-			incidentService.get_active_incidents(this.state.visiblePosts, 7)
+			incidentService.get_active_incidents(this.state.visiblePosts, 9)
 			.then( response => {
 				console.log("Response from control center is",response)
 				this.setState({
 					incidents: response,
-					visiblePosts: this.state.visiblePosts + 8,
+					visiblePosts: this.state.visiblePosts + 9,
 					no_posts:false
 				})
 				
@@ -70,14 +70,14 @@ class ControlPanel extends Component
 		}
 		else if(Number(usertype == 2)) //api call for employees
 		{	
-
 			incidentService.get_user_requested_incidents()
 			.then( response => {
 				if(response.incidents.length !==0)
 				{
 					this.setState({
 						incidents: response.incidents,
-						visiblePosts: this.state.visiblePosts + 7
+						visiblePosts: this.state.visiblePosts + 7,
+						no_posts:false
 					})
 					
 					this.state.incidents.forEach(incident => { /*Loop through every row of the jsonfile and get the attributes*/
@@ -99,7 +99,7 @@ class ControlPanel extends Component
 				{
 					console.log("To response einai adeio!!!")
 					this.setState=({
-						no_posts: false,
+						no_posts: true,
 						postsDone: true
 					})
 				}
@@ -171,10 +171,21 @@ class ControlPanel extends Component
 		return(
 			<div>
 				<SideMenu /> 
-		        <h5 className = "head_ltitle">Τρέχοντα Συμβάντα</h5>
-		        <h5 className = "head_rtitle">Χάρτης Συμβάντων</h5>
-				<div><button onClick = {this.refresh} className="refresh_btn" id="" style = {{position: 'absolute', marginLeft: '40%', marginTop: "5px"}}>Ανανέωση</button>)</div>
-        		<div className = "hrz_line"  style = {{marginTop: '1.5%'}}></div>
+				<div className="container">
+					<div className="row" style={{marginTop: '10px', marginLeft: '-25%'}}>
+						<div className="col-md"></div>
+						<div className="col-md">
+							<h5>Τρέχοντα Συμβάντα</h5>
+						</div>
+						<div className="col-md" style={{marginLeft: '10%'}}>
+							<button onClick = {this.refresh} className="refresh_btn">Ανανέωση</button>
+						</div>
+						<div className="col-md"  style={{marginLeft: '10%'}}>
+							<h5>Χάρτης Συμβάντων</h5>
+						</div>
+					</div>
+				</div>
+				<div className = "hrz_line"  style = {{marginTop: '0.6%'}}></div>
         		<br/><br/><br/>
       			
         		{this.state.isloading && <div className="load-spin"></div>}
