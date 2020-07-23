@@ -34,7 +34,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 import static com.example.theophilos.citizenprotectionproject.MainActivity.getUnsafeOkHttpClient;
 
-public class IncidentsActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class IncidentHistory extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private ArrayList<String> incidentNames = new ArrayList<>();
     private ArrayList<String> incidentPriorities = new ArrayList<>();
@@ -72,7 +72,7 @@ public class IncidentsActivity extends AppCompatActivity implements NavigationVi
 
 
         //Retrieve token wherever necessary
-        SharedPreferences preferences = IncidentsActivity.this.getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
+        SharedPreferences preferences = IncidentHistory.this.getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
         String usrName = preferences.getString("USRNAME",null);
 
 
@@ -90,7 +90,7 @@ public class IncidentsActivity extends AppCompatActivity implements NavigationVi
 
         switch (item.getItemId()){
             case R.id.nav_logout:
-                SharedPreferences preferences = IncidentsActivity.this.getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
+                SharedPreferences preferences = IncidentHistory.this.getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
                 String token  = preferences.getString("TOKEN",null);
                 JsonApi jsonApi = retrofit.create(JsonApi.class);
                 SharedPreferences.Editor editor = preferences.edit();
@@ -122,11 +122,11 @@ public class IncidentsActivity extends AppCompatActivity implements NavigationVi
                 break;
             case R.id.nav_accepted:
                 drawer.closeDrawer(GravityCompat.START);
+                intent = new Intent(getApplicationContext(), IncidentsActivity.class);
+                startActivity(intent);
                 break;
             case R.id.nav_history:
                 drawer.closeDrawer(GravityCompat.START);
-                intent = new Intent(getApplicationContext(), IncidentHistory.class);
-                startActivity(intent);
                 break;
         }
 
@@ -138,7 +138,7 @@ public class IncidentsActivity extends AppCompatActivity implements NavigationVi
         if (drawer.isDrawerOpen(GravityCompat.START)){
             drawer.closeDrawer(GravityCompat.START);
         } else{
-            return;
+            this.finish();
         }
 
     }
@@ -146,7 +146,7 @@ public class IncidentsActivity extends AppCompatActivity implements NavigationVi
 
     public void showIncidents(View view){
 
-        SharedPreferences preferences = IncidentsActivity.this.getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
+        SharedPreferences preferences = IncidentHistory.this.getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
         String usrId  = preferences.getString("ID",null);
         String token  = preferences.getString("TOKEN",null);
 
@@ -181,7 +181,7 @@ public class IncidentsActivity extends AppCompatActivity implements NavigationVi
                     recyclerLayout = findViewById(R.id.recyclerLayout);
                     recyclerLayout.setVisibility(View.VISIBLE);
                     for ( Incident i : incList ){
-                        if ( i.isActive() ) {
+                        if ( !(i.isActive()) ) {
                             incidentNames.add(i.getTitle());
                             incidentPriorities.add(i.getPriority());
                             incidentIds.add(i.getId());

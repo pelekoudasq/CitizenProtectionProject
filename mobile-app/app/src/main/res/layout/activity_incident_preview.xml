@@ -29,22 +29,39 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="50"
-                android:id="@+id/infoContainer">
+                android:layout_height="120dp"
+                android:id="@+id/infoContainer"
+                android:orientation="vertical"
+                android:layout_gravity="center">
+
 
                 <TextView
+                    android:layout_marginLeft="20dp"
                     android:id="@+id/incidentName"
                     android:layout_width="match_parent"
-                    android:layout_height="346dp" />
+                    android:layout_height="wrap_content"
+                    android:textSize="25dp"
+                    android:textColor="@color/darkGrey"
+                    android:layout_marginBottom="25dp"
+                    android:drawableLeft="@drawable/ic_launcher_foreground"
+                    android:drawablePadding="10dp"/>
 
-            </RelativeLayout>
+                <TextView
+                    android:layout_marginLeft="20dp"
+                    android:drawableLeft="@drawable/ic_baseline_location_on_24"
+                    android:drawablePadding="10dp"
+                    android:id="@+id/incidentAdress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="15dp"
+                    android:textColor="@color/darkGrey"/>
+            </LinearLayout>
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="50"
+                android:layout_weight="80"
                 android:id="@+id/mapContainer">
 
                 <com.google.android.gms.maps.MapView
@@ -52,11 +69,26 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
 
-
             </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="20">
 
-
+                <Button
+                    android:id="@+id/detailsButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@null"
+                    android:drawableBottom="@drawable/ic_baseline_arrow_downward_24"
+                    android:foregroundGravity="center"
+                    android:onClick="openDetails"
+                    android:text="Περισσότερες Λεπτομέρειες"
+                    android:textAllCaps="false"
+                    android:textColor="@color/darkGrey" />
+            </RelativeLayout>
         </LinearLayout>
+
 
 
     </LinearLayout>

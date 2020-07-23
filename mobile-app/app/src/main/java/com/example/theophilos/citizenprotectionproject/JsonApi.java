@@ -26,4 +26,8 @@ public interface JsonApi {
 
     @POST("control-center/api/logout")
     Call<Void> logout(@Header("Authorization") String token);
+
+    @GET("control-center/api/incidents/{id}")
+    Call<Incident> getIncident(@Header("Authorization") String token , @Path("id") String inc_id);
+
 }

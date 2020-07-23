@@ -1,6 +1,7 @@
 package com.example.theophilos.citizenprotectionproject;
 
 import android.Manifest;
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -15,7 +16,6 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.navigation.NavigationView;
 
@@ -26,17 +26,16 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.appcompat.widget.Toolbar;
 
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
-import android.view.animation.ScaleAnimation;
+import android.view.animation.Transformation;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,7 +47,13 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 import static com.example.theophilos.citizenprotectionproject.MainActivity.getUnsafeOkHttpClient;
 
-public class IncidentPreviewActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback {
+
+
+
+public class IncidentPreviewActivity extends AppCompatActivity implements
+        NavigationView.OnNavigationItemSelectedListener,
+        OnMapReadyCallback
+    {
 
     private DrawerLayout drawer;
     private MapView mapView;
@@ -94,9 +99,44 @@ public class IncidentPreviewActivity extends AppCompatActivity implements Naviga
 
         Intent myIntent = getIntent();
         String title = myIntent.getStringExtra("title");
-        TextView nameView;
+        final TextView nameView;
         nameView = findViewById(R.id.incidentName);
+        final TextView addressView = findViewById(R.id.incidentAdress);
         nameView.setText(title);
+
+        String token  = preferences.getString("TOKEN",null);
+        JsonApi jsonApi = retrofit.create(JsonApi.class);
+        Call<Incident> call = jsonApi.getIncident("Bearer "+token,myIntent.getStringExtra("id"));
+        call.enqueue(new Callback<Incident>() {
+            @Override
+            public void onResponse(Call<Incident> call, Response<Incident> response) {
+                if(!response.isSuccessful()) {
+                    return;
+                }
+                Incident inc = response.body();
+                Incident.Location loc = inc.getLocation();
+                String adr;
+                if ( loc != null ){
+                    adr = loc.getAddress();
+                    addressView.setText(adr);
+                }
+
+                if ( inc.getPriority().equals("Υψηλή")){
+                    nameView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.high, 0, 0, 0);
+                }
+                else if ( inc.getPriority().equals("Μέτρια")){
+                    nameView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.medium, 0, 0, 0);
+                }
+                else if ( inc.getPriority().equals("Χαμηλή")){
+                    nameView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.low, 0, 0, 0);
+                }
+            }
+            @Override
+            public void onFailure(Call<Incident> call, Throwable t) {
+            }
+        });
+
+
 
     }
 
@@ -112,38 +152,45 @@ public class IncidentPreviewActivity extends AppCompatActivity implements Naviga
     }
 
     @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item ){
 
-        switch (item.getItemId()) {
+        switch (item.getItemId()){
             case R.id.nav_logout:
                 SharedPreferences preferences = IncidentPreviewActivity.this.getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
-                String token = preferences.getString("TOKEN", null);
+                String token  = preferences.getString("TOKEN",null);
                 JsonApi jsonApi = retrofit.create(JsonApi.class);
                 SharedPreferences.Editor editor = preferences.edit();
                 editor.clear();
                 editor.apply();
                 finish();
-                Call<Void> call = jsonApi.logout("Bearer " + token);
+                Call<Void> call = jsonApi.logout("Bearer "+token);
                 call.enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {
-                        if (!response.isSuccessful()) {
+                        if(!response.isSuccessful()) {
                             return;
                         }
                     }
-
                     @Override
                     public void onFailure(Call<Void> call, Throwable t) {
                     }
                 });
 
 
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                Intent intent = new Intent(getApplicationContext(),MainActivity.class);
                 startActivity(intent);
                 break;
 
             case R.id.nav_account:
                 intent = new Intent(getApplicationContext(), UserInfoActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.nav_accepted:
+                intent = new Intent(getApplicationContext(), IncidentsActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.nav_history:
+                intent = new Intent(getApplicationContext(), IncidentHistory.class);
                 startActivity(intent);
                 break;
         }
@@ -223,6 +270,12 @@ public class IncidentPreviewActivity extends AppCompatActivity implements Naviga
         double lon3 = lon1 + Math.atan2(By, Math.cos(lat1) + Bx);
 
         return new LatLng(lat3,lon3);
+    }
+
+
+    public void openDetails(View view){
+        Intent intent = new Intent(getApplicationContext(), IncidentDetailed.class);
+        startActivity(intent);
     }
 
 
