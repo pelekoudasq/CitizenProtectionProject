@@ -11,7 +11,7 @@ import low from '../icons/low.png'
 import medium from '../icons/medium.png'
 import alert1 from '../icons/alert.png'
 import SideMenu from './SideMenu'
-import Gmap from './Gmap'
+import IncidentMap from "./IncidentMap";
 import { withRouter } from 'react-router'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import moment from 'moment'
@@ -462,7 +462,7 @@ class ViewIncident extends Component
                         </Col>
                         <Col>
                             {this.state.coordinates.length > 0 && (
-                                <Gmap coordinates = { this.state.coordinates } size={{ width:'95%', height:'100%', marginLeft:'0%', position: 'absolute'}} />
+                                <IncidentMap coordinates={this.state.coordinates}/>
                             )}
                         </Col>
                     </Row>
