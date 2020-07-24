@@ -12,9 +12,10 @@ const config = require('../config.json');
 const router = express.Router();
 const db = mongojs(config.dburi);
 
-//routes
 
-//GET all incidents
+/* routes */
+
+// GET all incidents
 router.get('/', function(req, res, next) {
 
 	const format = req.query.format;
@@ -35,7 +36,7 @@ router.get('/', function(req, res, next) {
 	});
 });
 
-//GET active incidents
+// GET active incidents
 router.get('/active', function(req, res, next) {
 
 	const format = req.query.format;
@@ -56,7 +57,29 @@ router.get('/active', function(req, res, next) {
 	});
 });
 
-//GET active incidents DEPARTMENT
+
+// GET IncidentLabels
+router.get('/labels/', function(req, res, next) {
+
+	const format = req.query.format;
+	console.log('laaabeeelssssssssssssssssss');
+	db.IncidentLabels.find({}, function(err, labels) {
+		if (err) {
+			if (format && format === "xml")
+				res.send(json2xml(err))
+			else
+				res.send(err);
+			return;
+		}
+		if (format && format === "xml")
+			res.send(json2xml(labels))
+		else
+			res.json(labels)
+	});
+});
+
+
+// GET active incidents of department
 router.get('/department/:department_id', function(req, res, next) {
 
 	const format = req.query.format;
@@ -79,7 +102,7 @@ router.get('/department/:department_id', function(req, res, next) {
 	});
 });
 
-//POST get auctions by filters
+// POST get auctions by filters
 router.post('/filter', function(req, res, next) {
 
 	console.log("api: incidents via filters");
@@ -140,7 +163,7 @@ router.post('/filter', function(req, res, next) {
 });
 
 
-//delete incident by id
+// DELETE incident by id
 router.delete('/:id', function(req, res, next) {
 
 	const format = req.query.format;
@@ -161,7 +184,7 @@ router.delete('/:id', function(req, res, next) {
 });
 
 
-//get incident by id
+// GET incident by id
 router.get('/:id', function(req, res, next) {
 
 	const format = req.query.format;
@@ -182,7 +205,7 @@ router.get('/:id', function(req, res, next) {
 });
 
 
-//get incident by priority
+// GET incidents by priority
 router.get('/priority/:priority', function(req, res, next) {
 
 	db.Incidents.find({ priority: req.params.priority }, function(err, incidents) {
@@ -295,7 +318,7 @@ router.post('/', function(req, res, next) {
 });
 
 
-//update incident
+// POST update incident
 router.post('/update/:id', function(req, res, next) {
 
 	// console.log(req.body);
@@ -320,7 +343,7 @@ router.post('/update/:id', function(req, res, next) {
 	});
 });
 
-//edit incident
+// POST edit incident
 router.post('/edit', function(req, res, next) {
 
 	console.log(req.body);
@@ -346,7 +369,7 @@ router.post('/edit', function(req, res, next) {
 	});
 });
 
-//edit auth of incident
+// POST edit auth of incident
 router.post('/editAuth', function(req, res, next) {
 
 	console.log(req.body);
