@@ -3,6 +3,11 @@
     margin-bottom: 10px;
 }
 
+.title-generic{
+    margin-bottom: 5px;
+    font-size: 20px;
+}
+
 .title-bar{
     margin-bottom: 5px;
     font-size: 20px;
@@ -71,4 +76,25 @@
     height: auto;
     padding: 0px;
     margin-bottom: 25px;
+}
+
+
+
+
+
+
+
+.blink_me {
+    animation: blinker 1.7s cubic-bezier(.5, 0, 1, 1) infinite alternate;
+    height: 10px;
+    width: 10px;
+    background-color: #1ece28;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+@keyframes blinker {
+    50% {
+    opacity: 0;
+    }
 }

@@ -98,7 +98,7 @@ class SideMenu extends Component
                             <FontAwesomeIcon icon={ faChartLine } className="icons" />
                         </NavIcon>
                         <NavText>
-                            Συμβάντα
+                            Στατιστικά
                         </NavText>
                     </NavItem>
 

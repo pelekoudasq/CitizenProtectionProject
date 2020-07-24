@@ -19,6 +19,7 @@ class Statistics extends Component {
             isloading: false,
             statsPeople: [],
             statsAuth: [],
+            statsLabels: [],
             auths: [],
         };
     }
@@ -45,6 +46,10 @@ class Statistics extends Component {
         let date = {};
         let statsPeople = [];
         let statsAuth = [];
+        let label = {};
+        let statsLabels = [];
+        let total_open = 0;
+        let total_close = 0;
         // auths: [1, 2]
         // activate: true/false
 
@@ -81,44 +86,81 @@ class Statistics extends Component {
                     });
                 });
 
+                fetch(`${apiUrl}/incidents/labels`, requestOptions)
+                    .then((response) => response.json())
+                    .then((response) => {
+                        console.log("hi", response);
 
-            fetch(`${apiUrl}/incidents`, requestOptions)
-                .then((response) => response.json())
-                .then((response) => {
-                    this.setState({
-                        incidents: response,
                     });
 
-                    this.state.incidents.forEach((incident) => {
-                        /*Loop through every row of the jsonfile and get the attributes*/
-                        /*define the new coordinate */
-                        coordinate = {};
-                        coordinate["lat"] = incident.location["latitude"];
-                        coordinate["lng"] = incident.location["longtitude"];
-                        coordinate["priority"] = incident.priority;
-                        /* Push it to the array of coordinates */
-                        coordinates.push(coordinate);
 
-                        date = new Date(incident.date);
-                        statsPeople[date.getMonth()].deaths += incident.stats["deaths"];
-                        statsPeople[date.getMonth()].arrested += incident.stats["arrested"];
-                        statsPeople[date.getMonth()].injured += incident.stats["injured"];
-
-                        incident.auth.forEach((auth_num) => {
-                            statsAuth[auth_num].value += 1;
-                            incident.active === true
-                            ? (statsAuth[auth_num].open += 1)
-                            : (statsAuth[auth_num].close += 1);
+                fetch(`${apiUrl}/incidents`, requestOptions)
+                    .then((response) => response.json())
+                    .then((response) => {
+                        this.setState({
+                            incidents: response,
                         });
+
+                        this.state.incidents.forEach((incident) => {
+                            /*Loop through every row of the jsonfile and get the attributes*/
+                            /*define the new coordinate */
+                            coordinate = {};
+                            coordinate["lat"] = incident.location["latitude"];
+                            coordinate["lng"] = incident.location["longtitude"];
+                            coordinate["priority"] = incident.priority;
+                            /* Push it to the array of coordinates */
+                            coordinates.push(coordinate);
+
+                            if(incident.keywords != null){
+                                label = {};
+                                incident.keywords.forEach((key) => {
+                                    if(statsLabels[key] != null){
+                                        console.log("edw")
+                                        statsLabels[key].deaths += incident.stats.deaths;
+                                        statsLabels[key].arrested += incident.stats.arrested;
+                                        statsLabels[key].injured += incident.stats.injured;
+                                    }
+                                    else{
+                                        label.deaths = incident.stats.deaths;
+                                        label.arrested = incident.stats.arrested;
+                                        label.injured = incident.stats.injured;
+                                        statsLabels[key] = label;
+                                    }
+
+
+                                });
+                            }
+
+                            if(incident.active) total_open +=1;
+                            else total_close += 1;
+
+                            date = new Date(incident.date);
+                            statsPeople[date.getMonth()].deaths += incident.stats["deaths"];
+                            statsPeople[date.getMonth()].arrested += incident.stats["arrested"];
+                            statsPeople[date.getMonth()].injured += incident.stats["injured"];
+
+                            incident.auth.forEach((auth_num) => {
+                                // if(auth_num<=statsAuth.length-1 && auth_num>=0){
+                                    statsAuth[auth_num].value += 1;
+                                    incident.active === true
+                                    ? (statsAuth[auth_num].open += 1)
+                                    : (statsAuth[auth_num].close += 1);
+                                // }
+                            });
+                        });
+
+                        this.setState({
+                            coordinates: coordinates,
+                            statsPeople: statsPeople,
+                            statsAuth: statsAuth,
+                            total_open: total_open,
+                            total_close: total_close,
+                            statsLabels: statsLabels
+                        });
+
                     });
 
-                    this.setState({
-                        coordinates: coordinates,
-                        statsPeople: statsPeople,
-                        statsAuth: statsAuth,
-                    });
-
-                });
+                    console.log(statsLabels)
           });
 
 
@@ -137,7 +179,7 @@ class Statistics extends Component {
           </li>
           <li className="nav-item">
             <a className="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">
-              Στατιστικά
+              Στατιστικοί Πίνακες
             </a>
           </li>
           <li className="nav-item">
@@ -155,6 +197,8 @@ class Statistics extends Component {
 
               <div className="container">
                 <div className="row">
+
+
                   <div className="col-8" id="graphBox-bar">
                     <p className="title-bar">
                       Θάνατοι-Τραυματισμοί-Συλλήψεις ανά Μήνα
@@ -175,16 +219,18 @@ class Statistics extends Component {
 
               <div className="container">
                 <div className="row">
+
                   <div className="col-sm-3" id="graphBox-pie">
                     <p className="title-pie">Ποσοστό συμμετοχής Φορέων</p>
                     <PieChart width={700} height={270}>
-                      <Pie dataKey="value" isAnimationActive={false} data={this.state.statsAuth} cx={100} cy={150} outerRadius={90} fill="#8884d8" label>
+                      <Pie dataKey="value" isAnimationActive={false} data={this.state.statsAuth} cx={130} cy={130} outerRadius={90} fill="#8884d8" label>
                         {this.state.statsAuth.map((entry, index) => (
                           <Cell key={index} fill={COLORS[index % COLORS.length]} />
                         ))}
                       </Pie>
                       <Tooltip />
                     </PieChart>
+
                   </div>
 
                   <div className="col-sm-1" id="betweenBox"></div>
@@ -224,7 +270,7 @@ class Statistics extends Component {
                   <p className="title-bar2">
                     Πλήθος ανοιχτών/κλειστών συμβάντων ανά Φορέα
                   </p>
-                  <table className="table table-hover table-sm" id="statTable">
+                  <table className="table table-hover table-sm table-bordered" id="statTable">
                     <thead>
                       <tr>
                         <th scope="col"></th>
