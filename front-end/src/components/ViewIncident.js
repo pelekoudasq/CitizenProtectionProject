@@ -48,7 +48,7 @@ class ViewIncident extends Component
         // this.state.auth.current = [];
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleReport = this.handleReport.bind(this);
-		
+        this.goBack = this.goBack.bind(this);		
     }
 
     customInputValue(buttonName, e) {
@@ -294,6 +294,10 @@ class ViewIncident extends Component
         }
         
     }
+    goBack()
+    {
+        this.props.history.goBack();
+    }
 
 	render()
 	{
@@ -316,11 +320,9 @@ class ViewIncident extends Component
 		return(
 			<div className = "hide-scroll">
 				<SideMenu />
-                <Link to="/incidents">
 		        <button className="btn btn-link" >
-		        <FontAwesomeIcon className="iconBack" icon={ faArrowLeft }/>
+		        <FontAwesomeIcon className="iconBack" icon={ faArrowLeft } onClick={this.goBack}/>
 		        </button>
-		        </Link>
 
                 <h5 className = "head_ltitleInfo">{incident.title}</h5>
         		<div className = "hrz_lineBack"></div>
