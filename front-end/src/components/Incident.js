@@ -89,9 +89,9 @@ class Incident extends Component
         this.props.history.push(`/incident/${id}`)
 	}
 
-	accept_incident()
+	accept_incident(e)
 	{
-		// console.log("Accepted")
+		console.log("Incident Accepted")
 		incidentService.accept_incident(this.props.incident._id)
 		window.location.reload(false);
 	}
@@ -110,11 +110,12 @@ class Incident extends Component
     	return(
     		<div>
     			<br/>
-				
     			<div className="row">
 					<Modal
 						overlayClassName={{
-							base: 'Modal-overlay'
+							base: 'Modal-overlay',
+							afterOpen: 'Modal-overlay-in',
+							beforeClose: 'Modal-overlay-out'
 						}}
 						isOpen={this.state.showModal}
 						contentLabel="onRequestClose"
@@ -157,19 +158,19 @@ class Incident extends Component
 					</Modal>
     			
 					<div className = "container-fluid" style = {{marginLeft: this.props.style.marginLeft}}>
-						<div className = "row"  id="inc_box" onClick={this.handleClick}>
-							<div  className="col-lg-1">
+						<div className = "row"  id="inc_box">
+							<div  className="col-lg-1"  onClick={this.handleClick}>
 								<img src={icon} alt= ''/>
 							</div>
-							<div className="col-md-3 ml-1" style={{marginLeft: '-100%'}}>{moment(this.props.incident.date).format('DD-MM-YYYY')}  {moment(this.props.incident.date).format('HH:mm')}</div>
-							<div className="col-sm-4" style={{marginLeft:  '-4%'}}>{this.props.incident.location.address}</div>
-							<div className="col" style={{marginLeft: "6%"}}>{this.props.incident.title}</div>
+							<div className="col-md-3 ml-1"  onClick={this.handleClick} style={{marginLeft: '-100%'}}>{moment(this.props.incident.date).format('DD-MM-YYYY')}  {moment(this.props.incident.date).format('HH:mm')}</div>
+							<div className="col-sm-4"  onClick={this.handleClick} style={{marginLeft:  '-4%'}}>{this.props.incident.location.address}</div>
+							<div className="col"  onClick={this.handleClick} style={{marginLeft: "2%"}}>{this.props.incident.title}</div>
+							<div className="col" style={{marginLeft: "-14.2%"}}><FontAwesomeIcon className="iconBack" icon={ faEye } style={{height: '16px'}} onClick={this.OpenModal}/></div>
 							{Number(this.props.usertype) === 2 && 
-								<div className="col-md" style={{marginLeft: "-3%"}}>
-									<button type="button" className="btn btn-primary btn-sm" onClick={this.accept_incident}>Αποδοχή</button>
+								<div className="col-md" style={{marginLeft: "-3%"}}  onClick={this.accept_incident}>
+									<button type="button" className="btn btn-primary btn-sm" >Αποδοχή</button>
 								</div>
 							}
-							<div className="col" style={{marginLeft: "-10%"}}><FontAwesomeIcon className="iconBack" icon={ faEye } style={{height: '16px'}} onClick={this.OpenModal}/></div>
 						</div>
 					</div>
     			</div>

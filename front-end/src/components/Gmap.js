@@ -12,6 +12,7 @@ function GMap(props)
   useEffect(() => {
     if(props.coordinates.length > 0)
     {
+        // eslint-disable-next-line
         googleMap = initGoogleMap();
         let bounds = new window.google.maps.LatLngBounds();
         markerList.forEach((coordinate, index) => {

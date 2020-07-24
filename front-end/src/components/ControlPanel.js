@@ -241,7 +241,7 @@ class ControlPanel extends Component
 							<div className = "col-lg-2" style={{marginLeft: '-5%'}}>
 								<p style={{fontSize:'19px'}}>Διεύθυνση</p>
 							</div>        			        			
-							<div className = "col-lg-1" style={{marginLeft: '6%'}}>
+							<div className = "col-lg-1" style={{marginLeft: '4%'}}>
 								<p style={{fontSize:'20px'}}>Τίτλος</p>
 							</div>    
 						</div>

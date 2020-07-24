@@ -75,7 +75,6 @@ class Incidents extends Component
 			incidentService.get_user_accepted_incidents()
 			
 			.then( response => {
-				console.log("To response einaiiiii", response)
 				if(response.incidents.length !==0)
 				{
 					// console.log("Response from sofia is",response.incidents)

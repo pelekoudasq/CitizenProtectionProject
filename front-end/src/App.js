@@ -39,7 +39,6 @@ class App extends Component
     render()
     {
     let usertype = localStorage.getItem("usertype")
-    console.log("EImai i vasia me",usertype)
     return (
         <div>
             <NavBar />
