@@ -320,7 +320,7 @@ class Incidents extends Component
 						</div>
 						
 						<div className = "col-md-5">
-							<h5  style={{marginTop: '6px'}}>Ιστορικό Συμβάντων</h5>
+							<h5  style={{marginTop: '6px', marginLeft: '27%'}}>Ιστορικό Συμβάντων</h5>
 						</div>
 
 						<div className="col-md-3">	
@@ -444,7 +444,7 @@ class Incidents extends Component
 				<br/>
 
 				{((!this.state.postsDone) && (Number(usertype) !== 2)) && //if no more posts left, then dont display
-					(<Button id = "load" className = "loadmore" onClick = {this.loadmore} style = {{position: 'absolute', marginLeft: '35%', marginTop: '1%'}}>Φόρτωση Περισσοτέρων</Button>
+					(<Button id = "load" className = "loadmore" onClick = {this.loadmore} style = {{position: 'absolute', marginLeft: '36%', marginTop: '1%'}}>Φόρτωση Περισσοτέρων</Button>
 				)}
 
 			</div>
