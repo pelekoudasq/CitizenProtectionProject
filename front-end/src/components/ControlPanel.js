@@ -211,38 +211,38 @@ class ControlPanel extends Component
 			<div>
 				<SideMenu />
 				<div className="container">
-					<div className="row" style={{marginTop: '10px', marginLeft: '-25%'}}>
-						<div className="col-md"></div>
-						<div className="col-md">
+					<div className="row" style={{marginTop: '10px', marginLeft: '4%'}}>
+						<div className="col-md-6 text-center">
 							<h5>Τρέχοντα Συμβάντα</h5>
 						</div>
-						<div className="col-md" style={{marginLeft: '10%'}}>
-							<button onClick = {this.refresh} className="refresh_btn">Ανανέωση</button>
-						</div>
-						<div className="col-md"  style={{marginLeft: '10%'}}>
+						
+						<div className="col-md-3 offset-sm-3 text-right">
 							<h5>Χάρτης Συμβάντων</h5>
 						</div>
 					</div>
 				</div>
 				<div className = "hrz_line"  style = {{marginTop: '0.6%'}}></div>
-        		<br/><br/><br/>
+        		<br/>
       			
         		{this.state.isloading && <div className="load-spin"></div>}
 
 				{!this.state.no_posts &&
-					<div className = "container-fluid" style={{marginTop: "-20px"}}>	
-						<div className = "row">
-							<div className = "col-sm-2" style={{marginLeft: '7%'}}>
-								<FontAwesomeIcon icon={ faExclamationTriangle } style={{width: '50px', marginTop: '8px'}} />
+					<div className = "container-fluid ml-5" style={{width: '96%'}}>	
+						<div className = "row ml-1">
+							<div className = "col-sm-1 align-self-center" >
+								<FontAwesomeIcon icon={ faExclamationTriangle } style={{width: '50px', marginTop: '8px', float: 'right'}} />
 							</div>
-							<div className = "col-lg-2" style={{marginLeft: '-15.5%'}}>
-								<p style={{fontSize:'19px'}}>Ημερομηνία</p>
+							<div className = "col-sm-1 align-self-center">
+								<p style={{fontSize:'19px', marginBottom: '0'}} className="text-center">Ημερομηνία</p>
 							</div>
-							<div className = "col-lg-2" style={{marginLeft: '-5%'}}>
-								<p style={{fontSize:'19px'}}>Διεύθυνση</p>
+							<div className = "col-sm-2 pl-5 mr-5 align-self-center">
+								<p style={{fontSize:'19px', marginBottom: '0'}} className>Διεύθυνση</p>
 							</div>        			        			
-							<div className = "col-lg-1" style={{marginLeft: '6%'}}>
-								<p style={{fontSize:'20px'}}>Τίτλος</p>
+							<div className = "col-sm-1 ml-5 mr-5 align-self-center">
+								<p style={{fontSize:'19px', marginBottom: '0'}} className="text-right ">Τίτλος</p>
+							</div>
+							<div className="col-lg-1 ml-3 mb-1 align-self-start">
+								<button onClick = {this.refresh} className="refresh_btn"></button>
 							</div>    
 						</div>
 					</div>
@@ -281,7 +281,7 @@ class ControlPanel extends Component
 				<br/>
 
 				{(!this.state.postsDone && !this.state.no_posts) && //if no more posts left, then dont display
-        			(<Button id = "load" className = "loadmore" onClick = {this.loadmore} style = {{position: 'absolute', marginLeft: '25%'}}>Φόρτωση Περισσοτέρων</Button>)}
+        			(<Button id = "load" className = "loadmore" onClick = {this.loadmore} style = {{position: 'absolute', marginLeft: '27%'}}>Φόρτωση Περισσοτέρων</Button>)}
             </div>
 		)
 	}
