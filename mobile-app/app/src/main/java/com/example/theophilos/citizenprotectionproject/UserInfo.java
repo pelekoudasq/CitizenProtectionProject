@@ -9,6 +9,7 @@ public class UserInfo {
     String username;
     String password;
     String token;
+    int userType;
 
 
     public UserInfo(String username, String password) {
@@ -18,6 +19,10 @@ public class UserInfo {
 
     public String getToken() {
         return token;
+    }
+
+    public int getUserType() {
+        return userType;
     }
 }
 

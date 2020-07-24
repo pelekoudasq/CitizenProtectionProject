@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import androidx.core.view.GravityCompat;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -38,48 +40,72 @@ public class MainActivity extends AppCompatActivity {
             .client( getUnsafeOkHttpClient().build())
             .build();
 
+    private AsyncTask<Void,Void,Void> loginTask;
+    private final SessionInfo sInfo = null;
+    private class loginTask extends AsyncTask<Void,Void,Void> {
+
+        @Override
+        protected void onCancelled() {
+            Toast.makeText(getApplicationContext(),"OPA",Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            if (!isCancelled()) {
+                EditText userText = (EditText) findViewById(R.id.userNameTextField);
+                EditText passText = (EditText) findViewById(R.id.passwordTextField);
+                UserInfo userInfo = new UserInfo(userText.getText().toString(), passText.getText().toString());
+
+                JsonApi jsonApi = retrofit.create(JsonApi.class);
+                Call<SessionInfo> call = jsonApi.login(userInfo);
+
+                call.enqueue(new Callback<SessionInfo>() {
+                    @Override
+                    public void onResponse(Call<SessionInfo> call, Response<SessionInfo> response) {
+                        if (!response.isSuccessful()) {
+                            Toast.makeText(getApplicationContext(), "Αποτυχία Σύνδεσης", Toast.LENGTH_LONG).show();
+                            return;
+                        }
+
+                        //Save token here
+                        SessionInfo sInfo = response.body();
+                        SharedPreferences preferences = MainActivity.this.getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
+                        preferences.edit().putString("TOKEN", sInfo.getToken()).apply();
+                        preferences.edit().putString("ID", sInfo.get_id()).apply();
+                        preferences.edit().putString("USRNAME", sInfo.getUsername()).apply();
+                        preferences.edit().putString("LAT", sInfo.getDetails().getLat()).apply();
+                        preferences.edit().putString("LON", sInfo.getDetails().getLon()).apply();
+
+                        final Intent intent = new Intent(getApplicationContext(), IncidentsActivity.class);
+                        if (sInfo != null && sInfo.getUserType() == 2 && !isCancelled()) {
+                            startActivity(intent);
+                        } else if(!isCancelled()){
+                            Toast.makeText(getApplicationContext(), "Αποτυχία Σύνδεσης", Toast.LENGTH_LONG).show();
+                        }
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<SessionInfo> call, Throwable t) {
+                        Toast.makeText(getApplicationContext(), "Αποτυχία Σύνδεσης", Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
+            return null;
+        }
+
+    }
+
 
     public void login( View view ){
-        final Intent intent = new Intent(getApplicationContext(),IncidentsActivity.class);
-
-        EditText userText = (EditText) findViewById(R.id.userNameTextField);
-        EditText passText = (EditText) findViewById(R.id.passwordTextField);
-        UserInfo userInfo = new UserInfo(userText.getText().toString(),passText.getText().toString());
-
-
-
-        JsonApi jsonApi = retrofit.create(JsonApi.class);
-        Call<SessionInfo> call = jsonApi.login(userInfo);
-
-        call.enqueue(new Callback<SessionInfo>() {
-            @Override
-            public void onResponse(Call<SessionInfo> call, Response<SessionInfo> response) {
-                if(!response.isSuccessful()) {
-                    Toast.makeText(getApplicationContext(),"Αποτυχία Σύνδεσης",Toast.LENGTH_LONG).show();
-                    return;
-                }
-
-                //Save token here
-                SessionInfo sInfo = response.body();
-                SharedPreferences preferences = MainActivity.this.getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
-                preferences.edit().putString("TOKEN",sInfo.getToken()).apply();
-                preferences.edit().putString("ID",sInfo.get_id()).apply();
-                preferences.edit().putString("USRNAME",sInfo.getUsername()).apply();
-                preferences.edit().putString("LAT",sInfo.getDetails().getLat()).apply();
-                preferences.edit().putString("LON",sInfo.getDetails().getLon()).apply();
-
-
-
-                startActivity(intent);
-
-            }
-
-            @Override
-            public void onFailure(Call<SessionInfo> call, Throwable t) {
-                Toast.makeText(getApplicationContext(),"Αποτυχία Σύνδεσης",Toast.LENGTH_LONG).show();
-            }
-        });
+        if( loginTask != null ) {
+            loginTask.cancel(true);
+        }
+        loginTask = new loginTask();
+        loginTask.execute();
     }
+
+
 
 
     @Override
