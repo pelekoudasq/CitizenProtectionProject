@@ -32,25 +32,28 @@
 .refresh_btn
 {
   background: url("../icons/refresh.svg") left     no-repeat;
+  background-color: #f0f0f0;
   background-size: 25px;
-  background-position: 6px;
-  background-color: #646f7732;
-  border-radius: 20px; 
-  border: none;
+  background-position: 4px;
+  height:30px;
+  padding-left:35px; 
+  border-radius: 12px; 
+  border: 1px #000 solid;
 }
 
 .refresh_btn:hover{
-  opacity: 0.7;
+  opacity: 0.8;
+  
 }
 
 .incident_line
 {
 	width: 50%;
-  border-top: 1px solid black;
-  position: absolute;
-  margin-left: 8%;
+  	border-top: 1px solid black;
+  	opacity: 0.4;
+  	position: absolute;
+  	margin-left: 8%;
 }
-
 .dash_img
 {
 	width: 85%;
@@ -145,7 +148,7 @@
 .inc_line
 {
   width: 40%;
-  margin-left: 14%;
+  margin-left: 10%;
   border-top: 2px solid grey;
   opacity: 0.4;
   position: absolute;

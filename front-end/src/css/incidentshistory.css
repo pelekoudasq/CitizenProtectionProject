@@ -12,15 +12,14 @@
 .refresh_btn
 {
   background: url("../icons/refresh.svg") left     no-repeat;
-  height: 35px !important;
-  padding: 20% !important;
   /* background-color: #b1b1b1; */
-  /* background-size: 25px;
+  background-size: 25px;
   background-position: 4px;
-  
-  border-radius: 12px; 
+  height:35px;
+  padding-left:35px; 
+  /* border-radius: 12px;  */
   border: none;
-  border: 1px #000 solid; */
+  /* border: 1px #000 solid; */
 }
 
 .refresh_btn:hover{
@@ -38,7 +37,7 @@
 
 .incidents_line
 {
-	width: 46.5%;
+	width: 45%;
   border-top: 1px solid black;
   opacity: 0.4;
   position: absolute;

@@ -169,7 +169,7 @@ class Incident extends Component
 									<button type="button" className="btn btn-primary btn-sm" onClick={this.accept_incident}>Αποδοχή</button>
 								</div>
 							}
-							<div className="col" style={{marginLeft: "-10%"}} onClick={this.OpenModal}><FontAwesomeIcon className="iconBack" icon={ faEye } style={{height: '16px'}}/></div>
+							<div className="col" style={{marginLeft: "-10%"}}><FontAwesomeIcon className="iconBack" icon={ faEye } style={{height: '16px'}} onClick={this.OpenModal}/></div>
 						</div>
 					</div>
     			</div>
