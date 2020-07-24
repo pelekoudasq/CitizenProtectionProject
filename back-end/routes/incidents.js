@@ -140,6 +140,27 @@ router.post('/filter', function(req, res, next) {
 });
 
 
+//delete incident by id
+router.delete('/:id', function(req, res, next) {
+
+	const format = req.query.format;
+
+	db.Incidents.remove({ _id: mongojs.ObjectID(req.params.id) }, function(err, incident) {
+		if (err) {
+			if (format && format === "xml")
+				res.send(json2xml(err))
+			else
+				res.send(err);
+			return;
+		}
+		if (format && format === "xml")
+			res.send(json2xml(incident));
+		else
+			res.json(incident)
+	});
+});
+
+
 //get incident by id
 router.get('/:id', function(req, res, next) {
 
@@ -184,14 +205,14 @@ router.get('/priority/:priority', function(req, res, next) {
 router.post('/', function(req, res, next) {
 
 	const incParam = req.body;
-	console.log(incParam);
+	// console.log(incParam);
 	var location;
 
 	opencage.geocode({q: incParam.address}).then(data => {
 		if (data.status.code == 200) {
 			if (data.results.length > 0) {
 				var place = data.results[0];
-				console.log(place.geometry);
+				// console.log(place.geometry);
 				location = {
 					longtitude : place.geometry.lng,
 					latitude : place.geometry.lat
@@ -200,15 +221,15 @@ router.post('/', function(req, res, next) {
 					incParam.auth[i] = parseInt(incParam.auth[i]);
 				var spots;
 				if (incParam.auth === "Χαμηλή") {
-					console.log(incParam.auth)
+					// console.log(incParam.auth)
 					spots = 2
 				}
 				else if (incParam.auth === "Μέτρια") {
-					console.log(incParam.auth)
+					// console.log(incParam.auth)
 					spots = 4
 				}
 				else {
-					console.log(incParam.auth)
+					// console.log(incParam.auth)
 					spots = 6
 				}
 				spots *= incParam.auth.length
@@ -241,14 +262,14 @@ router.post('/', function(req, res, next) {
 					/* incident saved */
 					
 					/* assign to users type 2 */
-					console.log(incident.auth);
+					// console.log(incident.auth);
 					db.Users.find({ userType : 2 , "details.authorityType" : { $in : incident.auth } }, function(err, users) {
 						if (err) {
 							res.json(incident);
 							return;
 						}
 						users.forEach(user => {
-							console.log(user);
+							// console.log(user);
 							db.Users.update(
 								{ _id: user._id },
 								{ $push: { incidentRequests : incident._id } },
@@ -277,7 +298,7 @@ router.post('/', function(req, res, next) {
 //update incident
 router.post('/update/:id', function(req, res, next) {
 
-	console.log(req.body);
+	// console.log(req.body);
 	const incParam = req.body;
 
 	db.Incidents.update(

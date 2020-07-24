@@ -108,7 +108,147 @@ describe('Test Endpoints', () => {
 				password: 'a_password'
 			})
 		expect(res.statusCode).toEqual(200)
-		done()
+		fs.writeFile('/tmp/new-user.json', JSON.stringify(JSON.parse(res.text)), function(err){
+			done()
+		})
+	})
+
+
+	it('T07. Temp user creates a new incident', async done => {
+		fs.readFile('/tmp/new-user.json', async function(err, data) {
+			const token = JSON.parse(data).token;
+			const res = await request(server)
+				.post('/control-center/api/incidents')
+				.set('Authorization', `Bearer ${token}`)
+				.trustLocalhost()
+				.send({
+					title: 'temporary_incidentTitle',
+					address: 'Panepistimioupoli, Zografou 157 72',
+					priority: 'Μέτρια',
+					auth: ["1", "3"]
+				})
+			expect(res.statusCode).toEqual(200)
+			fs.writeFile('/tmp/new-incident.json', JSON.stringify(JSON.parse(res.text)), function(err){
+				done()
+			})
+		})
+	})
+
+
+	it('T08. Temp user retrieves a list of incidents', async done => {
+		fs.readFile('/tmp/new-user.json', async function(err, data) {
+			const token = JSON.parse(data).token;
+			const res = await request(server)
+				.get('/control-center/api/incidents/?start=0&count=10')
+				.set('Authorization', `Bearer ${token}`)
+				.trustLocalhost()
+			expect(res.statusCode).toEqual(200)
+			expect(JSON.parse(res.text).length).toEqual(10)
+			done()
+		})
+	})
+
+
+	it('T09. Temp user updates an incident', async done => {
+		fs.readFile('/tmp/new-user.json', async function(err, data) {
+			const token = JSON.parse(data).token;
+			fs.readFile('/tmp/new-incident.json', async function(err, data) {
+				const incident_id = JSON.parse(data)._id;
+				const res = await request(server)
+					.post(`/control-center/api/incidents/update/${incident_id}`)
+					.set('Authorization', `Bearer ${token}`)
+					.trustLocalhost()
+					.send({
+						description: 'This is a test description from temp user',
+						callerName: 'temporary_callerName',
+						callerNumber: 'temporary_callerNumber',
+						keywords: ["tempKeyword1", "tempKeyword2"]
+					})
+				expect(res.statusCode).toEqual(200)
+				done()
+			})
+		})
+	})
+
+
+	it('T10. Temp user retrieves an incident', async done => {
+		fs.readFile('/tmp/new-user.json', async function(err, data) {
+			const token = JSON.parse(data).token;
+			fs.readFile('/tmp/new-incident.json', async function(err, data) {
+				const incident_id = JSON.parse(data)._id;
+				const res = await request(server)
+					.get(`/control-center/api/incidents/${incident_id}`)
+					.set('Authorization', `Bearer ${token}`)
+					.trustLocalhost()
+				expect(res.statusCode).toEqual(200)
+				expect(JSON.parse(res.text)._id).toEqual(incident_id)
+				done()
+			})
+		})
+	})
+
+
+	it('T11. Temp user deletes an incident', async done => {
+		fs.readFile('/tmp/new-user.json', async function(err, data) {
+			const token = JSON.parse(data).token;
+			fs.readFile('/tmp/new-incident.json', async function(err, data) {
+				const incident_id = JSON.parse(data)._id;
+				const res = await request(server)
+					.delete(`/control-center/api/incidents/${incident_id}`)
+					.set('Authorization', `Bearer ${token}`)
+					.trustLocalhost()
+				expect(res.statusCode).toEqual(200)
+				fs.unlink('/tmp/new-incident.json', function(err){
+					done()
+				})
+			})
+		})
+	})
+
+
+	it('T12. Temp user logs out', async done => {
+		fs.readFile('/tmp/new-user.json', async function(err, data) {
+			const token = JSON.parse(data).token;
+			const res = await request(server)
+				.get(`/control-center/api/logout`)
+				.set('Authorization', `Bearer ${token}`)
+				.trustLocalhost()
+			expect(res.statusCode).toEqual(200)
+			done()
+		})
+	})
+
+
+	it('T13. Admin deletes the temp user', async done => {
+		fs.readFile('/tmp/admin-user.json', async function(err, data) {
+			const token = JSON.parse(data).token;
+			fs.readFile('/tmp/new-user.json', async function(err, data) {
+				const user_id = JSON.parse(data)._id;
+				const res = await request(server)
+					.delete(`/control-center/api/admin/users/${user_id}`)
+					.set('Authorization', `Bearer ${token}`)
+					.trustLocalhost()
+				expect(res.statusCode).toEqual(200)
+				fs.unlink('/tmp/new-user.json', function(err){
+					done()
+				})
+			})
+		})
+	})
+
+
+	it('T14. Admin logs out', async done => {
+		fs.readFile('/tmp/admin-user.json', async function(err, data) {
+			const token = JSON.parse(data).token;
+			const res = await request(server)
+				.get(`/control-center/api/logout`)
+				.set('Authorization', `Bearer ${token}`)
+				.trustLocalhost()
+			expect(res.statusCode).toEqual(200)
+			fs.unlink('/tmp/admin-user.json', function(err){
+				done()
+			})
+		})
 	})
 
 	afterAll(async done => {

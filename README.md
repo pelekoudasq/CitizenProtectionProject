@@ -68,14 +68,14 @@ npm test
 ✅ T04. Admin creates a temp user  
 ✅ T05. Admin updates the temp user  
 ✅ T06. Temp user logs in  
-❌ T07. Temp user creates a new incident  
-❌ T08. Temp user retrieves a list of incidents  
-❌ T09. Temp user updates an incident  
-❌ T10. Temp user retrieves an incident  
-❌ T11. Temp user deletes an incident  
-❌ T12. Temp user logs out  
-❌ T13. Admin deletes the temp user  
-❌ T14. Admin logs out  
+✅ T07. Temp user creates a new incident  
+✅ T08. Temp user retrieves a list of incidents  
+✅ T09. Temp user updates an incident  
+✅ T10. Temp user retrieves an incident  
+✅ T11. Temp user deletes an incident  
+✅ T12. Temp user logs out  
+✅ T13. Admin deletes the temp user  
+✅ T14. Admin logs out  
 
 ##### RobotTests:
 
