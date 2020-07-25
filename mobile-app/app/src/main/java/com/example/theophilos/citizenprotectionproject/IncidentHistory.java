@@ -181,7 +181,7 @@ public class IncidentHistory extends AppCompatActivity implements NavigationView
                     recyclerLayout = findViewById(R.id.recyclerLayout);
                     recyclerLayout.setVisibility(View.VISIBLE);
                     for ( Incident i : incList ){
-                        if ( !(i.isActive()) ) {
+                        if ( i.isActive() == false ) {
                             incidentNames.add(i.getTitle());
                             incidentPriorities.add(i.getPriority());
                             incidentIds.add(i.getId());

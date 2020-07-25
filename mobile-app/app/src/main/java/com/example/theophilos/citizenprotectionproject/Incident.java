@@ -1,5 +1,9 @@
 package com.example.theophilos.citizenprotectionproject;
 
+import android.util.Log;
+import android.widget.Toast;
+
+import java.sql.Array;
 import java.util.List;
 
 /**
@@ -12,6 +16,13 @@ public class Incident {
     String _id;
     boolean active;
     Location location;
+    String description;
+    List<Comment> comments;
+
+
+    public List<Comment>  getComments() {
+        return comments;
+    }
 
     public String getTitle() {
         return title;
@@ -27,6 +38,10 @@ public class Incident {
 
     public boolean isActive() {
         return active;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     public Location getLocation() {
@@ -49,5 +64,6 @@ public class Incident {
         public String getAddress() {
             return address;
         }
+
     }
 }

@@ -6,4 +6,8 @@
 
     <color name="toolbarColor">#7f7f7f</color>
     <color name="darkGrey">#4E4E4E</color>
+    <color name="lightGrey">#C7C7C7</color>
+    <color name="lighterGrey">#CACACA</color>
+    <color name="lightestGrey">#E4E4E4</color>
+    <color name="maxGrey">#EEEEEE</color>
 </resources>
