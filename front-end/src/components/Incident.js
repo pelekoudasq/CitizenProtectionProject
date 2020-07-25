@@ -163,8 +163,8 @@ class Incident extends Component
 								<img src={icon} alt= ''/>
 							</div>
 							<div className="col-md-3 ml-1"  onClick={this.handleClick} style={{marginLeft: '-100%'}}>{moment(this.props.incident.date).format('DD-MM-YYYY')}  {moment(this.props.incident.date).format('HH:mm')}</div>
-							<div className="col-sm-4"  onClick={this.handleClick} style={{marginLeft:  '-4%'}}>{this.props.incident.location.address}</div>
-							<div className="col"  onClick={this.handleClick} style={{marginLeft: "2%"}}>{this.props.incident.title}</div>
+							<div className="col-sm-4 text-truncate"  onClick={this.handleClick} style={{marginLeft:  '-4%'}}>{this.props.incident.location.address}</div>
+							<div className="col text-truncate"  onClick={this.handleClick} style={{marginLeft: "2%"}}>{this.props.incident.title}</div>
 							<div className="col" style={{marginLeft: "-14.2%"}}><FontAwesomeIcon className="iconBack" icon={ faEye } style={{height: '16px'}} onClick={this.OpenModal}/></div>
 							{Number(this.props.usertype) === 2 && 
 								<div className="col-md" style={{marginLeft: "-3%"}}  onClick={this.accept_incident}>

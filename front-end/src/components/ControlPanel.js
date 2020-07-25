@@ -210,17 +210,20 @@ class ControlPanel extends Component
 		return(
 			<div>
 				<SideMenu />
-				<div className="container">
-					<div className="row" style={{marginTop: '10px', marginLeft: '4%'}}>
-						<div className="col-md-6 text-center my-0">
-							<h5>Τρέχοντα Συμβάντα</h5>
-						</div>
-						<div className="col-md-3 offset-sm-3 text-right my-0">
-							<h5>Χάρτης Συμβάντων</h5>
+				{!this.state.no_posts &&
+					<div className="container">
+						<div className="row" style={{marginTop: '10px', marginLeft: '4%'}}>
+							<div className="col-md-6 text-center my-0">
+								<h5>Τρέχοντα Συμβάντα</h5>
+							</div>
+							<div className="col-md-3 offset-sm-3 text-right my-0">
+								<h5>Χάρτης Συμβάντων</h5>
+							</div>
 						</div>
 					</div>
-				</div>
-				<div className = "hrz_line mt-0"></div>
+				}
+				{ !this.state.no_posts && <div className = "hrz_line mt-0"></div>}
+
       			
         		{this.state.isloading && <div className="load-spin"></div>}
 
@@ -254,10 +257,14 @@ class ControlPanel extends Component
         		
 				{this.state.no_posts ? (
 					<div>
-						<p><br/><br/><br/>
+						<h4 className='text-center'><br/><br/><br/>
 						Δεν υπάρχουν Διαθέσιμα Συμβάντα
-						</p>
-						<p>Ανανεώστε τη Σελίδα για να ενημερωθείτε για νέα Συμβάντα</p>
+						</h4>
+						<h4 className='text-center'>Ανανεώστε τη Σελίδα για να ενημερωθείτε για νέα Συμβάντα</h4>
+						<div className='text-center'>
+							<button onClick = {this.refresh} className="refresh_btn"></button>
+						</div>
+
 					</div>
 				) : ( 
 					<div className = "scroll">
