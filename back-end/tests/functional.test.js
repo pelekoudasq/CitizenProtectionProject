@@ -3,9 +3,10 @@ const server = require('../server');
 const fs = require('fs');
 
 
-describe('Test Endpoints', () => {
+describe('Functional Test Endpoints', () => {
 
 	it('T01. Health check status is OK', async done => {
+
 		const res = await request(server)
 			.get('/control-center/api/health-check')
 			.trustLocalhost()
@@ -16,6 +17,7 @@ describe('Test Endpoints', () => {
 
 
 	it('T02. The database is reset successfully', async done => {
+
 		const res = await request(server)
 			.get('/control-center/api/reset')
 			.trustLocalhost()
@@ -26,6 +28,7 @@ describe('Test Endpoints', () => {
 
 
 	it('T03. Admin logs in successfully', async done => {
+
 		const res = await request(server)
 			.post('/control-center/api/login')
 			.trustLocalhost()
@@ -115,6 +118,7 @@ describe('Test Endpoints', () => {
 
 
 	it('T07. Temp user creates a new incident', async done => {
+
 		fs.readFile('/tmp/new-user.json', async function(err, data) {
 			const token = JSON.parse(data).token;
 			const res = await request(server)
@@ -136,6 +140,7 @@ describe('Test Endpoints', () => {
 
 
 	it('T08. Temp user retrieves a list of incidents', async done => {
+
 		fs.readFile('/tmp/new-user.json', async function(err, data) {
 			const token = JSON.parse(data).token;
 			const res = await request(server)
@@ -150,6 +155,7 @@ describe('Test Endpoints', () => {
 
 
 	it('T09. Temp user updates an incident', async done => {
+
 		fs.readFile('/tmp/new-user.json', async function(err, data) {
 			const token = JSON.parse(data).token;
 			fs.readFile('/tmp/new-incident.json', async function(err, data) {
@@ -172,6 +178,7 @@ describe('Test Endpoints', () => {
 
 
 	it('T10. Temp user retrieves an incident', async done => {
+
 		fs.readFile('/tmp/new-user.json', async function(err, data) {
 			const token = JSON.parse(data).token;
 			fs.readFile('/tmp/new-incident.json', async function(err, data) {
@@ -189,6 +196,7 @@ describe('Test Endpoints', () => {
 
 
 	it('T11. Temp user deletes an incident', async done => {
+
 		fs.readFile('/tmp/new-user.json', async function(err, data) {
 			const token = JSON.parse(data).token;
 			fs.readFile('/tmp/new-incident.json', async function(err, data) {
@@ -207,6 +215,7 @@ describe('Test Endpoints', () => {
 
 
 	it('T12. Temp user logs out', async done => {
+
 		fs.readFile('/tmp/new-user.json', async function(err, data) {
 			const token = JSON.parse(data).token;
 			const res = await request(server)
@@ -220,6 +229,7 @@ describe('Test Endpoints', () => {
 
 
 	it('T13. Admin deletes the temp user', async done => {
+
 		fs.readFile('/tmp/admin-user.json', async function(err, data) {
 			const token = JSON.parse(data).token;
 			fs.readFile('/tmp/new-user.json', async function(err, data) {
@@ -238,6 +248,7 @@ describe('Test Endpoints', () => {
 
 
 	it('T14. Admin logs out', async done => {
+		
 		fs.readFile('/tmp/admin-user.json', async function(err, data) {
 			const token = JSON.parse(data).token;
 			const res = await request(server)
