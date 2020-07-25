@@ -470,8 +470,7 @@ class ViewIncident extends Component
                             </Form>
                         </Col>
                         <Col>
-                            {(
-                                <IncidentMap coordinates={JSON.parse(localStorage.getItem("coordinates"))}/>
+                            {(this.state.coordinates && <IncidentMap coordinates={JSON.parse(localStorage.getItem("coordinates"))}/>
                             )}
                         </Col>
                     </Row>
@@ -506,7 +505,11 @@ class ViewIncident extends Component
                                 <FormGroup className="m-1">
                                     <textarea className="py-0" id="descriptionBox" type="text" value={this.state.report} onChange={this.handleTextArea} name="report" placeholder="Τελική Αναφορά"/>
                                 </FormGroup>
-                                <Button className="float-right buttonblue" type="submit">Ολοκλήρωση Συμβάντος</Button>
+                                {(this.state.incident.departmentReport == this.state.incident.auth.length) ?
+                                (<Button className="float-right buttonblue" type="submit">Ολοκλήρωση Συμβάντος</Button>)
+                                :
+                                ( <Button disabled className="float-right buttonblue" type="submit">Ολοκλήρωση Συμβάντος</Button>)}
+
 
                             </Form>
                         )}
