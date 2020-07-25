@@ -44,7 +44,7 @@ class Incidents extends Component
 		let coordinates = [] //array of objects of coordinates
 		let usertype =  localStorage.getItem("usertype");
 
-		if (Number(usertype) === 0) //api call for control center
+		if (Number(usertype) === 0 ||Number(usertype) === 3 ) //api call for control center
 		{	
 			incidentService.get_all_incidents(this.state.visiblePosts, 8)
 			.then( response => {

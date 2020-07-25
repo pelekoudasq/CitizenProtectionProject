@@ -93,7 +93,7 @@ class SideMenu extends Component
                     <SideNav.Toggle onClick= {this.handleClick} />
                     <SideNav.Nav defaultSelected="home">
 
-                    <NavItem onClick={() => this.handleNavItem("/statistics")}>
+                    <NavItem onClick={() => this.handleNavItem("/")}>
                         <NavIcon>
                             <FontAwesomeIcon icon={ faChartLine } className="icons" />
                         </NavIcon>
@@ -102,9 +102,9 @@ class SideMenu extends Component
                         </NavText>
                     </NavItem>
 
-                    <NavItem onClick={() => this.handleNavItem("/statistics")}>
+                    <NavItem onClick={() => this.handleNavItem("/incidents")}>
                         <NavIcon>
-                            <FontAwesomeIcon icon={ faFilter } className="icons w-30" />
+                            <FontAwesomeIcon icon={ faIndent } className="icons w-30" />
                         </NavIcon>
                         <NavText>
                             Σύνθετη Αναζήτηση
