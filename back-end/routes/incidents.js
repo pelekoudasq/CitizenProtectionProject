@@ -102,6 +102,30 @@ router.get('/department/:department_id', function(req, res, next) {
 	});
 });
 
+
+// GET incidents of department
+router.get('/department/all/:department_id', function(req, res, next) {
+
+	const format = req.query.format;
+	const start = parseInt(req.query.start);
+	const count = parseInt(req.query.count);
+	// const dept_id = ObjectID(req.body.dept_id);
+
+	db.Incidents.find({ departments: req.params.department_id }).limit(count).skip(start, function(err, incidents) {
+		if (err) {
+			if (format && format === "xml")
+				res.send(json2xml(err))
+			else
+				res.send(err);
+			return;
+		}
+		if (format && format === "xml")
+			res.send(json2xml(incidents))
+		else
+			res.json(incidents)
+	});
+});
+
 // POST get auctions by filters
 router.post('/filter', function(req, res, next) {
 
