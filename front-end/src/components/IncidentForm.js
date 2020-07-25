@@ -10,6 +10,8 @@ import apiUrl from '../services/apiUrl'
 import Multiselect from 'react-widgets/lib/Multiselect'
 import AutoCompleteLoc from './AutoCompleteLoc'
 import "react-widgets/dist/css/react-widgets.css";
+import { incidentService } from '../services/incidents.service';
+
 
 
 class IncidentForm extends Component
@@ -33,15 +35,37 @@ class IncidentForm extends Component
             titleError: true,
             locError: true,
             formLoading: false,
-            successSubmit: " "
+            successSubmit: " ",
+            labels: []
         }
         this.customInputValue = this.customInputValue.bind(this);
         // this.state.auth.current = [];
         this.handleSubmit.bind(this);
         this.handleNameChange = this.handleNameChange.bind(this)
         this.handleLocation = this.handleLocation.bind(this)
+
+        
     }  
 
+    componentDidMount()
+    {
+
+        incidentService.get_labels()
+        .then(response => {
+
+            response.forEach(label =>{
+                // console.log(label.label)
+                this.setState({
+                  labels: this.state.labels.concat(label.label)
+                })
+            })
+            // this.setState({
+            //     labels: response
+            // })
+            
+        })
+        console.log(this.state.labels)
+    }
 
     customInputValue(buttonName) {
         let newChecked = `${buttonName}`;
@@ -194,7 +218,7 @@ class IncidentForm extends Component
             console.log('flag', this.state.flag)
         })
 
-        setTimeout(() => alert('Το Συμβαν Καταγράφηκε Επιτυχώς'), 10);
+        setTimeout(() => alert('Το Συμβάν Καταγράφηκε Επιτυχώς'), 10);
         this.props.history.push("/")
 
 
@@ -322,7 +346,7 @@ class IncidentForm extends Component
                             </FormGroup>
                             <FormGroup>
                             <Label for="exampleTypeOfIncident">Είδος συμβάντος</Label>
-                            <Multiselect dropDown data={['Φόνος','Ληστεία','Διάρρηξη','Τροχαίο']} ref={this.state.incident_type} />
+                            <Multiselect dropDown data={this.state.labels} ref={this.state.incident_type} />
                             </FormGroup>
                             <Label for="exampleDescription">Περιγραφή</Label>
                             <FormGroup>

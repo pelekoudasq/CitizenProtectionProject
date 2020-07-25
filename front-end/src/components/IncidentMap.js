@@ -4,8 +4,8 @@ import { withGoogleMap, GoogleMap, Marker } from "react-google-maps"
 
 function IncidentMap(props)
 {
-	console.log("here ",props.coordinates[0].lat);
-	console.log("props ", props);
+	// console.log("here ",props.coordinates[0].lat);
+	// console.log("props ", props);
 
 	var lat = props.coordinates[0].lat;
 	var lng = props.coordinates[0].lng;

@@ -13,7 +13,8 @@ export const incidentService = {
     get_user,
     get_incident,
     change_auth,
-    get_department_incidents 
+    get_department_incidents,
+    get_labels 
 };
 
 
@@ -292,4 +293,20 @@ function change_auth(auth, incident_id) {
     .then(response => {
         return response;
     });
+}
+
+function get_labels() {
+
+    const requestOptions = {
+        mode: 'cors',
+        method: 'GET',
+        headers: authHeader(),
+    };
+
+    return fetch(`${apiUrl}/incidents/labels`, requestOptions)
+    .then(response => response.json())
+    .then(response => {
+        console.log(response)
+        return response;
+    }); 
 }

@@ -41,14 +41,15 @@ class ViewIncident extends Component
             successSubmit: false,
             comments: [],
             reportText: "",
-            final: false
+            final: false,
+            keywords: ""
         }
         
         this.customInputValue = this.customInputValue.bind(this);
         // this.state.auth.current = [];
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleReport = this.handleReport.bind(this);
-        this.goBack = this.goBack.bind(this);		
+        this.goBack = this.goBack.bind(this);
     }
 
     customInputValue(buttonName, e) {
@@ -113,10 +114,15 @@ class ViewIncident extends Component
 
             coordinates.push(coordinate)
 
+            localStorage.setItem("coordinates", JSON.stringify(coordinates))
             this.setState({
                 address: response.location.address,
                 coordinates: coordinates,
-                auth: response.auth
+                auth: response.auth,
+            })
+
+            response.keywords && this.setState({
+                keywords: response.keywords.join(', ')
             })
 
             this.getComments();
@@ -147,6 +153,7 @@ class ViewIncident extends Component
         this.setState({
             [name]: value
         })
+        event.preventDefault();
     };
   
     handleEdit = event => {
@@ -357,7 +364,7 @@ class ViewIncident extends Component
                                         </tr>
                                         <tr>
                                             <td className="pr-3">Είδος Συμβάντος:</td>
-                                            <td>{incident.keywords}</td>
+                                            <td>{this.state.keywords}</td>
                                         </tr>
                                         <tr>
                                             <td colSpan="2">Περιγραφή:</td>
@@ -417,7 +424,7 @@ class ViewIncident extends Component
                                             </tr>
                                             <tr>
                                                 <td className="pr-3">Είδος Συμβάντος:</td>
-                                                <td>{incident.keywords}</td>
+                                                <td>{this.state.keywords}</td>
                                             </tr>
                                             <tr>
                                                 <td colSpan="2">Περιγραφή:</td>
@@ -463,8 +470,8 @@ class ViewIncident extends Component
                             </Form>
                         </Col>
                         <Col>
-                            {this.state.coordinates.length > 0 && (
-                                <IncidentMap coordinates={this.state.coordinates}/>
+                            {(
+                                <IncidentMap coordinates={JSON.parse(localStorage.getItem("coordinates"))}/>
                             )}
                         </Col>
                     </Row>
