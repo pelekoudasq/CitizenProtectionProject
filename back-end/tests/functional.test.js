@@ -76,8 +76,8 @@ describe('Functional Test Endpoints', () => {
 
 		fs.readFile('/tmp/admin-user.json', async function(err, data) {
 			const token = JSON.parse(data).token;
-			fs.readFile('/tmp/new-user.json', async function(err, data) {
-				const temp_user_id = JSON.parse(data)._id;
+			fs.readFile('/tmp/new-user.json', async function(err, data2) {
+				const temp_user_id = JSON.parse(data2)._id;
 				const res = await request(server)
 					.put(`/control-center/api/admin/users/${temp_user_id}`)
 					.set('Authorization', `Bearer ${token}`)
@@ -158,8 +158,8 @@ describe('Functional Test Endpoints', () => {
 
 		fs.readFile('/tmp/new-user.json', async function(err, data) {
 			const token = JSON.parse(data).token;
-			fs.readFile('/tmp/new-incident.json', async function(err, data) {
-				const incident_id = JSON.parse(data)._id;
+			fs.readFile('/tmp/new-incident.json', async function(err, data2) {
+				const incident_id = JSON.parse(data2)._id;
 				const res = await request(server)
 					.post(`/control-center/api/incidents/update/${incident_id}`)
 					.set('Authorization', `Bearer ${token}`)
@@ -181,8 +181,8 @@ describe('Functional Test Endpoints', () => {
 
 		fs.readFile('/tmp/new-user.json', async function(err, data) {
 			const token = JSON.parse(data).token;
-			fs.readFile('/tmp/new-incident.json', async function(err, data) {
-				const incident_id = JSON.parse(data)._id;
+			fs.readFile('/tmp/new-incident.json', async function(err, data2) {
+				const incident_id = JSON.parse(data2)._id;
 				const res = await request(server)
 					.get(`/control-center/api/incidents/${incident_id}`)
 					.set('Authorization', `Bearer ${token}`)
@@ -199,8 +199,8 @@ describe('Functional Test Endpoints', () => {
 
 		fs.readFile('/tmp/new-user.json', async function(err, data) {
 			const token = JSON.parse(data).token;
-			fs.readFile('/tmp/new-incident.json', async function(err, data) {
-				const incident_id = JSON.parse(data)._id;
+			fs.readFile('/tmp/new-incident.json', async function(err, data2) {
+				const incident_id = JSON.parse(data2)._id;
 				const res = await request(server)
 					.delete(`/control-center/api/incidents/${incident_id}`)
 					.set('Authorization', `Bearer ${token}`)
@@ -232,8 +232,8 @@ describe('Functional Test Endpoints', () => {
 
 		fs.readFile('/tmp/admin-user.json', async function(err, data) {
 			const token = JSON.parse(data).token;
-			fs.readFile('/tmp/new-user.json', async function(err, data) {
-				const user_id = JSON.parse(data)._id;
+			fs.readFile('/tmp/new-user.json', async function(err, data2) {
+				const user_id = JSON.parse(data2)._id;
 				const res = await request(server)
 					.delete(`/control-center/api/admin/users/${user_id}`)
 					.set('Authorization', `Bearer ${token}`)
@@ -248,7 +248,7 @@ describe('Functional Test Endpoints', () => {
 
 
 	it('T14. Admin logs out', async done => {
-		
+
 		fs.readFile('/tmp/admin-user.json', async function(err, data) {
 			const token = JSON.parse(data).token;
 			const res = await request(server)
