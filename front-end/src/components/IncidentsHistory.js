@@ -11,7 +11,6 @@ import Gmap from './Gmap'
 import { CustomInput, Col, Row, Button, Form, FormGroup, Label} from 'reactstrap'
 import { TextField } from '@material-ui/core';
 
-
 import { incidentService } from '../services/incidents.service';
 
 class Incidents extends Component
@@ -31,7 +30,7 @@ class Incidents extends Component
 			filter_priority: [],
 			filter_status: [], //true holds for pending incidents, false holds for closed
 			no_result: false,
-			no_posts: false,
+			no_posts: true,
 			postsDone: false
 		}
 		this.loadmore = this.loadmore.bind(this)
@@ -53,6 +52,7 @@ class Incidents extends Component
 				console.log("Response from control center is",response)
 				this.setState({
 					incidents: response,
+					no_posts: false,
 					visiblePosts: this.state.visiblePosts + 8
 				})
 				
@@ -82,6 +82,7 @@ class Incidents extends Component
 					// console.log("Response from sofia is",response.incidents)
 					this.setState({
 						incidents: response.incidents,
+						no_posts: false,
 						visiblePosts: this.state.visiblePosts + 6
 					})
 					
@@ -110,16 +111,16 @@ class Incidents extends Component
 				}
 			});	
 		}
-		else if(Number(usertype) === 1) //api call for authorities
+		else if(Number(usertype) === 1) //api call for authorities departments
 		{	
 			incidentService.get_all_department_incidents()
 			
 			.then( response => {
 				if(response.length !==0)
 				{
-					// console.log("Response from sofia is",response.incidents)
 					this.setState({
 						incidents: response,
+						no_posts: false,
 						visiblePosts: this.state.visiblePosts + 6
 					})
 					
@@ -173,6 +174,7 @@ class Incidents extends Component
 				})
 
 				this.setState(prevState => ({
+					postsDone: false,
 					incidents: [...prevState.incidents, ...response]
 				}))
 
@@ -341,6 +343,11 @@ class Incidents extends Component
 		event.preventDefault();
 	}
 
+	refresh()
+	{
+		window.location.reload(false);
+	}
+
 	render()
 	{
 		let incidents = this.state.incidents
@@ -379,6 +386,7 @@ class Incidents extends Component
 				<div className="row ml-4 pl-5"  style={{position: 'absolute'}}>
 					<div className="col-sm-2 py-1 pr-0" style={{position: 'absolute',  marginLeft: '50%', marginTop: '-40%'}}>
 						<div className="dropdown-divider"></div>
+						<fieldset disabled={this.state.no_posts}>
 						<Form>
 						<Row >
 							<Col sm={4} style={{marginLeft: '-35%'}}>
@@ -436,12 +444,15 @@ class Incidents extends Component
 							<button type="submit" className="btn btn-primary" onClick={this.apply_filter}>Αναζήτηση</button>
 						</Row>
 						</Form>
+						</fieldset>
 					</div>
 				</div>      			
 
 				<div className = "vertical_line"></div>
 	
-				{this.state.no_result ? (<p>Δε βρέθηκαν Αποτελέσματα στην Αναζήτησή σας</p>) : ( 
+				{this.state.no_result && (<p>Δε βρέθηκαν Αποτελέσματα στην Αναζήτησή σας</p>)}
+				
+				{!this.state.no_posts && ( 
 					<div className = "container-fluid">	
 						<div className = "row">
 							<div className = "col-sm-2" style={{marginLeft: '19%'}}>
@@ -457,6 +468,7 @@ class Incidents extends Component
 								<p style={{fontSize:'20px'}}>Τίτλος</p>
 							</div>    
 						</div>
+						<div className = 'incidents_line' style={{opacity: '1.0'}}></div>
 					</div>
 				)}
 
@@ -464,9 +476,20 @@ class Incidents extends Component
 					<Gmap coordinates = {this.state.coordinates} size={{ width:'30%', height:'60%', marginLeft:'69%', position: 'absolute'}}/>
 				)}  
 
-				<div className = 'incidents_line' style={{opacity: '1.0'}}></div>
-					
-				{!this.state.no_result && ( 
+				
+				{this.state.no_posts && (
+					<div>
+						<h4 className='text-center'><br/><br/><br/>
+						Δεν υπάρχουν Διαθέσιμα Συμβάντα
+						</h4>
+						<h4 className='text-center'>Ανανεώστε τη Σελίδα για να ενημερωθείτε για νέα Συμβάντα</h4>
+						<div className='text-center'>
+							<button onClick = {this.refresh} className="refresh_btn"></button>
+						</div>
+
+					</div>
+				)}	
+				{!this.state.no_result && !this.state.no_posts && ( 
 					<div className = "scrolls">
 						{incidents.map((incident) => {//Loop through every row of the json file and get the attributes
 							return (
@@ -481,7 +504,7 @@ class Incidents extends Component
 					</div>
 				)}
 
-				{!this.state.no_result && (<div className = "incs_line"></div>)}
+				{!this.state.no_result && !this.state.no_posts && (<div className = "incs_line"></div>)}
 				<br/>
 
 				{((!this.state.postsDone) && (Number(usertype) === 0 || Number(usertype) === 4 )) && //if no more posts left, then dont display
