@@ -141,7 +141,32 @@ describe('Robot Test Endpoints', () => {
 
 	it('RT07. User manages a list of incidents', async done => {
 
-		done()
+		fs.readFile('/tmp/new-user-robot.json', async function(err, data) {
+			const token = JSON.parse(data).token;
+			const incidents = robot_data.incidents;
+			for await (const incident of incidents) {
+				const res = await request(server)
+					.post('/control-center/api/incidents')
+					.set('Authorization', `Bearer ${token}`)
+					.trustLocalhost()
+					.send({
+						title: incident.title,
+						address: 'Address 19, 19489',
+						priority: 'Μέτρια',
+						x: incident.x,
+						y: incident.y,
+						auth: ["1"],
+						startDate: incident.startDate,
+						endDate: incident.endDate,
+						description: incident.description
+					})
+				expect(res.statusCode).toEqual(200)
+				fs.writeFile(`/tmp/${incident.title}-robot.json`, JSON.stringify(JSON.parse(res.text)), function(err){
+					// done()
+				})
+			}
+			done()
+		})
 	})
 
 

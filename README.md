@@ -85,7 +85,7 @@ npm test
 ✅ RT04. Admin creates multiple users  
 ✅ RT05. Admin updates one user and deletes the rest of the users  
 ✅ RT06. User logs in  
-❌ RT07. User manages a list of incidents  
+✅ RT07. User manages a list of incidents  
 ✅ RT08. User logs out  
 ✅ RT09. Admin deletes the remaining user  
 ✅ RT10. Admin logs out  

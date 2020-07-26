@@ -279,6 +279,21 @@ router.post('/', function(req, res, next) {
 					// console.log(incParam.auth)
 					spots = 6
 				}
+				var description = null
+				if (incParam.description)
+					description = incParam.description
+				if (incParam.x && incParam.y) {
+					location.longtitude = incParam.x;
+					location.latitude = incParam.y;
+				}
+				var startDate = null
+				if (incParam.startDate)
+					startDate = incParam.startDate
+				else
+					startDate = new Date()
+				var endDate = null
+				if (incParam.endDate)
+					endDate = incParam.endDate
 				spots *= incParam.auth.length
 				incident = db.Incidents.save({
 					title: incParam.title,
@@ -287,8 +302,9 @@ router.post('/', function(req, res, next) {
 						longtitude: location.longtitude,
 						latitude: location.latitude
 					},
+					description : description,
 					priority: incParam.priority,
-					date: new Date(),
+					date: startDate,
 					auth: incParam.auth,
 					spots: spots,
 					active: true,
@@ -300,7 +316,8 @@ router.post('/', function(req, res, next) {
 						deaths: 0,
 						injured: 0,
 						arrested: 0
-					}
+					},
+					end_date: endDate
 				}, function(err, incident) {
 					if (err) {
 						res.send(err);
