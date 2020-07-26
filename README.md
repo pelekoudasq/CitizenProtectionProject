@@ -82,12 +82,12 @@ npm test
 ✅ RT01. Health check status is OK  
 ✅ RT02. The database is reset successfully  
 ✅ RT03. Admin logs in successfully  
-❌ RT04. Admin creates multiple users  
-❌ RT05. Admin updates one user and deletes the rest of the users  
-❌ RT06. User logs in  
+✅ RT04. Admin creates multiple users  
+✅ RT05. Admin updates one user and deletes the rest of the users  
+✅ RT06. User logs in  
 ❌ RT07. User manages a list of incidents  
-❌ RT08. User logs out  
-❌ RT09. Admin deletes the remaining user  
+✅ RT08. User logs out  
+✅ RT09. Admin deletes the remaining user  
 ✅ RT10. Admin logs out  
 
 

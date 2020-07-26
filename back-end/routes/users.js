@@ -175,6 +175,7 @@ router.put('/:id', function(req, res, next) {
 // DELETE user
 router.delete('/:id', function(req, res, next) {
 
+	// console.log('DEEEEEEEELEEEEEEEEEEETEEEEEEEEEEEEEE');
 	const format = req.query.format;
 	db.Users.remove({ _id: mongojs.ObjectID(req.params.id) }, function(err, result) {
 		if (err) {
@@ -215,7 +216,7 @@ router.get('/:id', function(req, res, next) {
 // GET incident requests
 router.get('/requests/:user_id', function(req, res, next) {
 
-	console.log('users: get incident requests by user');
+	// console.log('users: get incident requests by user');
 	db.Users.findOne({ _id: mongojs.ObjectID(req.params.user_id) }, function(err, user) {
 		if (err) {
 			res.send(err);

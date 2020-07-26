@@ -3,6 +3,7 @@ const server = require('../server');
 const fs = require('fs');
 const robot_data = require('./RobotTestData.json');
 
+
 describe('Robot Test Endpoints', () => {
 
 	it('RT01. Health check status is OK', async done => {
@@ -47,11 +48,32 @@ describe('Robot Test Endpoints', () => {
 
 		fs.readFile('/tmp/admin-user-robot.json', async function(err, data) {
 			const token = JSON.parse(data).token;
-			// fs.readFile('./RobotTestData', async function(err, data2) {
-				const users = robot_data.users;
-				console.log(users)
-				done()
-			// })
+			const users = robot_data.users;
+			for await (const user of users) {
+			// await users.forEach(async user => {
+				const res = await request(server)
+					.post('/control-center/api/admin/users')
+					.set('Authorization', `Bearer ${token}`)
+					.trustLocalhost()
+					.send({
+						username: user.username,
+						password: user.password,
+						firstName: user.firstName,
+						lastName: user.lastName,
+						role: 2,
+						agency: 1,
+					})
+				expect(res.statusCode).toEqual(200)
+				expect(JSON.parse(res.text).username).toEqual(user.username)
+				expect(JSON.parse(res.text).name.firstName).toEqual(user.firstName)
+				expect(JSON.parse(res.text).name.lastName).toEqual(user.lastName)
+				expect(JSON.parse(res.text).userType).toEqual(2)
+				expect(JSON.parse(res.text).details.authorityType).toEqual(1)
+				fs.writeFile(`/tmp/${user.username}-robot.json`, JSON.stringify(JSON.parse(res.text)), function(err){
+					// done()
+				})
+			}
+			done()
 		})
 	})
 
@@ -60,14 +82,60 @@ describe('Robot Test Endpoints', () => {
 
 		fs.readFile('/tmp/admin-user-robot.json', async function(err, data) {
 			const token = JSON.parse(data).token;
+			const users = robot_data.users;
+			// var first_updated = false
+			for await (const user of users) {
+				fs.readFile(`/tmp/${user.username}-robot.json`, async function(err, data2) {
+					const user_id = JSON.parse(data2)._id;
+					if (user.username === 'username_1') { // update first
+						// first_updated = true
+						const res = await request(server)
+							.put(`/control-center/api/admin/users/${user_id}`)
+							.set('Authorization', `Bearer ${token}`)
+							.trustLocalhost()
+							.send({
+								username: 'robot-update',
+								firstName: 'a_nameUpd',
+								lastName: 'a_surnameUpd',
+								role: 2,
+								agency: 1,
+							})
+						expect(res.statusCode).toEqual(200)
+						expect(JSON.parse(res.text).username).toEqual('robot-update')
+						expect(JSON.parse(res.text).name.firstName).toEqual('a_nameUpd')
+						expect(JSON.parse(res.text).name.lastName).toEqual('a_surnameUpd')
+						expect(JSON.parse(res.text).userType).toEqual(2)
+						expect(JSON.parse(res.text).details.authorityType).toEqual(1)
+					} else { //delete rest
+						const res = await request(server)
+							.delete(`/control-center/api/admin/users/${user_id}`)
+							.set('Authorization', `Bearer ${token}`)
+							.trustLocalhost()
+						expect(res.statusCode).toEqual(200)
+						fs.unlink(`/tmp/${user.username}-robot.json`, function(err) {})
+					}
+				})
+			}
 			done()
 		})
 	})
 
 
 	it('RT06. User logs in', async done => {
-
-		done()
+		
+		fs.readFile('/tmp/username_1-robot.json', async function(err, data) {
+			const res = await request(server)
+				.post('/control-center/api/login')
+				.trustLocalhost()
+				.send({
+					username: 'username_1',
+					password: 'a_password'
+				})
+			expect(res.statusCode).toEqual(200)
+			fs.writeFile('/tmp/new-user-robot.json', JSON.stringify(JSON.parse(res.text)), function(err){
+				done()
+			})
+		})
 	})
 
 
@@ -79,13 +147,36 @@ describe('Robot Test Endpoints', () => {
 
 	it('RT08. User logs out', async done => {
 
-		done()
+		fs.readFile('/tmp/new-user-robot.json', async function(err, data) {
+			const token = JSON.parse(data).token;
+			const res = await request(server)
+				.get(`/control-center/api/logout`)
+				.set('Authorization', `Bearer ${token}`)
+				.trustLocalhost()
+			expect(res.statusCode).toEqual(200)
+			fs.unlink('/tmp/new-user-robot.json', function(err){
+				done()
+			})
+		})
 	})
 
 
 	it('RT09. Admin deletes the remaining user', async done => {
 
-		done()
+		fs.readFile('/tmp/admin-user-robot.json', async function(err, data) {
+			const token = JSON.parse(data).token;
+			fs.readFile('/tmp/username_1-robot.json', async function(err, data2) {
+				const user_id = JSON.parse(data2)._id;
+				const res = await request(server)
+					.delete(`/control-center/api/admin/users/${user_id}`)
+					.set('Authorization', `Bearer ${token}`)
+					.trustLocalhost()
+				expect(res.statusCode).toEqual(200)
+				fs.unlink('/tmp/username_1-robot.json', function(err){
+					done()
+				})
+			})
+		})
 	})
 
 
@@ -98,7 +189,7 @@ describe('Robot Test Endpoints', () => {
 				.set('Authorization', `Bearer ${token}`)
 				.trustLocalhost()
 			expect(res.statusCode).toEqual(200)
-			fs.unlink('/tmp/admin-user-robot.json', function(err){
+			fs.unlink('/tmp/admin-user-robot.json', function(err) {
 				done()
 			})
 		})

@@ -21,7 +21,7 @@ router.get('/', function(req, res, next) {
 	const format = req.query.format;
 	const start = parseInt(req.query.start);
 	const count = parseInt(req.query.count);
-	db.Incidents.find({}).limit(count).skip(start, function(err, incidents) {
+	db.Incidents.find({}).sort({ date: -1 }).limit(count).skip(start, function(err, incidents) {
 		if (err) {
 			if (format && format === "xml")
 				res.send(json2xml(err))
@@ -42,7 +42,7 @@ router.get('/active', function(req, res, next) {
 	const format = req.query.format;
 	const start = parseInt(req.query.start);
 	const count = parseInt(req.query.count);
-	db.Incidents.find({ active: true }).limit(count).skip(start, function(err, incidents) {
+	db.Incidents.find({ active: true }).sort({ date: -1 }).limit(count).skip(start, function(err, incidents) {
 		if (err) {
 			if (format && format === "xml")
 				res.send(json2xml(err))
@@ -87,7 +87,7 @@ router.get('/department/:department_id', function(req, res, next) {
 	const count = parseInt(req.query.count);
 	// const dept_id = ObjectID(req.body.dept_id);
 
-	db.Incidents.find({ active: true, departments: req.params.department_id }).limit(count).skip(start, function(err, incidents) {
+	db.Incidents.find({ active: true, departments: req.params.department_id }).sort({ date: -1 }).limit(count).skip(start, function(err, incidents) {
 		if (err) {
 			if (format && format === "xml")
 				res.send(json2xml(err))
@@ -111,7 +111,7 @@ router.get('/department/all/:department_id', function(req, res, next) {
 	const count = parseInt(req.query.count);
 	// const dept_id = ObjectID(req.body.dept_id);
 
-	db.Incidents.find({ departments: req.params.department_id }).limit(count).skip(start, function(err, incidents) {
+	db.Incidents.find({ departments: req.params.department_id }).sort({ date: -1 }).limit(count).skip(start, function(err, incidents) {
 		if (err) {
 			if (format && format === "xml")
 				res.send(json2xml(err))
@@ -177,7 +177,7 @@ router.post('/filter', function(req, res, next) {
 		query['$and'].push({ date: { $gte: date_1, $lt: date_2 }});
 	}
 	
-	db.Incidents.find(query, function(err, incidents) {
+	db.Incidents.find(query).sort({ date: -1 }, function(err, incidents) {
 		if (err) {
 			res.send(err);
 			return;
