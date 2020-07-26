@@ -197,7 +197,7 @@ router.delete('/:id', function(req, res, next) {
 router.get('/:id', function(req, res, next) {
 
 	const format = req.query.format;
-	db.Users.find({ _id: mongojs.ObjectID(req.params.id) }, function(err, user) {
+	db.Users.findOne({ _id: mongojs.ObjectID(req.params.id) }, function(err, user) {
 		if (err) {
 			if (format && format === "xml")
 				res.send(json2xml(err));
