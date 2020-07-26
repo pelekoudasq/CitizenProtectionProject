@@ -30,7 +30,9 @@ class Incidents extends Component
 			filter_end_date:"",
 			filter_priority: [],
 			filter_status: [], //true holds for pending incidents, false holds for closed
-			no_result: false
+			no_result: false,
+			no_posts: false,
+			postsDone: false
 		}
 		this.loadmore = this.loadmore.bind(this)
 		this.apply_filter = this.apply_filter.bind(this);	
@@ -75,7 +77,7 @@ class Incidents extends Component
 			incidentService.get_user_accepted_incidents()
 			
 			.then( response => {
-				if(response.incidents.length !==0)
+				if(response.length !==0)
 				{
 					// console.log("Response from sofia is",response.incidents)
 					this.setState({
@@ -98,7 +100,7 @@ class Incidents extends Component
 						coordinates: coordinates
 					})
 				}
-				else if(response.incidents.length === 0)
+				else if(response.length === 0)
 				{
 					console.log("To response einai adeio!!!")
 					this.setState=({
@@ -108,6 +110,45 @@ class Incidents extends Component
 				}
 			});	
 		}
+		else if(Number(usertype) === 1) //api call for authorities
+		{	
+			incidentService.get_all_department_incidents()
+			
+			.then( response => {
+				if(response.length !==0)
+				{
+					// console.log("Response from sofia is",response.incidents)
+					this.setState({
+						incidents: response,
+						visiblePosts: this.state.visiblePosts + 6
+					})
+					
+					this.state.incidents.forEach(incident => { /*Loop through every row of the jsonfile and get the attributes*/
+							/*define the new coordinate */
+							coordinate = {}
+							coordinate['lat'] = incident.location['latitude']
+							coordinate['lng'] = incident.location['longtitude']    
+							coordinate['priority'] = incident.priority
+		
+							/* Push it to the array of coordinates */
+							coordinates.push(coordinate)
+						})
+		
+					this.setState({
+						coordinates: coordinates
+					})
+				}
+				else if(response.length === 0)
+				{
+					console.log("To response einai adeio!!!")
+					this.setState=({
+						no_posts: true,
+						postsDone: true
+					})
+				}
+			});	
+		}
+
 
 	}
 
@@ -443,7 +484,7 @@ class Incidents extends Component
 				{!this.state.no_result && (<div className = "incs_line"></div>)}
 				<br/>
 
-				{((!this.state.postsDone) && (Number(usertype) !== 2)) && //if no more posts left, then dont display
+				{((!this.state.postsDone) && (Number(usertype) === 0 || Number(usertype) === 4 )) && //if no more posts left, then dont display
 					(<Button id = "load" className = "loadmore" onClick = {this.loadmore} style = {{position: 'absolute', marginLeft: '36%', marginTop: '1%'}}>Φόρτωση Περισσοτέρων</Button>
 				)}
 

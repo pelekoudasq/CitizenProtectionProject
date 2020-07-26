@@ -14,7 +14,8 @@ export const incidentService = {
     get_incident,
     change_auth,
     get_department_incidents,
-    get_labels 
+    get_labels,
+    get_all_department_incidents
 };
 
 
@@ -81,6 +82,24 @@ function accept_incident(incident_id) //only employees make this call
     requestOptions.headers['Content-Type'] = 'application/json'   
 
     return fetch(`${apiUrl}/incidents/accept`, requestOptions)
+    .then(response => response.json())
+    .then(response => {
+        return response;
+    });	
+
+}
+
+
+function get_all_department_incidents(start, count) //only departments make this call
+{
+    const department_id = localStorage.getItem('userid'); 
+	const requestOptions = {
+		mode: 'cors',
+		method: 'GET',
+		headers: authHeader(),
+	};
+
+    return fetch(`${apiUrl}/incidents/department/all/${department_id}?start=${start}&count=${count}`, requestOptions)
     .then(response => response.json())
     .then(response => {
         return response;
