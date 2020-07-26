@@ -1,7 +1,6 @@
 import React, {Component} from 'react'
 import { CustomInput, Col, Row, Button, Form, FormGroup, Label, Input, Container } from 'reactstrap'
 import { faArrowLeft, faEdit } from '@fortawesome/free-solid-svg-icons'
-import { Link } from 'react-router-dom'
 import '../css/controlpanel.css'
 import '../css/incidentform.css'
 import '../css/viewincident.css'
@@ -215,7 +214,7 @@ class ViewIncident extends Component
             	incidentService.get_user(this.state.incident.comments[i].user)
             	.then(response => {
 
-                    let com = <li className='list-group-item mt-2 pb-0 u-shadow-v18 g-bg-secondary rounded'>
+                    let com = <li key = {response[0]._id} className='list-group-item mt-2 pb-0 u-shadow-v18 g-bg-secondary rounded'>
                         <div className="font-weight-bold opacity6">{response[0].username}</div>
                         <div className="text-wrap">
                             {comment.text}
@@ -505,7 +504,7 @@ class ViewIncident extends Component
                                 <FormGroup className="m-1">
                                     <textarea className="py-0" id="descriptionBox" type="text" value={this.state.report} onChange={this.handleTextArea} name="report" placeholder="Τελική Αναφορά"/>
                                 </FormGroup>
-                                {(this.state.incident.departmentReport == this.state.incident.auth.length) ?
+                                {(this.state.incident.departmentReports >= this.state.incident.departments.length) ?
                                 (<Button className="float-right buttonblue" type="submit">Ολοκλήρωση Συμβάντος</Button>)
                                 :
                                 ( <Button disabled className="float-right buttonblue" type="submit">Ολοκλήρωση Συμβάντος</Button>)}

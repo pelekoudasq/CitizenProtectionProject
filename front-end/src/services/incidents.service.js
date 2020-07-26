@@ -19,7 +19,6 @@ export const incidentService = {
 };
 
 
-
 function authHeader() 
 {
     // return authorization header with jwt token

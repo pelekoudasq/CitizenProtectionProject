@@ -1,15 +1,9 @@
 import React , {Component} from 'react'
 import { withGoogleMap, GoogleMap, Marker } from "react-google-maps"
-import { render } from 'react-dom'
 
 
 class IncidentMap extends Component
 {	
-	constructor(props)
-	{
-		super(props)
-    }
-
 	shouldComponentUpdate()
 	{
 		return false;
@@ -28,15 +22,20 @@ class IncidentMap extends Component
 			
 		));
 
-		return(
-			<div id="incidentMap" style={{ width:'95%', height:'100%', marginLeft:'0%', position: "absolute" }}>
-				<IncidentMap
-					containerElement = { <div className="h-100" /> }
-					mapElement = { <div className="h-100" /> }
-					center = {{ lat: -34.397, lng: 150.644 }}
-				/>
-			</div>
-		)
+		if(this.props.coordinates)
+			return(
+				<div id="incidentMap" style={{ width:'95%', height:'100%', marginLeft:'0%', position: "absolute" }}>
+					<IncidentMap
+						containerElement = { <div className="h-100" /> }
+						mapElement = { <div className="h-100" /> }
+						center = {{ lat: -34.397, lng: 150.644 }}
+					/>
+				</div>
+			)
+		else
+		{
+			return(<p></p>)
+		}
 	
 	}
 }

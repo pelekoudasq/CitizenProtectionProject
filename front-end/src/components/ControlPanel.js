@@ -45,7 +45,7 @@ class ControlPanel extends Component
 		{	
 			incidentService.get_active_incidents(this.state.visiblePosts, 9)
 			.then( response => {
-				console.log("Response from control center is",response)
+				// console.log("Response from control center is",response)
 				this.setState({
 					incidents: response,
 					visiblePosts: this.state.visiblePosts + 9,
@@ -98,7 +98,6 @@ class ControlPanel extends Component
 				}
 				else if(response.incidents && response.incidents.length === 0)
 				{
-					console.log("To response einai adeio!!!")
 					this.setState=({
 						no_posts: true,
 						postsDone: true
@@ -169,10 +168,12 @@ class ControlPanel extends Component
 				this.setState ({
 					isloading: false
 				})
-
-				this.setState(prevState => ({
-					incidents: [...prevState.incidents, ...response]
-				}))
+				let rev_incidents = response.reverse()
+				let total_incidents = rev_incidents.concat(this.state.incidents)
+				// console.log(rev_response)
+				this.setState({
+					incidents: total_incidents
+				})
 
 				this.state.incidents.forEach(incident => { /*Loop through every row of the jsonfile and get the attributes*/
 					/*define the new coordinate */
@@ -237,7 +238,7 @@ class ControlPanel extends Component
 								<p style={{fontSize:'19px', marginBottom: '0'}} className="text-center">Ημερομηνία</p>
 							</div>
 							<div className = "col-sm-2 pl-5 mr-5 align-self-center">
-								<p style={{fontSize:'19px', marginBottom: '0'}} className>Διεύθυνση</p>
+								<p style={{fontSize:'19px', marginBottom: '0'}}>Διεύθυνση</p>
 							</div>        			        			
 							<div className = "col-sm-1 ml-5 mr-4 align-self-center">
 								<p style={{fontSize:'19px', marginBottom: '0'}} className="text-right ">Τίτλος</p>

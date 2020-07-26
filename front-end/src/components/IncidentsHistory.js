@@ -47,11 +47,13 @@ class Incidents extends Component
 
 		if (Number(usertype) === 0 ||Number(usertype) === 3 ) //api call for control center
 		{	
-			incidentService.get_all_incidents(this.state.visiblePosts, 8)
+			incidentService.get_all_incidents(this.state.visiblePosts, 9)
 			.then( response => {
 				console.log("Response from control center is",response)
+
+
 				this.setState({
-					incidents: response,
+					incidents: response.reverse(),
 					no_posts: false,
 					visiblePosts: this.state.visiblePosts + 8
 				})
@@ -81,7 +83,7 @@ class Incidents extends Component
 				{
 					// console.log("Response from sofia is",response.incidents)
 					this.setState({
-						incidents: response.incidents,
+						incidents: response.incidents.reverse(),
 						no_posts: false,
 						visiblePosts: this.state.visiblePosts + 6
 					})
@@ -119,7 +121,7 @@ class Incidents extends Component
 				if(response.length !==0)
 				{
 					this.setState({
-						incidents: response,
+						incidents: response.reverse(),
 						no_posts: false,
 						visiblePosts: this.state.visiblePosts + 6
 					})
@@ -159,13 +161,13 @@ class Incidents extends Component
 			isloading: true
 		})
 		this.setState({
-			visiblePosts: this.state.visiblePosts + 7
+			visiblePosts: this.state.visiblePosts + 9
 		})
 
 		let coordinate = {} //object of coordinates
         let coordinates = [] //array of objects of coordinates
 
-		incidentService.get_active_incidents(this.state.visiblePosts, 7)
+		incidentService.get_all_incidents(this.state.visiblePosts, 9)
 		.then (response => {
 			if (response.length !== 0)
 			{
@@ -173,10 +175,14 @@ class Incidents extends Component
 					isloading: false
 				})
 
-				this.setState(prevState => ({
-					postsDone: false,
-					incidents: [...prevState.incidents, ...response]
-				}))
+				let rev_incidents = response.reverse()
+				let total_incidents = rev_incidents.concat(this.state.incidents)
+				// console.log(rev_response)
+				this.setState({
+					incidents: total_incidents,
+					postDone: false
+				})
+
 
 				this.state.incidents.forEach(incident => { /*Loop through every row of the jsonfile and get the attributes*/
 					/*define the new coordinate */
@@ -507,7 +513,7 @@ class Incidents extends Component
 				{!this.state.no_result && !this.state.no_posts && (<div className = "incs_line"></div>)}
 				<br/>
 
-				{((!this.state.postsDone) && (Number(usertype) === 0 || Number(usertype) === 4 )) && //if no more posts left, then dont display
+				{((!this.state.postsDone) &&(!this.state.no_posts) && ((Number(usertype) === 0 || Number(usertype) === 3 ))) && //if no more posts left, then dont display
 					(<Button id = "load" className = "loadmore" onClick = {this.loadmore} style = {{position: 'absolute', marginLeft: '36%', marginTop: '1%'}}>Φόρτωση Περισσοτέρων</Button>
 				)}
 

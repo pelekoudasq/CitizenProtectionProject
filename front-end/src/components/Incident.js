@@ -156,23 +156,41 @@ class Incident extends Component
 							<Button style = {{marginTop: '12%', marginLeft: '2%'}} onClick={this.handleClick}>Περισσότερα</Button>
 						</div>
 					</Modal>
-    			
-					<div className = "container-fluid" style = {{marginLeft: this.props.style.marginLeft}}>
-						<div className = "row"  id="inc_box">
-							<div  className="col-lg-1"  onClick={this.handleClick}>
-								<img src={icon} alt= ''/>
-							</div>
-							<div className="col-md-3 ml-1"  onClick={this.handleClick} style={{marginLeft: '-100%'}}>{moment(this.props.incident.date).format('DD-MM-YYYY')}  {moment(this.props.incident.date).format('HH:mm')}</div>
-							<div className="col-sm-4 text-truncate"  onClick={this.handleClick} style={{marginLeft:  '-4%'}}>{this.props.incident.location.address}</div>
-							<div className="col text-truncate"  onClick={this.handleClick} style={{marginLeft: "2%"}}>{this.props.incident.title}</div>
-							<div className="col" style={{marginLeft: "-14.2%"}}><FontAwesomeIcon className="iconBack" icon={ faEye } style={{height: '16px'}} onClick={this.OpenModal}/></div>
-							{Number(this.props.usertype) === 2 && 
-								<div className="col-md" style={{marginLeft: "-3%"}}  onClick={this.accept_incident}>
-									<button type="button" className="btn btn-primary btn-sm" >Αποδοχή</button>
+					{/* {(this.state.incident.departmentReports >= this.state.incident.departments.length) && */}
+						<div className = "container-fluid" style = {{marginLeft: this.props.style.marginLeft}}>
+							<div className = "row"  id="inc_box">
+								<div  className="col-lg-1"  onClick={this.handleClick}>
+									<img src={icon} alt= ''/>
 								</div>
-							}
-						</div>
-					</div>
+								<div className="col-md-3 ml-1"  onClick={this.handleClick} style={{marginLeft: '-100%'}}>{moment(this.props.incident.date).format('DD-MM-YYYY')}  {moment(this.props.incident.date).format('HH:mm')}</div>
+								<div className="col-sm-4 text-truncate"  onClick={this.handleClick} style={{marginLeft:  '-4%'}}>{this.props.incident.location.address}</div>
+								<div className="col text-truncate"  onClick={this.handleClick} style={{marginLeft: "2%"}}>{this.props.incident.title}</div>
+								<div className="col" style={{marginLeft: "-14.2%"}}><FontAwesomeIcon className="iconBack" icon={ faEye } style={{height: '16px'}} onClick={this.OpenModal}/></div>
+								{Number(this.props.usertype) === 2 && 
+									<div className="col-md" style={{marginLeft: "-3%"}}  onClick={this.accept_incident}>
+										<button type="button" className="btn btn-primary btn-sm" >Αποδοχή</button>
+									</div>
+								}
+							</div>
+						</div> 
+					{/* // :( //the incidents cannot be closed yet
+					// 	<div className = "container-fluid" style = {{marginLeft: this.props.style.marginLeft, backgroundColor: "red"}}>
+					// 		<div className = "row"  id="inc_box">
+					// 			<div  className="col-lg-1"  onClick={this.handleClick}>
+					// 				<img src={icon} alt= ''/>
+					// 			</div>
+					// 			<div className="col-md-3 ml-1"  onClick={this.handleClick} style={{marginLeft: '-100%'}}>{moment(this.props.incident.date).format('DD-MM-YYYY')}  {moment(this.props.incident.date).format('HH:mm')}</div>
+					// 			<div className="col-sm-4 text-truncate"  onClick={this.handleClick} style={{marginLeft:  '-4%'}}>{this.props.incident.location.address}</div>
+					// 			<div className="col text-truncate"  onClick={this.handleClick} style={{marginLeft: "2%"}}>{this.props.incident.title}</div>
+					// 			<div className="col" style={{marginLeft: "-14.2%"}}><FontAwesomeIcon className="iconBack" icon={ faEye } style={{height: '16px'}} onClick={this.OpenModal}/></div>
+					// 			{Number(this.props.usertype) === 2 && 
+					// 				<div className="col-md" style={{marginLeft: "-3%"}}  onClick={this.accept_incident}>
+					// 					<button type="button" className="btn btn-primary btn-sm" >Αποδοχή</button>
+					// 				</div>
+					// 			}
+					// 		</div>
+					// 	</div> 
+					// )} */}
     			</div>
     			<br/>
     		</div>
