@@ -1,9 +1,30 @@
 package com.example.theophilos.citizenprotectionproject;
 
+import android.Manifest;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.os.Bundle;
+
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.Snackbar;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import retrofit2.Call;
@@ -12,23 +33,18 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import com.google.android.gms.maps.MapView;
-import com.google.android.material.navigation.NavigationView;
+import static com.example.theophilos.citizenprotectionproject.LoginActivity.getUnsafeOkHttpClient;
 
-import static com.example.theophilos.citizenprotectionproject.MainActivity.getUnsafeOkHttpClient;
-
-public class UserInfoActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class UserInfoActivity extends AppCompatActivity implements
+        NavigationView.OnNavigationItemSelectedListener,
+        OnMapReadyCallback {
 
     private DrawerLayout drawer;
+    private CustomMapView mapView;
 
     public Retrofit retrofit = new Retrofit.Builder()
             .baseUrl("https://10.0.2.2:9000")
@@ -36,17 +52,20 @@ public class UserInfoActivity extends AppCompatActivity implements NavigationVie
             .client(getUnsafeOkHttpClient().build())
             .build();
 
+    private static final String MAPVIEW_BUNDLE_KEY = "MapViewBundleKey";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_user_info);
-
+        setContentView(R.layout.user_info_activity);
 
 
         Toolbar toolbar = findViewById(R.id.toolBar);
         setSupportActionBar(toolbar);
 
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Πλατφόρμα Προστασίας Πολίτη");
 
         drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
@@ -55,36 +74,22 @@ public class UserInfoActivity extends AppCompatActivity implements NavigationVie
 
         drawer.setScrimColor(Color.TRANSPARENT);
 
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,drawer,toolbar,
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-
-
-
         //Retrieve token wherever necessary
         SharedPreferences preferences = UserInfoActivity.this.getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
-        String usrName = preferences.getString("USRNAME",null);
+        String usrName = preferences.getString("USRNAME", null);
 
 
-        View hView =  navigationView.getHeaderView(0);
-        TextView nav_user = (TextView)hView.findViewById(R.id.accountName);
+        View hView = navigationView.getHeaderView(0);
+        TextView nav_user = (TextView) hView.findViewById(R.id.accountName);
         nav_user.setText(usrName);
+
+        initGoogleMap(savedInstanceState);
     }
-
-    @Override
-    public void onBackPressed(){
-        if (drawer.isDrawerOpen(GravityCompat.START)){
-            drawer.closeDrawer(GravityCompat.START);
-        } else{
-            this.finish();
-        }
-
-    }
-
-
-
 
 
     @Override
@@ -113,7 +118,7 @@ public class UserInfoActivity extends AppCompatActivity implements NavigationVie
                 });
 
 
-                Intent intent = new Intent(getApplicationContext(),MainActivity.class);
+                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                 startActivity(intent);
                 break;
 
@@ -133,5 +138,60 @@ public class UserInfoActivity extends AppCompatActivity implements NavigationVie
         }
 
         return true;
+    }
+
+    private void initGoogleMap(Bundle savedInstanceState) {
+        Bundle mapViewBundle = null;
+        if (savedInstanceState != null) {
+            mapViewBundle = savedInstanceState.getBundle(MAPVIEW_BUNDLE_KEY);
+        }
+        mapView = (CustomMapView) findViewById(R.id.infoMapView);
+        mapView.onCreate(mapViewBundle);
+
+        mapView.getMapAsync(this);
+    }
+
+    @Override
+    public void onResume() {
+        mapView.onResume();
+        super.onResume();
+    }
+
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mapView.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mapView.onDestroy();
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        mapView.onLowMemory();
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        SharedPreferences preferences = UserInfoActivity.this.getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
+        String lat = preferences.getString("LAT", null);
+        String lon = preferences.getString("LON", null);
+        double d1 = Double.parseDouble(lat);
+
+
+        CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(d1,23.7032915));
+        CameraUpdate zoom=CameraUpdateFactory.zoomTo(11);
+        googleMap.moveCamera(center);
+        googleMap.animateCamera(zoom);
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        googleMap.setMyLocationEnabled(true);
     }
 }

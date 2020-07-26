@@ -34,7 +34,7 @@
 
 
 
-    <include layout="@layout/content_scrolling" />
+    <include layout="@layout/incident_preview_content_scrolling" />
 
 </LinearLayout>
 

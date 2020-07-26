@@ -18,7 +18,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
 
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -32,7 +31,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-import static com.example.theophilos.citizenprotectionproject.MainActivity.getUnsafeOkHttpClient;
+import static com.example.theophilos.citizenprotectionproject.LoginActivity.getUnsafeOkHttpClient;
 
 public class IncidentHistory extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -111,7 +110,7 @@ public class IncidentHistory extends AppCompatActivity implements NavigationView
                 });
 
 
-                Intent intent = new Intent(getApplicationContext(),MainActivity.class);
+                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                 startActivity(intent);
                 break;
 

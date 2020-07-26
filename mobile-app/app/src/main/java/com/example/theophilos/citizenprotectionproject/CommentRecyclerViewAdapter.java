@@ -2,9 +2,12 @@ package com.example.theophilos.citizenprotectionproject;
 
 import android.content.Context;
 import android.content.Intent;
+
+import androidx.core.view.MotionEventCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -67,5 +70,7 @@ public class CommentRecyclerViewAdapter extends RecyclerView.Adapter<CommentRecy
             parentLayout = itemView.findViewById(R.id.comment_parent_layout);
         }
     }
+
+
 
 }

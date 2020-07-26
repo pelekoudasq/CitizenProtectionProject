@@ -4,7 +4,7 @@ package com.example.theophilos.citizenprotectionproject;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import androidx.core.view.GravityCompat;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.AsyncTask;
@@ -30,7 +30,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class MainActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {
 
     private TextView textViewResult;
 
@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
 
                         //Save token here
                         SessionInfo sInfo = response.body();
-                        SharedPreferences preferences = MainActivity.this.getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
+                        SharedPreferences preferences = LoginActivity.this.getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
                         preferences.edit().putString("TOKEN", sInfo.getToken()).apply();
                         preferences.edit().putString("ID", sInfo.get_id()).apply();
                         preferences.edit().putString("USRNAME", sInfo.getUsername()).apply();

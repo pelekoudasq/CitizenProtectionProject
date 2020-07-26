@@ -37,21 +37,40 @@
                 android:orientation="vertical"
                 android:visibility="invisible">
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Τρέχοντα Συμβάντα"
-                    android:textAlignment="center"
-                    android:textColor="@color/toolbarColor"
-                    android:textSize="27sp" />
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Τρέχοντα Συμβάντα"
+                android:gravity="center"
+                android:textColor="@color/toolbarColor"
+                android:textSize="27sp" />
+
+
 
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recyclerView"
                     android:layout_width="match_parent"
-                    android:layout_height="500dp"
+                    android:layout_height="490dp"
                     android:padding="30dp"
                     ></androidx.recyclerview.widget.RecyclerView>
+
+
+                <Button
+                    android:layout_width="90dp"
+                    android:layout_height="90dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/round_button"
+                    android:drawableTop="@drawable/ic_baseline_refresh_24"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:onClick="showIncidents"
+                    android:text="hello"
+                    android:textColor="#fff" />
+
+
+
 
             </LinearLayout>
 

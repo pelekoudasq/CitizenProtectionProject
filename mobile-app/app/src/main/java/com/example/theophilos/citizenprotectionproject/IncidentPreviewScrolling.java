@@ -15,16 +15,14 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.material.appbar.CollapsingToolbarLayout;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.snackbar.Snackbar;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
+import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -36,23 +34,20 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-import static com.example.theophilos.citizenprotectionproject.MainActivity.getUnsafeOkHttpClient;
+import static com.example.theophilos.citizenprotectionproject.LoginActivity.getUnsafeOkHttpClient;
 
-public class ScrollingActivity extends AppCompatActivity implements
+public class IncidentPreviewScrolling extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener,
         OnMapReadyCallback {
 
     private DrawerLayout drawer;
-    private MapView mapView;
+    private CustomMapView mapView;
     private ArrayList<String> Comments = new ArrayList<>();
     private ArrayList<String> Dates = new ArrayList<>();
     private ArrayList<String> Times = new ArrayList<>();
@@ -69,7 +64,7 @@ public class ScrollingActivity extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_scrolling);
+        setContentView(R.layout.incident_preview_activity_scrolling);
 
         Toolbar toolbar = findViewById(R.id.toolBar);
         setSupportActionBar(toolbar);
@@ -91,7 +86,7 @@ public class ScrollingActivity extends AppCompatActivity implements
         toggle.syncState();
 
         //Retrieve token wherever necessary
-        SharedPreferences preferences = ScrollingActivity.this.getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
+        SharedPreferences preferences = IncidentPreviewScrolling.this.getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
         String usrName = preferences.getString("USRNAME", null);
 
 
@@ -167,6 +162,42 @@ public class ScrollingActivity extends AppCompatActivity implements
 
     }
 
+    public void showComments(View view){
+        Comments.clear();
+        Intent myIntent = getIntent();
+        SharedPreferences preferences = IncidentPreviewScrolling.this.getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
+        String token  = preferences.getString("TOKEN",null);
+        JsonApi jsonApi = retrofit.create(JsonApi.class);
+        Call<Incident> call = jsonApi.getIncident("Bearer "+token,myIntent.getStringExtra("id"));
+        call.enqueue(new Callback<Incident>() {
+            @Override
+            public void onResponse(Call<Incident> call, Response<Incident> response) {
+                if(!response.isSuccessful()) {
+                    return;
+                }
+                Incident inc = response.body();
+
+                List<Comment> comms = inc.getComments();
+                for ( Comment c : comms ){
+                    Comments.add(c.getText());
+                    String time = new SimpleDateFormat("HH:mm").format(c.getDate());
+                    Times.add(time);
+                    String date = new SimpleDateFormat("dd-MM-yyyy").format(c.getDate());
+                    Dates.add(date);
+                }
+
+                initRecyclerView();
+
+            }
+            @Override
+            public void onFailure(Call<Incident> call, Throwable t) {
+            }
+        });
+
+
+
+    }
+
 
 
     private void initGoogleMap(Bundle savedInstanceState) {
@@ -174,7 +205,7 @@ public class ScrollingActivity extends AppCompatActivity implements
         if (savedInstanceState != null) {
             mapViewBundle = savedInstanceState.getBundle(MAPVIEW_BUNDLE_KEY);
         }
-        mapView = (MapView) findViewById(R.id.mapview);
+        mapView = (CustomMapView) findViewById(R.id.mapview);
         mapView.onCreate(mapViewBundle);
 
         mapView.getMapAsync(this);
@@ -185,7 +216,7 @@ public class ScrollingActivity extends AppCompatActivity implements
 
         switch (item.getItemId()){
             case R.id.nav_logout:
-                SharedPreferences preferences = ScrollingActivity.this.getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
+                SharedPreferences preferences = IncidentPreviewScrolling.this.getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
                 String token  = preferences.getString("TOKEN",null);
                 JsonApi jsonApi = retrofit.create(JsonApi.class);
                 SharedPreferences.Editor editor = preferences.edit();
@@ -206,19 +237,22 @@ public class ScrollingActivity extends AppCompatActivity implements
                 });
 
 
-                Intent intent = new Intent(getApplicationContext(),MainActivity.class);
+                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                 startActivity(intent);
                 break;
 
             case R.id.nav_account:
+                drawer.closeDrawer(GravityCompat.START);
                 intent = new Intent(getApplicationContext(), UserInfoActivity.class);
                 startActivity(intent);
                 break;
             case R.id.nav_accepted:
+                drawer.closeDrawer(GravityCompat.START);
                 intent = new Intent(getApplicationContext(), IncidentsActivity.class);
                 startActivity(intent);
                 break;
             case R.id.nav_history:
+                drawer.closeDrawer(GravityCompat.START);
                 intent = new Intent(getApplicationContext(), IncidentHistory.class);
                 startActivity(intent);
                 break;
@@ -255,7 +289,7 @@ public class ScrollingActivity extends AppCompatActivity implements
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        SharedPreferences preferences = ScrollingActivity.this.getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
+        SharedPreferences preferences = IncidentPreviewScrolling.this.getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
         String lat = preferences.getString("LAT", null);
         String lon = preferences.getString("LON", null);
         double d1 = Double.parseDouble(lat);
@@ -280,6 +314,7 @@ public class ScrollingActivity extends AppCompatActivity implements
         CommentRecyclerViewAdapter adapter = new CommentRecyclerViewAdapter(Comments,Dates,Times,this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
     }
 
 }

@@ -59,7 +59,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         holder.parentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final Intent intent = new Intent(context,ScrollingActivity.class);
+                final Intent intent = new Intent(context, IncidentPreviewScrolling.class);
                 intent.putExtra("id",incidentIds.get(position));
                 intent.putExtra("title",incidentNames.get(position));
                 context.startActivity(intent);

@@ -18,11 +18,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
 
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +31,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-import static com.example.theophilos.citizenprotectionproject.MainActivity.getUnsafeOkHttpClient;
+import static com.example.theophilos.citizenprotectionproject.LoginActivity.getUnsafeOkHttpClient;
 
 public class IncidentsActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -112,7 +110,7 @@ public class IncidentsActivity extends AppCompatActivity implements NavigationVi
                 });
 
 
-                Intent intent = new Intent(getApplicationContext(),MainActivity.class);
+                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                 startActivity(intent);
                 break;
 
@@ -147,6 +145,11 @@ public class IncidentsActivity extends AppCompatActivity implements NavigationVi
 
     public void showIncidents(View view){
 
+        incidentNames.clear();
+        incidentPriorities.clear();
+        incidentIds.clear();
+
+
         SharedPreferences preferences = IncidentsActivity.this.getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
         String usrId  = preferences.getString("ID",null);
         String token  = preferences.getString("TOKEN",null);
@@ -166,7 +169,15 @@ public class IncidentsActivity extends AppCompatActivity implements NavigationVi
                 LinearLayout buttonLayout,recyclerLayout;
 
                 List<Incident> incList = acceptedIncidents.getIncidents();
-                if ( incList.size() == 0 ){
+
+                int totalActive = 0;
+                for ( Incident i : incList){
+                    if (i.isActive()){
+                        totalActive++;
+                    }
+                }
+
+                if ( totalActive == 0 ){
                     recyclerLayout = findViewById(R.id.recyclerLayout);
                     recyclerLayout.setVisibility(View.INVISIBLE);
 
