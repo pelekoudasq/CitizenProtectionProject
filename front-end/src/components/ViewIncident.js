@@ -30,7 +30,7 @@ class ViewIncident extends Component
             injured: React.createRef(),
             arrested: React.createRef(),
             coordinates: [],
-			isloading: false,
+			isloading: true,
             editing: false,
             priority: React.createRef(),
             callerName: React.createRef(),
@@ -203,7 +203,7 @@ class ViewIncident extends Component
             event.preventDefault();
     };
 
-    getComments()
+    async getComments()
     {
         if (this.state.incident.comments){
             var i;
@@ -211,11 +211,11 @@ class ViewIncident extends Component
 
                 let comment = this.state.incident.comments[i]
 
-            	incidentService.get_user(this.state.incident.comments[i].user)
-            	.then(response => {
+            	await incidentService.get_user(this.state.incident.comments[i].user)
+            	.then(async response => {
 
-                    let com = <li key = {response[0]._id} className='list-group-item mt-2 pb-0 u-shadow-v18 g-bg-secondary rounded'>
-                        <div className="font-weight-bold opacity6">{response[0].username}</div>
+                    let com = <li key = {i} className='list-group-item mt-2 pb-0 u-shadow-v18 g-bg-secondary rounded'>
+                        <div className="font-weight-bold opacity6">{response.username}</div>
                         <div className="text-wrap">
                             {comment.text}
                         </div>
@@ -230,6 +230,9 @@ class ViewIncident extends Component
                     })
                 });
             }
+            this.setState({
+                isloading: false
+            })
         }        
     }
 
@@ -333,7 +336,7 @@ class ViewIncident extends Component
                 <h5 className = "head_ltitleInfo">{incident.title}</h5>
         		<div className = "hrz_lineBack"></div>
 
-        		{this.state.isloading && <div className="load-spin"></div> }
+        		{/*this.state.isloading && <div className="load-spin"></div> */}
 
                 <Container>
                     <Row id="incinfo">
@@ -485,7 +488,7 @@ class ViewIncident extends Component
                         <div className = "hrz_lineBack"></div>
                         <Col sm={6} className="mt-1 my-scroll scroll">
                             <ul className='list-group overflow-auto' key={this.state.incident._id}>
-                                {this.state.comments}
+                                {!this.state.isLoading && this.state.comments}
                             </ul>
                         </Col>
                         {/* <Col sm={1} className="vrtcl_lineBack mt-2 p-0"></Col> */}

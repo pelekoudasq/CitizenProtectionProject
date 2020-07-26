@@ -461,7 +461,7 @@ class Incidents extends Component
 	
 				{this.state.no_result && (<p>Δε βρέθηκαν Αποτελέσματα στην Αναζήτησή σας</p>)}
 				
-				{!this.state.no_posts && ( 
+				{(!this.state.no_posts && !this.state.no_result) && ( 
 					<div className = "container-fluid">	
 						<div className = "row">
 							<div className = "col-sm-2" style={{marginLeft: '19%'}}>
