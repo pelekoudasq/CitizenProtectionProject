@@ -484,7 +484,7 @@ class ViewIncident extends Component
                         <h6 className = "head_ltitleInfo">Αναφορές</h6>
                         <div className = "hrz_lineBack"></div>
                         <Col sm={6} className="mt-1 my-scroll scroll">
-                            <ul className='list-group overflow-auto'>
+                            <ul className='list-group overflow-auto' key={this.state.incident._id}>
                                 {this.state.comments}
                             </ul>
                         </Col>

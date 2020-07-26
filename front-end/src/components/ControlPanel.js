@@ -168,8 +168,11 @@ class ControlPanel extends Component
 				this.setState ({
 					isloading: false
 				})
-				let rev_incidents = response.reverse()
-				let total_incidents = rev_incidents.concat(this.state.incidents)
+				let rev_incidents = response
+				let incs_temp = this.state.incidents
+				let total_incidents = incs_temp.concat(rev_incidents)
+				//  [this.state.incidents, rev_incidents]
+				
 				// console.log(rev_response)
 				this.setState({
 					incidents: total_incidents
