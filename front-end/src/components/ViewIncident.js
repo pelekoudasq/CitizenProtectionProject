@@ -108,7 +108,7 @@ class ViewIncident extends Component
             })
             
             coordinate['lat'] = response.location['latitude']
-            coordinate['lng'] = response.location['longtitude']
+            coordinate['lng'] = response.location['longitude']
             coordinate['priority'] = response.priority
 
             coordinates.push(coordinate)
@@ -211,7 +211,8 @@ class ViewIncident extends Component
 
                 let comment = this.state.incident.comments[i]
 
-            	await incidentService.get_user(this.state.incident.comments[i].user)
+                await incidentService.get_user(this.state.incident.comments[i].user)
+                // eslint-disable-next-line 
             	.then(async response => {
 
                     let com = <li key = {i} className='list-group-item mt-2 pb-0 u-shadow-v18 g-bg-secondary rounded'>
@@ -464,7 +465,7 @@ class ViewIncident extends Component
                                         </div>
                                         {incident.active && (Number(usertype) === 0 || Number(usertype) === 1) && (
                                             <button id="close-image" className="mx-auto">
-                                            <img src={alert1} alt='' style={{ width: '180px'}} onClick= {(formflag === true) ? this.handleAuth : console.log("")} />
+                                            <img src={alert1} alt='' style={{ width: '180px'}} onClick= {(formflag === true) && this.handleAuth}/>
                                             </button>
                                         )}
                                     </div>
@@ -472,8 +473,7 @@ class ViewIncident extends Component
                             </Form>
                         </Col>
                         <Col>
-                            {(this.state.coordinates && <IncidentMap coordinates={JSON.parse(localStorage.getItem("coordinates"))}/>
-                            )}
+                            {(this.state.coordinates && <IncidentMap coordinates={JSON.parse(localStorage.getItem("coordinates"))}/>)}
                         </Col>
                     </Row>
                     <Row>
@@ -491,7 +491,6 @@ class ViewIncident extends Component
                                 {!this.state.isLoading && this.state.comments}
                             </ul>
                         </Col>
-                        {/* <Col sm={1} className="vrtcl_lineBack mt-2 p-0"></Col> */}
                         <Col sm={5} className="mt-3 ml-5">
                         {this.state.reportText}
                         {Number(usertype) === 0 && incident.active && ( //control-center agent

@@ -10,6 +10,7 @@ import Incident from './Incident'
 import Gmap from './Gmap'
 import { CustomInput, Col, Row, Button, Form, FormGroup, Label} from 'reactstrap'
 import { TextField } from '@material-ui/core';
+import Clear from '../icons/clear_filter.png'
 
 import { incidentService } from '../services/incidents.service';
 
@@ -37,6 +38,7 @@ class Incidents extends Component
 		this.apply_filter = this.apply_filter.bind(this);	
 		this.filterPriority = this.filterPriority.bind(this);
 		this.filterState = this.filterState.bind(this);
+		this.clear_filters = this.clear_filters.bind(this);
 	}	
 
 	componentDidMount()
@@ -49,9 +51,6 @@ class Incidents extends Component
 		{	
 			incidentService.get_all_incidents(this.state.visiblePosts, 9)
 			.then( response => {
-				console.log("Response from control center is",response)
-
-
 				this.setState({
 					incidents: response.reverse(),
 					no_posts: false,
@@ -62,7 +61,7 @@ class Incidents extends Component
 						/*define the new coordinate */
 						coordinate = {}
 						coordinate['lat'] = incident.location['latitude']
-						coordinate['lng'] = incident.location['longtitude']    
+						coordinate['lng'] = incident.location['longitude']    
 						coordinate['priority'] = incident.priority
 	
 						/* Push it to the array of coordinates */
@@ -74,25 +73,23 @@ class Incidents extends Component
 				})
 			});	
 		}
-		else if(Number(usertype) === 2) //api call for employees
+		else if(Number(usertype) === 2 ) //api call for employees
 		{	
 			incidentService.get_user_accepted_incidents()
-			
 			.then( response => {
 				if(response.length !==0)
 				{
 					// console.log("Response from sofia is",response.incidents)
 					this.setState({
 						incidents: response.incidents.reverse(),
-						no_posts: false,
-						visiblePosts: this.state.visiblePosts + 6
+						no_posts: false
 					})
 					
 					this.state.incidents.forEach(incident => { /*Loop through every row of the jsonfile and get the attributes*/
 							/*define the new coordinate */
 							coordinate = {}
 							coordinate['lat'] = incident.location['latitude']
-							coordinate['lng'] = incident.location['longtitude']    
+							coordinate['lng'] = incident.location['longitude']    
 							coordinate['priority'] = incident.priority
 		
 							/* Push it to the array of coordinates */
@@ -105,7 +102,6 @@ class Incidents extends Component
 				}
 				else if(response.length === 0)
 				{
-					console.log("To response einai adeio!!!")
 					this.setState=({
 						no_posts: true,
 						postsDone: true
@@ -122,15 +118,14 @@ class Incidents extends Component
 				{
 					this.setState({
 						incidents: response.reverse(),
-						no_posts: false,
-						visiblePosts: this.state.visiblePosts + 6
+						no_posts: false
 					})
 					
 					this.state.incidents.forEach(incident => { /*Loop through every row of the jsonfile and get the attributes*/
 							/*define the new coordinate */
 							coordinate = {}
 							coordinate['lat'] = incident.location['latitude']
-							coordinate['lng'] = incident.location['longtitude']    
+							coordinate['lng'] = incident.location['longitude']    
 							coordinate['priority'] = incident.priority
 		
 							/* Push it to the array of coordinates */
@@ -191,7 +186,7 @@ class Incidents extends Component
 					/*define the new coordinate */
 					coordinate = {}
 					coordinate['lat'] = incident.location['latitude']
-					coordinate['lng'] = incident.location['longtitude']    
+					coordinate['lng'] = incident.location['longitude']    
 					coordinate['priority'] = incident.priority
 
 					/* Push it to the array of coordinates */
@@ -301,11 +296,11 @@ class Incidents extends Component
 			{
 					response.forEach(incident => { /*Loop through every row of the jsonfile and get the attributes*/
 					/*define the new coordinate */
-					if (Number(usertype) === 0)
+					if (Number(usertype) === 0 || Number(usertype) === 3)
 					{
 						coordinate = {}
 						coordinate['lat'] = incident.location['latitude']
-						coordinate['lng'] = incident.location['longtitude']    
+						coordinate['lng'] = incident.location['longitude']    
 						coordinate['priority'] = incident.priority
 
 						/* Push it to the array of coordinates */
@@ -319,7 +314,7 @@ class Incidents extends Component
 							console.log("Edo beno me incident", incident)
 							coordinate = {}
 							coordinate['lat'] = incident.location['latitude']
-							coordinate['lng'] = incident.location['longtitude']    
+							coordinate['lng'] = incident.location['longitude']    
 							coordinate['priority'] = incident.priority
 
 							/* Push it to the array of coordinates */
@@ -328,7 +323,7 @@ class Incidents extends Component
 						}
 					}
 				})
-				console.log("incidents after filter are ", temp_incidents)
+				// console.log("incidents after filter are ", temp_incidents)
 				this.setState({
 					coordinates: coordinates,
 					postsDone: true,
@@ -340,7 +335,6 @@ class Incidents extends Component
 			}
 			else if(response.length === 0)
 			{
-				console.log("response is 0")
 				this.setState({
 					postsDone: true,
 					isloading: false,
@@ -350,6 +344,16 @@ class Incidents extends Component
 		})
 
 		event.preventDefault();
+	}
+
+	clear_filters()
+	{
+		this.setState({
+			filter_status: [],
+			filter_start_date: "" ,
+			filter_end_date:"",
+			filter_priority: []
+		})
 	}
 
 	refresh()
@@ -382,7 +386,7 @@ class Incidents extends Component
 
 						<div className="col-md-3">	
 							<form onSubmit={this.apply_filter}> 
-								<input type="text" value={this.state.filter_text} onChange={this.handleTextArea} name="filter_text" placeholder="Αναζήτηση Συμβάντων. . ." id = "search_bar" style={{width: '90%', marginTop: '2px', marginLeft:'25%'}}></input>																
+								<input type="text" value={this.state.filter_text} onChange={this.handleTextArea} name="filter_text" placeholder="Αναζήτηση Συμβάντων. . ." id = "search_bar" style={{width: '90%', marginTop: '-2px', marginLeft:'25%'}}></input>																
 							</form>
 						</div>
 					</div>
@@ -418,11 +422,33 @@ class Incidents extends Component
 								</div>
 							</FormGroup>
 							</Col>
+							{/* <Col sm="auto">
+                            <Form id="incinfo">
+                                <FormGroup className="mx-auto">
+                                    <div>
+                                        <Label className="pl-4" for="exampleCheckbox">Φορείς</Label>
+                                        <div required className="CheckBox mx-auto px-2" innerref={incident.auth}> 
+                                            <CustomInput type="checkbox" id="mycheck" label="Ε.Κ.Α.Β." onClick={this.customInputValue.bind(this, "0")}/>
+                                            <CustomInput type="checkbox" id="2" label="ΕΛ.ΑΣ."  onClick={this.customInputValue.bind(this, "1")}/>
+                                            <CustomInput type="checkbox" id="3" label="Λιμενικό"  onClick={this.customInputValue.bind(this, "2")}/>
+                                            <CustomInput type="checkbox" id="4" label="Πυρoσβεστική"  onClick={this.customInputValue.bind(this, "3")}/>
+                                        </div>
+                                    </div>
+                                </FormGroup>
+                            </Form>
+                        </Col> */}
 							<br/><br/><br/><br/>
-							<h6>Ημερομηνία</h6>
+							<div className="row">
+								<div className="col-md-5">
+									<h6>Ημερομηνία</h6>
+								</div>
+								<div className="col-md-5">
+									<img src={Clear} alt='' className = "clear_filter_icon" onClick={this.clear_filters}/>
+								</div>
+							</div>
 							<div>
 								<TextField
-									style={{width: "80%"}}
+									style={{width: "90%"}}
 									id="start_date"
 									label="Από"
 									value={this.state.filter_start_date}
@@ -437,7 +463,7 @@ class Incidents extends Component
 							<br/>
 							<div>
 							<TextField
-								style={{width: "80%"}}
+								style={{width: "90%"}}
 								id="end_date"
 								label="Έως"
 								type="date"
@@ -484,8 +510,6 @@ class Incidents extends Component
 				{(this.state.coordinates.length > 0 && !this.state.isloading && !this.state.no_result) && (
 					<Gmap coordinates = {this.state.coordinates} size={{ width:'30%', height:'60%', marginLeft:'69%', position: 'absolute'}}/>
 				)}  
-
-				
 				{this.state.no_posts && (
 					<div>
 						<h4 className='text-center'><br/><br/><br/>

@@ -2,12 +2,32 @@
 {
   background: url("../icons/search.svg") left     no-repeat;
   background-size: 25px;
-  background-position: 4px;
-  height:35px;
+  background-position: 8px;
+  height:40px;
   padding-left:35px; 
-  border-radius: 12px; 
-  border: 1px #000 solid;
+  border-radius: 15px; 
+  border: 2px rgb(109, 109, 109) solid;
 }
+
+.clear_filter_icon
+{
+  height: 28px;
+  padding-left:5px;
+  padding-top: 5px;
+  padding-right: 5px;
+  padding-bottom: 5px;
+  border-radius: 10px; 
+  margin-left: 210%;
+  margin-top: -2px;
+  border: 1px rgb(141, 143, 146);
+}
+
+.clear_filter_icon:hover 
+{
+  opacity: 0.7;
+  cursor: pointer;
+}
+
 
 .scrolls
 {

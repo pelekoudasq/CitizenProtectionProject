@@ -39,8 +39,7 @@ class IncidentForm extends Component
             labels: []
         }
         this.customInputValue = this.customInputValue.bind(this);
-        // this.state.auth.current = [];
-        this.handleSubmit.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
         this.handleNameChange = this.handleNameChange.bind(this)
         this.handleLocation = this.handleLocation.bind(this)
 
@@ -58,11 +57,7 @@ class IncidentForm extends Component
                 this.setState({
                   labels: this.state.labels.concat(label.label)
                 })
-            })
-            // this.setState({
-            //     labels: response
-            // })
-            
+            })            
         })
         console.log(this.state.labels)
     }

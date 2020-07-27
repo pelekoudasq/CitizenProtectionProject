@@ -56,7 +56,7 @@ class ControlPanel extends Component
 						/*define the new coordinate */
 						coordinate = {}
 						coordinate['lat'] = incident.location['latitude']
-						coordinate['lng'] = incident.location['longtitude']    
+						coordinate['lng'] = incident.location['longitude']    
 						coordinate['priority'] = incident.priority
 	
 						/* Push it to the array of coordinates */
@@ -85,7 +85,7 @@ class ControlPanel extends Component
 							/*define the new coordinate */
 							coordinate = {}
 							coordinate['lat'] = incident.location['latitude']
-							coordinate['lng'] = incident.location['longtitude']    
+							coordinate['lng'] = incident.location['longitude']    
 							coordinate['priority'] = incident.priority
 		
 							/* Push it to the array of coordinates */
@@ -122,7 +122,7 @@ class ControlPanel extends Component
 							/*define the new coordinate */
 							coordinate = {}
 							coordinate['lat'] = incident.location['latitude']
-							coordinate['lng'] = incident.location['longtitude']    
+							coordinate['lng'] = incident.location['longitude']    
 							coordinate['priority'] = incident.priority
 		
 							/* Push it to the array of coordinates */
@@ -182,7 +182,7 @@ class ControlPanel extends Component
 					/*define the new coordinate */
 					coordinate = {}
 					coordinate['lat'] = incident.location['latitude']
-					coordinate['lng'] = incident.location['longtitude']    
+					coordinate['lng'] = incident.location['longitude']    
 					coordinate['priority'] = incident.priority
 
 					/* Push it to the array of coordinates */
@@ -246,7 +246,7 @@ class ControlPanel extends Component
 							<div className = "col-sm-1 ml-5 mr-4 align-self-center">
 								<p style={{fontSize:'19px', marginBottom: '0'}} className="text-right ">Τίτλος</p>
 							</div>
-							<div className="col-lg-1 ml-2 mb-1 align-self-start">
+							<div className="col-lg-1 align-self-center" style={{marginLeft: "2%"}}>
 								<button onClick = {this.refresh} className="refresh_btn"></button>
 							</div>    
 						</div>
