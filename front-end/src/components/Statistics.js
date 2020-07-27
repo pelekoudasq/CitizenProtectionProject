@@ -4,6 +4,9 @@ import HeatMap from "./HeatMap";
 import RadiusMap from "./RadiusMap";
 import { withRouter } from "react-router";
 import "../css/statistics.css";
+import { incidentService } from '../services/incidents.service';
+import { statisticsService } from '../services/statistics.service';
+
 import {
   PieChart,
   Pie,
@@ -18,7 +21,6 @@ import {
   Tooltip,
   Legend,
 } from "recharts";
-import apiUrl from "../services/apiUrl";
 
 const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#FF8042"];
 
@@ -38,22 +40,7 @@ class Statistics extends Component {
     };
   }
 
-  authHeader() {
-    // return authorization header with jwt token
-    const token = localStorage.getItem("token");
-    if (token) {
-      return { Authorization: `Bearer ${token}` };
-    } else {
-      return {};
-    }
-  }
-
   componentDidMount() {
-    let requestOptions = {
-      method: "GET",
-      headers: this.authHeader(),
-    };
-
     let coordinate = {}; //object of coordinates
     let coordinates = []; //array of objects of coordinates
     let date = {};
@@ -81,8 +68,7 @@ class Statistics extends Component {
       { name: "Δεκέμβριος", deaths: 0, arrested: 0, injured: 0 },
     ];
 
-    fetch(`${apiUrl}/authorities/`, requestOptions)
-      .then((response) => response.json())
+    statisticsService.get_authorities()
       .then((response) => {
         this.setState({
           auths: response,
@@ -99,15 +85,13 @@ class Statistics extends Component {
           });
         });
 
-        fetch(`${apiUrl}/incidents`, requestOptions)
-          .then(async (response) => response.json())
+        incidentService.get_all_incidents()
           .then(async (response) => {
             this.setState({
               incidents: response,
             });
 
             await this.state.incidents.forEach((incident) => {
-				console.log("For Each")
               /*Loop through every row of the jsonfile and get the attributes*/
               /*define the new coordinate */
               coordinate = {};
@@ -151,7 +135,6 @@ class Statistics extends Component {
                 // }
               });
             });
-			console.log("set statee")
             this.setState({
 				isloading: false,
 				coordinates: coordinates,

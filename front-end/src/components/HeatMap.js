@@ -20,10 +20,13 @@ function HeatMap(props)
 		<div id="heatmap">
 			<p className="title-bar">Θερμικός Χάρτης</p>
 			<Heatmap
-				containerElement = { <div className="h-100" /> }
+				containerElement = { <div style={{height: "67%"}} /> }
 				mapElement = { <div className="h-100" /> }
 				center = {{ lat: -34.397, lng: 150.644 }}
 			/>
+
+			<h5 className="text-left font-weight-light mt-3">Στον χάρτη, οι περιοχές με κόκκινο χρώμα έχουν πιο έντονη δραστηριότητα, ενώ στις περιοχές με πράσινο χρώμα παρατηρούνται λιγότερα συμβάντα</h5>
+
 		</div>
 	)
 }
