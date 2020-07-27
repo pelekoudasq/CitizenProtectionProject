@@ -45,6 +45,61 @@
                     android:textColor="@color/toolbarColor"
                     android:textSize="27sp" />
 
+                <LinearLayout
+                    android:layout_marginTop="20dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center">
+                        <TextView
+                            android:textColor="@color/darkGrey"
+                            android:id="@+id/from"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="20dp"
+                            android:layout_marginRight="20dp"
+                            android:text="Από"/>
+
+                        <TextView
+                            android:id="@+id/date1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="--/--/--"
+                            android:layout_marginRight="20dp"
+                            android:textSize="20dp"/>
+
+                        <TextView
+                            android:textColor="@color/darkGrey"
+                            android:id="@+id/till"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="20dp"
+                            android:layout_marginRight="20dp"
+                            android:text="'Εως"/>
+
+                        <TextView
+                            android:id="@+id/date2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="--/--/--"
+                            android:textSize="20dp"/>
+
+                    </LinearLayout>
+
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:drawableLeft="@drawable/ic_baseline_search_24"
+                        android:onClick="showIncidents"
+                        android:text="Αναζήτηση"
+                        android:textAllCaps="false" />
+                </LinearLayout>
+
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recyclerView"

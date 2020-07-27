@@ -4,6 +4,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import java.sql.Array;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -18,6 +19,7 @@ public class Incident {
     Location location;
     String description;
     List<Comment> comments;
+    Date date;
 
 
     public List<Comment>  getComments() {
@@ -65,5 +67,9 @@ public class Incident {
             return address;
         }
 
+    }
+
+    public Date getDate() {
+        return date;
     }
 }

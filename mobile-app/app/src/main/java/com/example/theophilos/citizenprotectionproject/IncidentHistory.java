@@ -1,6 +1,7 @@
 
 package com.example.theophilos.citizenprotectionproject;
 
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -8,10 +9,15 @@ import android.graphics.Color;
 
 import androidx.annotation.NonNull;
 import com.google.android.material.navigation.NavigationView;
+
+import androidx.annotation.RequiresApi;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,11 +25,22 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.DatePicker;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -39,6 +56,8 @@ public class IncidentHistory extends AppCompatActivity implements NavigationView
     private ArrayList<String> incidentPriorities = new ArrayList<>();
     private ArrayList<String> incidentIds = new ArrayList<>();
     private DrawerLayout drawer;
+    private DatePickerDialog.OnDateSetListener mDateSetListenerFrom;
+    private DatePickerDialog.OnDateSetListener mDateSetListenerTill;
 
     public Retrofit retrofit = new Retrofit.Builder()
             //.baseUrl("https://10.0.2.2:9000")
@@ -47,6 +66,7 @@ public class IncidentHistory extends AppCompatActivity implements NavigationView
             .client( getUnsafeOkHttpClient().build())
             .build();
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,7 +100,72 @@ public class IncidentHistory extends AppCompatActivity implements NavigationView
         TextView nav_user = (TextView)hView.findViewById(R.id.accountName);
         nav_user.setText(usrName);
 
-        showIncidents( this.getCurrentFocus() );
+
+        TextView mDispDate1 = findViewById(R.id.date1);
+        TextView mDispDate2 = findViewById(R.id.date2);
+
+        mDispDate1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Calendar cal = Calendar.getInstance();
+                int year1 = cal.get(Calendar.YEAR);
+                int month1 = cal.get(Calendar.MONTH);
+                int day1 = cal.get(Calendar.DAY_OF_MONTH);
+
+                DatePickerDialog dialog = new DatePickerDialog(
+                        IncidentHistory.this,
+                        android.R.style.Theme_Holo_Light_Dialog_MinWidth,
+                        mDateSetListenerFrom,
+                        year1,month1,day1);
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                dialog.show();
+            }
+        });
+
+        mDispDate2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Calendar cal = Calendar.getInstance();
+                int year2 = cal.get(Calendar.YEAR);
+                int month2 = cal.get(Calendar.MONTH);
+                int day2 = cal.get(Calendar.DAY_OF_MONTH);
+
+                DatePickerDialog dialog = new DatePickerDialog(
+                        IncidentHistory.this,
+                        android.R.style.Theme_Holo_Light_Dialog_MinWidth,
+                        mDateSetListenerTill,
+                        year2,month2,day2);
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                dialog.show();
+            }
+        });
+
+        mDateSetListenerFrom = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int year1, int month1, int day1) {
+                month1++;
+                String date = day1+ "/" + month1 + "/" + year1;
+                TextView date1 = findViewById(R.id.date1);
+                date1.setText(date);
+            }
+        };
+
+        mDateSetListenerTill = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int year2, int month2, int day2) {
+                month2++;
+                String date = day2 + "/" + month2 + "/" + year2;
+                TextView date2 = findViewById(R.id.date2);
+                date2.setText(date);
+            }
+        };
+
+
+        try {
+            showIncidents( this.getCurrentFocus() );
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
 
     }
@@ -144,59 +229,114 @@ public class IncidentHistory extends AppCompatActivity implements NavigationView
     }
 
 
-    public void showIncidents(View view){
-
-        SharedPreferences preferences = IncidentHistory.this.getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
-        String usrId  = preferences.getString("ID",null);
-        String token  = preferences.getString("TOKEN",null);
-
-        JsonApi jsonApi = retrofit.create(JsonApi.class);
-        Call<Incidents> call = jsonApi.getAcceptedIncidents( "Bearer "+token , usrId );
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void showIncidents(View view) throws ParseException {
+        incidentNames.clear();
+        incidentIds.clear();
+        incidentPriorities.clear();
 
 
-        call.enqueue(new Callback<Incidents>() {
-            @Override
-            public void onResponse(Call<Incidents> call, Response<Incidents> response) {
-                if(!response.isSuccessful()) {
-                    return;
-                }
+        LinearLayout buttonLayout, recyclerLayout;
 
-                Incidents acceptedIncidents = response.body();
-                LinearLayout buttonLayout,recyclerLayout;
+        TextView dateTV1 = findViewById(R.id.date1);
+        String date1String = dateTV1.getText().toString();
 
-                List<Incident> incList = acceptedIncidents.getIncidents();
-                if ( incList.size() == 0 ){
-                    recyclerLayout = findViewById(R.id.recyclerLayout);
-                    recyclerLayout.setVisibility(View.INVISIBLE);
+        TextView dateTV2 = findViewById(R.id.date2);
+        String date2String = dateTV2.getText().toString();
 
-                    buttonLayout = findViewById(R.id.buttonLayout);
-                    buttonLayout.setVisibility(View.VISIBLE);
 
-                }
-                else{
 
-                    buttonLayout = findViewById(R.id.buttonLayout);
-                    buttonLayout.setVisibility(View.INVISIBLE);
+        if ( date1String.equals("--/--/--") || date2String.equals("--/--/--") ){
+            buttonLayout = findViewById(R.id.buttonLayout);
+            buttonLayout.setVisibility(View.INVISIBLE);
 
-                    recyclerLayout = findViewById(R.id.recyclerLayout);
-                    recyclerLayout.setVisibility(View.VISIBLE);
-                    for ( Incident i : incList ){
-                        if ( i.isActive() == false ) {
-                            incidentNames.add(i.getTitle());
-                            incidentPriorities.add(i.getPriority());
-                            incidentIds.add(i.getId());
-                        }
+            recyclerLayout = findViewById(R.id.recyclerLayout);
+            recyclerLayout.setVisibility(View.VISIBLE);
+
+            Toast.makeText(this, "Εισάγετε ημερομηνίες και πατήστε Αναζήτηση", Toast.LENGTH_LONG).show();
+        }
+        else {
+
+            final Date Date1 =new SimpleDateFormat("dd/MM/yyyy").parse(date1String);
+            final Date Date2 =new SimpleDateFormat("dd/MM/yyyy").parse(date2String);
+
+
+            SharedPreferences preferences = IncidentHistory.this.getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
+            String usrId = preferences.getString("ID", null);
+            String token = preferences.getString("TOKEN", null);
+
+            JsonApi jsonApi = retrofit.create(JsonApi.class);
+            Call<Incidents> call = jsonApi.getAcceptedIncidents("Bearer " + token, usrId);
+
+
+            call.enqueue(new Callback<Incidents>() {
+                @Override
+                public void onResponse(Call<Incidents> call, Response<Incidents> response) {
+                    if (!response.isSuccessful()) {
+                        return;
                     }
-                    initRecyclerView();
+
+                    Incidents acceptedIncidents = response.body();
+                    LinearLayout buttonLayout, recyclerLayout;
+
+                    List<Incident> incList = acceptedIncidents.getIncidents();
+                    if (incList.size() == 0) {
+                        recyclerLayout = findViewById(R.id.recyclerLayout);
+                        recyclerLayout.setVisibility(View.INVISIBLE);
+
+                        buttonLayout = findViewById(R.id.buttonLayout);
+                        buttonLayout.setVisibility(View.VISIBLE);
+
+                    } else {
+
+                        buttonLayout = findViewById(R.id.buttonLayout);
+                        buttonLayout.setVisibility(View.INVISIBLE);
+
+                        recyclerLayout = findViewById(R.id.recyclerLayout);
+                        recyclerLayout.setVisibility(View.VISIBLE);
+                        Date incDate;
+                        int c1;
+                        int c2;
+                        for (Incident i : incList) {
+                            incDate = i.getDate();
+                            final TimeZone timeZone = (TimeZone.getTimeZone("UTC"));
+                            Comparator<Date> comparator = new Comparator<Date>() {
+                                @Override
+                                public int compare(Date date1, Date date2) {
+                                    return truncateToDay(date1).compareTo(truncateToDay(date2));
+                                }
+
+                                private Date truncateToDay(Date date) {
+                                    Calendar calendar = Calendar.getInstance(timeZone);
+                                    calendar.setTime(date);
+                                    calendar.set(Calendar.HOUR_OF_DAY, 0);
+                                    calendar.set(Calendar.MINUTE, 0);
+                                    calendar.set(Calendar.SECOND, 0);
+                                    calendar.set(Calendar.MILLISECOND, 0);
+                                    return calendar.getTime();
+                                }
+                            };
+                            c1 = comparator.compare(incDate,Date1);
+                            c2 = comparator.compare(incDate,Date2);
+
+
+                            if ( i.isActive() == false && (c1 >= 0) && (c2 <= 0 ) ) {
+                                incidentNames.add(i.getTitle());
+                                incidentPriorities.add(i.getPriority());
+                                incidentIds.add(i.getId());
+                            }
+                        }
+                        initRecyclerView();
+                    }
+
+
                 }
 
-
-            }
-
-            @Override
-            public void onFailure(Call<Incidents> call, Throwable t) {
-            }
-        });
+                @Override
+                public void onFailure(Call<Incidents> call, Throwable t) {
+                }
+            });
+        }
     }
 
 
@@ -206,5 +346,7 @@ public class IncidentHistory extends AppCompatActivity implements NavigationView
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
+
+
 }
 
