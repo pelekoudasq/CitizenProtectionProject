@@ -55,27 +55,93 @@ router.post('/', function(req, res, next){
 	const password = req.body.password;
 	const firstName = req.body.firstName;
 	const lastName = req.body.lastName;
-	const role = req.body.role;
-	const agency = req.body.agency;
+	const role = Number(req.body.role);
+	const agency = Number(req.body.agency);
+	const name = req.body.name;
+	const area = req.body.area;
+	const latitude = req.body.latitude;
+	const longitude = req.body.longitude;
+	const departmentId = req.body.departmentId;
+	console.log(role)
 	db.Users.findOne({ username: username }, function(err, user){
 		if (user) {
 			res.status(400).json({ error: 'This username is already in use' });
 			return;
 		} else {
 			passwordHash = bcrypt.hashSync(password, 10);
-			db.Users.save({
-				userType: role,
-				name: {
-					firstName: firstName,
-					lastName: lastName
-				},
-				details: {
-					authorityType: agency
-				},
-				username: username,
-				passwordHash: passwordHash,
-				lastLoggedIn: new Date()
-			});
+			if (role === 0) {
+				console.log("creating user type 0");
+				db.Users.save({
+					userType: role,
+					name: {
+						firstName: firstName,
+						lastName: lastName
+					},
+					username: username,
+					passwordHash: passwordHash,
+					lastLoggedIn: new Date()
+				});	
+			} else if (role === 1) {
+				console.log("creating user type 1");
+				db.Users.save({
+					userType: role,
+					name: name,
+					details: {
+						authorityType: agency,
+						area: area,
+						latitude: latitude,
+						longitude: longitude
+					},
+					username: username,
+					passwordHash: passwordHash,
+					lastLoggedIn: new Date()
+				});
+			} else if (role === 2) {
+				console.log("creating user type 2");
+				db.Users.save({
+					userType: role,
+					name: {
+						firstName: firstName,
+						lastName: lastName
+					},
+					details: {
+						authorityType: agency,
+						departmentId: departmentId,
+						area: area,
+						latitude: latitude,
+						longitude: longitude
+					},
+					username: username,
+					passwordHash: passwordHash,
+					lastLoggedIn: new Date(),
+					incidentRequests: [],
+					acceptedIncidents: []
+				});
+			} else if (role === 3) {
+				console.log("creating user type 3");
+				db.Users.save({
+					userType: role,
+					name: {
+						firstName: firstName,
+						lastName: lastName
+					},
+					username: username,
+					passwordHash: passwordHash,
+					lastLoggedIn: new Date()
+				});
+			} else if (role === 4) {
+				console.log("creating user type 4");
+				db.Users.save({
+					userType: role,
+					name: {
+						firstName: firstName,
+						lastName: lastName
+					},
+					username: username,
+					passwordHash: passwordHash,
+					lastLoggedIn: new Date()
+				});
+			}
 			db.Users.findOne({ username: username }, function(err, newUser){
 				if (format && format === "xml")
 					res.send(json2xml(newUser));
@@ -117,8 +183,8 @@ router.put('/:id', function(req, res, next) {
 		if (user.details) {
 			departmentId = user.details.departmentId;
 			area = user.details.area;
-			lat = user.details.lat;
-			long = user.details.long;
+			latitude = user.details.lat;
+			longitude = user.details.long;
 		}
 
 		if (password)
@@ -141,8 +207,8 @@ router.put('/:id', function(req, res, next) {
 						authorityType: agency,
 						departmentId: departmentId,
 						area: area,
-						lat: lat,
-						long: long
+						latitude: latitude,
+						longitude: longitude
 					}
 				}
 			},

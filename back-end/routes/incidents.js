@@ -261,10 +261,10 @@ router.post('/', function(req, res, next) {
 				var place = data.results[0];
 				// console.log(place.geometry);
 				location = {
-					longtitude : place.geometry.lng,
+					longitude : place.geometry.lng,
 					latitude : place.geometry.lat
 				};
-				for (var i=0; i<incParam.auth.length; i++)
+				for (var i = 0; i < incParam.auth.length; i++)
 					incParam.auth[i] = parseInt(incParam.auth[i]);
 				var spots;
 				if (incParam.auth === "Χαμηλή") {
@@ -283,7 +283,7 @@ router.post('/', function(req, res, next) {
 				if (incParam.description)
 					description = incParam.description
 				if (incParam.x && incParam.y) {
-					location.longtitude = incParam.x;
+					location.longitude = incParam.x;
 					location.latitude = incParam.y;
 				}
 				var startDate = null
@@ -299,7 +299,7 @@ router.post('/', function(req, res, next) {
 					title: incParam.title,
 					location: {
 						address: incParam.address,
-						longtitude: location.longtitude,
+						longitude: location.longitude,
 						latitude: location.latitude
 					},
 					description : description,
