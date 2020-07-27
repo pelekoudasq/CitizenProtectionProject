@@ -43,7 +43,7 @@
 
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyC4mI0PunCnmyJJtiA_L1hx6JS6lwANVts" />
+            android:value="AIzaSyAYKnVPsLIZ95ycf9yrqUczcPNVfXFxXyY" />
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />

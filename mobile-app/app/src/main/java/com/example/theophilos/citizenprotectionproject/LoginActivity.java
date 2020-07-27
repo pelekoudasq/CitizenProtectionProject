@@ -44,8 +44,8 @@ public class LoginActivity extends AppCompatActivity {
 
 
     public Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl("https://10.0.2.2:9000")
-//            .baseUrl("https://83.212.76.248:9000")
+//            .baseUrl("https://10.0.2.2:9000")
+            .baseUrl("https://83.212.76.248:9000")
             .addConverterFactory(GsonConverterFactory.create())
             .client( getUnsafeOkHttpClient().build())
             .build();
@@ -79,6 +79,13 @@ public class LoginActivity extends AppCompatActivity {
 
                         //Save token here
                         SessionInfo sInfo = response.body();
+
+                        if ( sInfo.getUserType() != 2 ){
+                            Toast.makeText(getApplicationContext(), "Αποτυχία Σύνδεσης", Toast.LENGTH_LONG).show();
+                            return;
+                        }
+
+
                         SharedPreferences preferences = LoginActivity.this.getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
                         preferences.edit().putString("TOKEN", sInfo.getToken()).apply();
                         preferences.edit().putString("ID", sInfo.get_id()).apply();
@@ -93,9 +100,11 @@ public class LoginActivity extends AppCompatActivity {
                         intent.putExtra("exitFlag","true");
                         if (sInfo != null && sInfo.getUserType() == 2 && !isCancelled()) {
                             startActivity(intent);
-                        } else if(!isCancelled()){
+                        }
+                        else if(!isCancelled()){
                             Toast.makeText(getApplicationContext(), "Αποτυχία Σύνδεσης", Toast.LENGTH_LONG).show();
                         }
+
 
                     }
 

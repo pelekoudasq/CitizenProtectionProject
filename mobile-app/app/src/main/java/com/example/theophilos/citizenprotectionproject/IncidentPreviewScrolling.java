@@ -7,6 +7,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationManager;
 import android.nfc.Tag;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -17,9 +20,19 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.material.navigation.NavigationView;
+import com.google.maps.DirectionsApiRequest;
+import com.google.maps.GeoApiContext;
+import com.google.maps.PendingResult;
+import com.google.maps.internal.PolylineEncoding;
+import com.google.maps.model.DirectionsResult;
+import com.google.maps.model.DirectionsRoute;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -27,6 +40,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -37,6 +51,8 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.text.InputType;
 import android.util.Log;
 import android.view.MenuItem;
@@ -50,11 +66,13 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.location.Geocoder.isPresent;
 import static com.example.theophilos.citizenprotectionproject.LoginActivity.getUnsafeOkHttpClient;
 
 public class IncidentPreviewScrolling extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener,
-        OnMapReadyCallback {
+        OnMapReadyCallback,
+        GoogleMap.OnPolylineClickListener{
 
     private DrawerLayout drawer;
     private CustomMapView mapView;
@@ -63,6 +81,9 @@ public class IncidentPreviewScrolling extends AppCompatActivity implements
     private ArrayList<String> Times = new ArrayList<>();
     private List<Comment> comms;
     private static final String TAG = "IncidentPreviewScrolling";
+    private GeoApiContext mGeoApiContext = null;
+    private ArrayList<PolylineData> mPolylineData = new ArrayList<>();
+    GoogleMap map;
 
     public Retrofit retrofit = new Retrofit.Builder()
             .baseUrl("https://10.0.2.2:9000")
@@ -163,6 +184,8 @@ public class IncidentPreviewScrolling extends AppCompatActivity implements
         });
 
 
+
+
     }
 
 
@@ -192,6 +215,8 @@ public class IncidentPreviewScrolling extends AppCompatActivity implements
                     Dates.add(date);
 
                 }
+
+                reverseArrayList(Comments);
                 initRecyclerView();
             }
             @Override
@@ -211,6 +236,98 @@ public class IncidentPreviewScrolling extends AppCompatActivity implements
         mapView.onCreate(mapViewBundle);
 
         mapView.getMapAsync(this);
+
+        if ( mGeoApiContext == null ){
+            mGeoApiContext = new GeoApiContext.Builder().apiKey("AIzaSyAYKnVPsLIZ95ycf9yrqUczcPNVfXFxXyY").build();
+        }
+    }
+
+
+    @Override
+    public void onPolylineClick(Polyline polyline) {
+        for(PolylineData polylineData: mPolylineData){
+            if(polyline.getId().equals(polylineData.getPolyline().getId())){
+                polylineData.getPolyline().setColor(ContextCompat.getColor(this, R.color.blue));
+                polylineData.getPolyline().setZIndex(1);
+            }
+            else{
+                polylineData.getPolyline().setColor(ContextCompat.getColor(this, R.color.darkGrey));
+                polylineData.getPolyline().setZIndex(0);
+            }
+        }
+    }
+
+    private void addPolylinesToMap(final DirectionsResult result){
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                mPolylineData.clear();
+
+                for(DirectionsRoute route: result.routes){
+                    Log.d(TAG, "run: leg: " + route.legs[0].toString());
+                    List<com.google.maps.model.LatLng> decodedPath = PolylineEncoding.decode(route.overviewPolyline.getEncodedPath());
+
+                    List<LatLng> newDecodedPath = new ArrayList<>();
+
+                    // This loops through all the LatLng coordinates of ONE polyline.
+                    for(com.google.maps.model.LatLng latLng: decodedPath){
+
+//                        Log.d(TAG, "run: latlng: " + latLng.toString());
+
+                        newDecodedPath.add(new LatLng(
+                                latLng.lat,
+                                latLng.lng
+                        ));
+                    }
+                    Polyline polyline = map.addPolyline(new PolylineOptions().addAll(newDecodedPath));
+                    polyline.setColor(ContextCompat.getColor(IncidentPreviewScrolling.this , R.color.darkGrey));
+                    polyline.setClickable(true);
+                    mPolylineData.add(new PolylineData(polyline , route.legs[0]));
+
+                }
+            }
+        });
+    }
+
+    private void calculateDirections(Marker marker){
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        Criteria criteria = new Criteria();
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
+
+        com.google.maps.model.LatLng destination = new com.google.maps.model.LatLng(
+                marker.getPosition().latitude,
+                marker.getPosition().longitude
+        );
+        DirectionsApiRequest directions = new DirectionsApiRequest(mGeoApiContext);
+
+        directions.alternatives(true);
+        directions.origin(
+                new com.google.maps.model.LatLng(
+                        location.getLatitude(),
+                        location.getLongitude()
+                )
+        );
+        Log.d(TAG, "calculateDirections: destination: " + destination.toString());
+        directions.destination(destination).setCallback(new PendingResult.Callback<DirectionsResult>() {
+            @Override
+            public void onResult(DirectionsResult result) {
+                Log.d(TAG, "calculateDirections: routes: " + result.routes[0].toString());
+                Log.d(TAG, "calculateDirections: duration: " + result.routes[0].legs[0].duration);
+                Log.d(TAG, "calculateDirections: distance: " + result.routes[0].legs[0].distance);
+                Log.d(TAG, "calculateDirections: geocodedWayPoints: " + result.geocodedWaypoints[0].toString());
+
+                addPolylinesToMap(result);
+            }
+
+            @Override
+            public void onFailure(Throwable e) {
+                Log.e(TAG, "calculateDirections: Failed to get directions: " + e.getMessage() );
+
+            }
+        });
     }
 
     @Override
@@ -296,6 +413,8 @@ public class IncidentPreviewScrolling extends AppCompatActivity implements
 
         String token = preferences.getString("TOKEN", null);
 
+        map = googleMap;
+
 
         JsonApi jsonApi = retrofit.create(JsonApi.class);
         Call<Incident> call = jsonApi.getIncident("Bearer "+token,getIntent().getStringExtra("id"));
@@ -309,17 +428,34 @@ public class IncidentPreviewScrolling extends AppCompatActivity implements
                 double lat = inc.getLocation().getLatitude();
                 double lon = inc.getLocation().getLongtitude();
 
-                CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(lat,lon));
-                CameraUpdate zoom=CameraUpdateFactory.zoomTo(10);
-                googleMap.moveCamera(center);
-                googleMap.animateCamera(zoom);
 
-                googleMap.addMarker(new MarkerOptions().position(new LatLng(lat,lon)).title("Marker"));
+                LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+                Criteria criteria = new Criteria();
+
                 if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                     return;
                 }
-                googleMap.setMyLocationEnabled(true);
+                Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
 
+
+                CameraPosition cameraPosition = new CameraPosition.Builder()
+                        .target(new LatLng(location.getLatitude(), location.getLongitude()))
+                        .zoom(15)
+                        .tilt(50)
+                        .bearing(90)
+                        .build();
+                map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+                MarkerOptions markerOpt = new MarkerOptions().position(new LatLng(lat,lon)).title("Marker");
+                Marker marker = map.addMarker(new MarkerOptions().position(new LatLng(lat,lon)).title("Hello World"));
+
+                calculateDirections( marker );
+
+                map.addMarker(markerOpt);
+                if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    return;
+                }
+                map.setMyLocationEnabled(true);
 
             }
             @Override
@@ -328,6 +464,7 @@ public class IncidentPreviewScrolling extends AppCompatActivity implements
         });
 
 
+        map.setOnPolylineClickListener(this);
 
     }
 
@@ -369,7 +506,6 @@ public class IncidentPreviewScrolling extends AppCompatActivity implements
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {
                         if (!response.isSuccessful()) {
-                            Toast.makeText(IncidentPreviewScrolling.this, "OPA", Toast.LENGTH_SHORT).show();
                             return;
                         }
                         showComments(view);
@@ -377,7 +513,6 @@ public class IncidentPreviewScrolling extends AppCompatActivity implements
 
                     @Override
                     public void onFailure(Call<Void> call, Throwable t) {
-                        Toast.makeText(IncidentPreviewScrolling.this, "IPA", Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -390,5 +525,17 @@ public class IncidentPreviewScrolling extends AppCompatActivity implements
         });
         builder.show();
     }
+
+
+    public ArrayList<String> reverseArrayList(ArrayList<String> list)
+    {
+        for (int i = 0; i < list.size() / 2; i++) {
+            String temp = list.get(i);
+            list.set(i, list.get(list.size() - i - 1));
+            list.set(list.size() - i - 1, temp);
+        }
+        return list;
+    }
+
 
 }
