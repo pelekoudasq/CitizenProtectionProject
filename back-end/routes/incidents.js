@@ -14,6 +14,13 @@ const db = mongojs(config.dburi);
 
 
 /* routes */
+function arePointsNear(incLat, intLong, pLat, pLong, km) {
+	var ky = 40000 / 360;
+	var kx = Math.cos(Math.PI * incLat / 180.0) * ky;
+	var dx = Math.abs(intLong - pLong) * kx;
+	var dy = Math.abs(incLat - pLat) * ky;
+	return Math.sqrt(dx * dx + dy * dy) <= km;
+}
 
 // GET all incidents
 router.get('/', function(req, res, next) {
@@ -180,16 +187,23 @@ router.post('/filter', function(req, res, next) {
 
 	//7, 8, 9, 10
 	if (req.body.auth.length) {
+		console.log(req.body.auth)
+		auths = []
 		if (req.body.auth.find(element => element === "7"))
-			query['$and'].push({ auth: { $all: ["0"] }});
+			auths.push(0)
 		if (req.body.auth.find(element => element === "8"))
-			query['$and'].push({ auth: { $all: ["1"] }});
+			auths.push(1)
+			// query['$and'].push({ auth: { $all: [1] }});
 		if (req.body.auth.find(element => element === "9"))
-			query['$and'].push({ auth: { $all: ["2"] }});
+			auths.push(2)
+			// query['$and'].push({ auth: { $all: [2] }});
 		if (req.body.auth.find(element => element === "10"))
-			query['$and'].push({ auth: { $all: ["3"] }});
+			auths.push(3)
+			// query['$and'].push({ auth: { $all: [3] }});
+		query['$and'].push({ auth: { $all: auths }});
 	}
 
+	console.log(query)
 	db.Incidents.find(query).sort({ date: -1 }, function(err, incidents) {
 		if (err) {
 			res.send(err);
@@ -347,15 +361,17 @@ router.post('/', function(req, res, next) {
 						}
 						users.forEach(user => {
 							// console.log(user);
-							db.Users.update(
-								{ _id: user._id },
-								{ $push: { incidentRequests : incident._id } },
-							function(err, incident) {
-								// if (incident) {
-								// 	res.send(incident);
-								// 	return;
-								// }
-							});
+							if (arePointsNear(location.latitude, location.longitude, user.details.lat, user.details.long, 5)) {
+								db.Users.update(
+									{ _id: user._id },
+									{ $push: { incidentRequests : incident._id } },
+								function(err, incident) {
+									// if (incident) {
+									// 	res.send(incident);
+									// 	return;
+									// }
+								});
+							}
 						});
 						res.json(incident);
 					});

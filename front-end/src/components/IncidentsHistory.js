@@ -273,15 +273,15 @@ class Incidents extends Component
 	{
 		let newChecked = `${buttonName}`;
         let new_state = [];
-        if(this.state.filter_status.indexOf(newChecked) === -1){
-            new_state = [...this.state.filter_status, newChecked];
+        if(this.state.filter_auth.indexOf(newChecked) === -1){
+            new_state = [...this.state.filter_auth, newChecked];
         }
         else
         {     
-            let index = this.state.filter_status.indexOf(newChecked);
+            let index = this.state.filter_auth.indexOf(newChecked);
 			if (index !== -1) 
-				this.state.filter_status.splice(index, 1);
-            new_state = this.state.filter_status
+				this.state.filter_auth.splice(index, 1);
+            new_state = this.state.filter_auth
         }
 
         if(Object.keys(new_state).length > 0)            
