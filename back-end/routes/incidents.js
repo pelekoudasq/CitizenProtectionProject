@@ -136,7 +136,8 @@ router.post('/filter', function(req, res, next) {
 		req.body.text || 
 		req.body.priority.length || 
 		(req.body.state.length && !req.body.state.find(element => element === "6")) ||
-		(req.body.start_date && req.body.end_date)
+		(req.body.start_date && req.body.end_date) ||
+		req.body.auth.length
 	) {
 		query['$and'] = [];
 	}
@@ -176,7 +177,19 @@ router.post('/filter', function(req, res, next) {
 	if (date_1 && date_2) {
 		query['$and'].push({ date: { $gte: date_1, $lt: date_2 }});
 	}
-	
+
+	//7, 8, 9, 10
+	if (req.body.auth.length) {
+		if (req.body.auth.find(element => element === "7"))
+			query['$and'].push({ auth: { $all: ["0"] }});
+		if (req.body.auth.find(element => element === "8"))
+			query['$and'].push({ auth: { $all: ["1"] }});
+		if (req.body.auth.find(element => element === "9"))
+			query['$and'].push({ auth: { $all: ["2"] }});
+		if (req.body.auth.find(element => element === "10"))
+			query['$and'].push({ auth: { $all: ["3"] }});
+	}
+
 	db.Incidents.find(query).sort({ date: -1 }, function(err, incidents) {
 		if (err) {
 			res.send(err);
@@ -510,7 +523,7 @@ router.post('/comment', function(req, res, next) {
 				}
 			},
 			$inc: {
-				departmentReports: req.body.final
+				departmentReports: req.body.final_comment
 			}
 		}
 	, function(err, ret) {
