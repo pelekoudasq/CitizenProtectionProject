@@ -8,39 +8,44 @@
     tools:context="com.example.theophilos.citizenprotectionproject.LoginActivity">
 
 
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="236dp"
+        android:layout_height="188dp"
+        android:layout_marginLeft="264dp"
+        android:layout_marginStart="264dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.86"
+        app:srcCompat="@drawable/mainlogo" />
+
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="303dp"
         android:layout_height="243dp"
-        android:layout_marginBottom="175dp"
-        android:layout_marginEnd="50dp"
-        android:layout_marginStart="50dp"
+        android:layout_marginEnd="3dp"
+        android:layout_marginLeft="3dp"
+        android:layout_marginRight="3dp"
+        android:layout_marginStart="3dp"
         android:layout_marginTop="150dp"
         android:background="@drawable/layout_bg"
         android:backgroundTint="#ededed"
         android:gravity="center"
         android:orientation="vertical"
         android:padding="1dp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.034">
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:id="@+id/test"/>
-
-        <TextView
-            android:textColor="@color/toolbarColor"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             android:layout_marginTop="10dp"
-            android:text="Όνομα Χρήστη*" />
+            android:text="Όνομα Χρήστη*"
+            android:textColor="@color/toolbarColor" />
 
         <EditText
             android:id="@+id/userNameTextField"
@@ -59,12 +64,13 @@
 
 
         <TextView
-            android:textColor="@color/toolbarColor"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:text="Κωδικός Πρόσβασης*" />
+            android:text="Κωδικός Πρόσβασης*"
+            android:textColor="@color/toolbarColor" />
+
 
         <EditText
             android:id="@+id/passwordTextField"
@@ -79,37 +85,24 @@
             android:padding="4dp"
             android:textColor="@android:color/black" />
 
+
+
+
         <Button
-            android:background="@drawable/layout_bg"
             android:id="@+id/loginbutton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             android:layout_marginTop="20dp"
+            android:background="@drawable/layout_bg"
             android:backgroundTint="@color/colorPrimaryDark"
             android:onClick="login"
             android:text="ΣΥΝΔΕΣΗ"
-            android:textColor="#ffffff"/>
+            android:textColor="#ffffff" />
 
 
     </LinearLayout>
-
-
-    <ImageView
-        android:id="@+id/imageView3"
-        android:layout_width="205dp"
-        android:layout_height="200dp"
-        android:layout_marginBottom="17dp"
-        android:layout_marginStart="380dp"
-        android:layout_marginTop="20dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
-        app:layout_constraintVertical_bias="1.0"
-        app:srcCompat="@drawable/mainlogo" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

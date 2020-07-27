@@ -9,13 +9,17 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.security.cert.CertificateException;
-import java.util.List;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
@@ -35,9 +39,13 @@ public class LoginActivity extends AppCompatActivity {
 
     private TextView textViewResult;
 
+    private boolean ISOPEN = false;
+    private boolean FLAG = false;
+
+
     public Retrofit retrofit = new Retrofit.Builder()
-            //.baseUrl("https://10.0.2.2:9000")
-            .baseUrl("https://83.212.76.248:9000")
+            .baseUrl("https://10.0.2.2:9000")
+//            .baseUrl("https://83.212.76.248:9000")
             .addConverterFactory(GsonConverterFactory.create())
             .client( getUnsafeOkHttpClient().build())
             .build();
@@ -97,6 +105,7 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 });
             }
+
             return null;
         }
 
@@ -117,12 +126,36 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.login_activity);
 
 
         JsonApi jsonApi = retrofit.create(JsonApi.class);
 
         Call<HealthCheck> call = jsonApi.getHealthCheck();
+
+        final LinearLayout linearLayout = findViewById(R.id.linearLayout);
+
+        com.rw.keyboardlistener.KeyboardUtils.addKeyboardToggleListener( this , new com.rw.keyboardlistener.KeyboardUtils.SoftKeyboardToggleListener()
+        {
+            @Override
+            public void onToggleSoftKeyboard(boolean isVisible)
+            {
+                if ( ISOPEN  ){
+                    setMargins( linearLayout , 18 , 350 , 0 , 0 );
+                    ISOPEN = false;
+                }
+                else{
+                    if ( FLAG ){
+                        setMargins( linearLayout , 18 , 100 , 0 , 0 );
+                        ISOPEN = true;
+                    }
+                    else{
+                        FLAG = true;
+                    }
+
+                }
+            }
+        });
 
         call.enqueue(new Callback<HealthCheck>() {
             @Override
@@ -142,6 +175,13 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    private void setMargins (View view, int left, int top, int right, int bottom) {
+        if (view.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
+            ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
+            p.setMargins(left, top, right, bottom);
+            view.requestLayout();
+        }
+    }
 
     public static OkHttpClient.Builder getUnsafeOkHttpClient() {
 

@@ -65,8 +65,8 @@ public class IncidentHistoryPreview extends AppCompatActivity implements
     private static final String TAG = "IncidentPreviewScrolling";
 
     public Retrofit retrofit = new Retrofit.Builder()
-            //.baseUrl("https://10.0.2.2:9000")
-            .baseUrl("https://83.212.76.248:9000")
+            .baseUrl("https://10.0.2.2:9000")
+//            .baseUrl("https://83.212.76.248:9000")
             .addConverterFactory(GsonConverterFactory.create())
             .client(getUnsafeOkHttpClient().build())
             .build();

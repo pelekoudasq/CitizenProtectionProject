@@ -60,8 +60,8 @@ public class IncidentHistory extends AppCompatActivity implements NavigationView
     private DatePickerDialog.OnDateSetListener mDateSetListenerTill;
 
     public Retrofit retrofit = new Retrofit.Builder()
-            //.baseUrl("https://10.0.2.2:9000")
-            .baseUrl("https://83.212.76.248:9000")
+            .baseUrl("https://10.0.2.2:9000")
+//            .baseUrl("https://83.212.76.248:9000")
             .addConverterFactory(GsonConverterFactory.create())
             .client( getUnsafeOkHttpClient().build())
             .build();
@@ -280,14 +280,14 @@ public class IncidentHistory extends AppCompatActivity implements NavigationView
                     LinearLayout buttonLayout, recyclerLayout;
 
                     List<Incident> incList = acceptedIncidents.getIncidents();
-                    if (incList.size() == 0) {
-                        recyclerLayout = findViewById(R.id.recyclerLayout);
-                        recyclerLayout.setVisibility(View.INVISIBLE);
-
-                        buttonLayout = findViewById(R.id.buttonLayout);
-                        buttonLayout.setVisibility(View.VISIBLE);
-
-                    } else {
+//                    if (incList.size() == 0) {
+//                        recyclerLayout = findViewById(R.id.recyclerLayout);
+//                        recyclerLayout.setVisibility(View.INVISIBLE);
+//
+//                        buttonLayout = findViewById(R.id.buttonLayout);
+//                        buttonLayout.setVisibility(View.VISIBLE);
+//
+//                    } else {
 
                         buttonLayout = findViewById(R.id.buttonLayout);
                         buttonLayout.setVisibility(View.INVISIBLE);
@@ -330,7 +330,7 @@ public class IncidentHistory extends AppCompatActivity implements NavigationView
                     }
 
 
-                }
+//                }
 
                 @Override
                 public void onFailure(Call<Incidents> call, Throwable t) {

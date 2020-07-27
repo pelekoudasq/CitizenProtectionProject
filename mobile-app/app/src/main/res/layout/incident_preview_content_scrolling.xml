@@ -91,6 +91,15 @@
                 android:layout_height="60dp"
                 android:layout_weight="30"
                 android:gravity="right"
+                android:onClick="newComment"
+                android:src="@drawable/ic_baseline_add_comment_24"
+                android:layout_marginRight="5dp"/>
+
+            <ImageButton
+                android:layout_width="40dp"
+                android:layout_height="60dp"
+                android:layout_weight="30"
+                android:gravity="right"
                 android:onClick="showComments"
                 android:src="@drawable/ic_baseline_refresh_24_2"
                 android:layout_marginRight="5dp"/>

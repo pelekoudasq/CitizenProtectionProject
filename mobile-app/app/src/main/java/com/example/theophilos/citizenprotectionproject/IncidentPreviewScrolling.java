@@ -2,6 +2,7 @@ package com.example.theophilos.citizenprotectionproject;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -22,6 +23,7 @@ import com.google.android.material.navigation.NavigationView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
@@ -35,9 +37,11 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import android.text.InputType;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -61,8 +65,8 @@ public class IncidentPreviewScrolling extends AppCompatActivity implements
     private static final String TAG = "IncidentPreviewScrolling";
 
     public Retrofit retrofit = new Retrofit.Builder()
-            //.baseUrl("https://10.0.2.2:9000")
-            .baseUrl("https://83.212.76.248:9000")
+            .baseUrl("https://10.0.2.2:9000")
+//            .baseUrl("https://83.212.76.248:9000")
             .addConverterFactory(GsonConverterFactory.create())
             .client(getUnsafeOkHttpClient().build())
             .build();
@@ -165,24 +169,35 @@ public class IncidentPreviewScrolling extends AppCompatActivity implements
 
 
     public void showComments(View view){
+        SharedPreferences preferences = IncidentPreviewScrolling.this.getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
         Comments.clear();
         Times.clear();
         Dates.clear();
-        SharedPreferences preferences = IncidentPreviewScrolling.this.getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
-        final String token  = preferences.getString("TOKEN",null);
-        String usrId;
-        for ( Comment c : comms ) {
-            Comments.add(c.getText());
-            String time = new SimpleDateFormat("HH:mm").format(c.getDate());
-            Times.add(time);
-            String date = new SimpleDateFormat("dd-MM-yyyy").format(c.getDate());
-            Dates.add(date);
+        String token  = preferences.getString("TOKEN",null);
+        JsonApi jsonApi = retrofit.create(JsonApi.class);
+        Call<Incident> call = jsonApi.getIncident("Bearer "+token,getIntent().getStringExtra("id"));
+        call.enqueue(new Callback<Incident>() {
+            @Override
+            public void onResponse(Call<Incident> call, Response<Incident> response) {
+                if (!response.isSuccessful()) {
+                    return;
+                }
+                Incident inc = response.body();
+                List<Comment> comms = inc.getComments();
+                for (Comment c : comms) {
+                    Comments.add(c.getText());
+                    String time = new SimpleDateFormat("HH:mm").format(c.getDate());
+                    Times.add(time);
+                    String date = new SimpleDateFormat("dd-MM-yyyy").format(c.getDate());
+                    Dates.add(date);
 
-        }
-
-        initRecyclerView();
-
-
+                }
+                initRecyclerView();
+            }
+            @Override
+            public void onFailure (Call < Incident > call, Throwable t){
+            }
+        });
     }
 
 
@@ -278,11 +293,6 @@ public class IncidentPreviewScrolling extends AppCompatActivity implements
     public void onMapReady(final GoogleMap googleMap) {
 
         SharedPreferences preferences = IncidentPreviewScrolling.this.getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
-//        String lat = preferences.getString("LAT", null);
-//        String lon = preferences.getString("LON", null);
-//        double d1 = Double.parseDouble(lat);
-//        double d2 = Double.parseDouble(lon);
-
 
         String token = preferences.getString("TOKEN", null);
 
@@ -329,6 +339,56 @@ public class IncidentPreviewScrolling extends AppCompatActivity implements
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+    }
+
+    private String m_Text = "";
+
+    public void newComment ( final View view ){
+
+        SharedPreferences preferences = IncidentPreviewScrolling.this.getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
+        final String token = preferences.getString("TOKEN", null);
+        final String usrId = preferences.getString("ID", null);
+        Intent myIntent = getIntent();
+        final String incId = myIntent.getStringExtra("id");
+
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Νέο Σχόλιο");
+        final EditText input = new EditText(this);
+        input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_AUTO_COMPLETE);
+        builder.setView(input);
+        builder.setPositiveButton("Αποστολή", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                m_Text = input.getText().toString();
+                NewComment comment = new NewComment( incId , m_Text , usrId );
+
+                JsonApi jsonApi = retrofit.create(JsonApi.class);
+                Call<Void> call = jsonApi.newComment("Bearer "+token,comment);
+                call.enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+                        if (!response.isSuccessful()) {
+                            Toast.makeText(IncidentPreviewScrolling.this, "OPA", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        showComments(view);
+                    }
+
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable t) {
+                        Toast.makeText(IncidentPreviewScrolling.this, "IPA", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
+        builder.setNegativeButton("Ακύρωση", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        builder.show();
     }
 
 }

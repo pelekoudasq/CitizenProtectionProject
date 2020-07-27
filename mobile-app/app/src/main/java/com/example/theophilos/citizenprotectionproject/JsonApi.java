@@ -36,4 +36,7 @@ public interface JsonApi {
     @GET("control-center/api/admin/users/{id}")
     Call<SessionInfo> getUser(@Header("Authorization") String token , @Path("id") String dep_id );
 
+    @POST("control-center/api/incidents/comment")
+    Call<Void> newComment(@Header("Authorization") String token , @Body NewComment comment);
+
 }

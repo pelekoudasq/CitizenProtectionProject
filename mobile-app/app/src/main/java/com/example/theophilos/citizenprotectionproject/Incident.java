@@ -53,14 +53,14 @@ public class Incident {
     public class Location {
         String address;
         double latitude;
-        double longtitude;
+        double longitude;
 
         public double getLatitude() {
             return latitude;
         }
 
         public double getLongtitude() {
-            return longtitude;
+            return longitude;
         }
 
         public String getAddress() {
