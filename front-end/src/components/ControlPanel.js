@@ -28,8 +28,20 @@ class ControlPanel extends Component
 			no_posts:false
 		}
 		this.loadmore = this.loadmore.bind(this)
+		// this.get_user_response = this.get_user_response.bind(this)
 	}	
 
+	// get_user_response()
+	// {
+		// let usertype =  localStorage.getItem("usertype");
+	// 	console.log("usertype is ", usertype)
+	// 	if(Number(usertype) === 0) //api call for control center
+	// 		return incidentService.get_active_incidents(this.state.visiblePosts, 9)
+	// 	else if(Number(usertype) === 1)  //api call for departments
+	// 		return incidentService.get_user_requested_incidents()
+	// 	else if (Number(usertype) === 2) //api call for employees
+	// 		return incidentService.get_department_incidents(this.state.visiblePosts, 9)
+	// }
 
 	componentDidMount()
 	{	
@@ -40,7 +52,40 @@ class ControlPanel extends Component
 		this.setState({
 			no_posts:true
 		})
+		// this.get_user_response()
+		// .then( response => {
+		// 	console.log(response)
+		// 	if(response.incidents !==0)
+		// 	{
+		// 		this.setState({
+		// 			incidents: response,
+		// 			visiblePosts: this.state.visiblePosts + 9,
+		// 			no_posts:false
+		// 		})
+				
+		// 		this.state.incidents.forEach(incident => { /*Loop through every row of the jsonfile and get the attributes*/
+		// 				/*define the new coordinate */
+		// 				coordinate = {}
+		// 				coordinate['lat'] = incident.location['latitude']
+		// 				coordinate['lng'] = incident.location['longitude']    
+		// 				coordinate['priority'] = incident.priority
 
+		// 				/* Push it to the array of coordinates */
+		// 				coordinates.push(coordinate)
+		// 			})
+
+		// 		this.setState({
+		// 			coordinates: coordinates
+		// 		})
+		// 	}
+		// 	else
+		// 	{
+		// 		this.setState=({
+		// 			no_posts: true,
+		// 			postsDone: true
+		// 		})
+		// 	}
+		// })
 		if(Number(usertype) === 0) //api call for control center
 		{	
 			incidentService.get_active_incidents(this.state.visiblePosts, 9)
@@ -105,11 +150,10 @@ class ControlPanel extends Component
 				}
 			});	
 		}
-		else if(Number(usertype) === 1) //api call for departments
+		else if(Number(usertype) === 1)
 		{	
 			incidentService.get_department_incidents(this.state.visiblePosts, 9)
 			.then( response => {
-				console.log("Eimai apo atpf me response", response)
 				if(response.length !==0)
 				{
 					this.setState({
@@ -135,7 +179,6 @@ class ControlPanel extends Component
 				}
 				else if(response.length === 0)
 				{
-					console.log("To response einai adeio!!!")
 					this.setState=({
 						no_posts: true,
 						postsDone: true

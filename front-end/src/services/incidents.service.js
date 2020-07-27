@@ -160,7 +160,7 @@ function get_department_incidents(start, count) //only departments make this cal
 }
 
 
-function get_filtered_incidents(text, priority, state, start_date, end_date) {
+function get_filtered_incidents(text, priority, state, auth, start_date, end_date) {
 
 	const requestOptions = {
 		mode: 'cors',
@@ -170,6 +170,7 @@ function get_filtered_incidents(text, priority, state, start_date, end_date) {
             text,
             priority,
             state,
+            auth,
             start_date,
             end_date
         }),
@@ -208,7 +209,7 @@ function edit_incident(callerName, callerNumber, priority, incident_id) {
     });
 }
 
-function post_comment(text, incident_id, final) {
+function post_comment(text, incident_id, final_comment) {
 
     const user_id = localStorage.getItem('userid');
 
@@ -220,7 +221,7 @@ function post_comment(text, incident_id, final) {
             text,
             incident_id,
             user_id,
-            final
+            final_comment
         }),
     };
 

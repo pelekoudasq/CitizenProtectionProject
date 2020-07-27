@@ -30,6 +30,7 @@ class Incidents extends Component
 			filter_end_date:"",
 			filter_priority: [],
 			filter_status: [], //true holds for pending incidents, false holds for closed
+			filter_auth: [],
 			no_result: false,
 			no_posts: true,
 			postsDone: false
@@ -39,6 +40,8 @@ class Incidents extends Component
 		this.filterPriority = this.filterPriority.bind(this);
 		this.filterState = this.filterState.bind(this);
 		this.clear_filters = this.clear_filters.bind(this);
+		this.handleAuthState = this.handleAuthState.bind(this);
+		
 	}	
 
 	componentDidMount()
@@ -138,7 +141,6 @@ class Incidents extends Component
 				}
 				else if(response.length === 0)
 				{
-					console.log("To response einai adeio!!!")
 					this.setState=({
 						no_posts: true,
 						postsDone: true
@@ -267,6 +269,34 @@ class Incidents extends Component
             });
         }
 	}
+	handleAuthState(buttonName) 
+	{
+		let newChecked = `${buttonName}`;
+        let new_state = [];
+        if(this.state.filter_status.indexOf(newChecked) === -1){
+            new_state = [...this.state.filter_status, newChecked];
+        }
+        else
+        {     
+            let index = this.state.filter_status.indexOf(newChecked);
+			if (index !== -1) 
+				this.state.filter_status.splice(index, 1);
+            new_state = this.state.filter_status
+        }
+
+        if(Object.keys(new_state).length > 0)            
+        {
+            this.setState({
+                filter_auth: new_state
+            });
+        }
+        else
+        {
+            this.setState({
+                filter_auth: new_state
+            });
+        }
+	}
 	
 	handleTextArea = event => {
         const {name,value} = event.target;
@@ -288,8 +318,8 @@ class Incidents extends Component
 		let user_id = localStorage.getItem("userid");
 		let temp_incidents = []
 
-
-		incidentService.get_filtered_incidents(this.state.filter_text, this.state.filter_priority, this.state.filter_status, this.state.filter_start_date,  this.state.filter_end_date)
+		console.log("filtra auth einai ", this.state.filter_auth)
+		incidentService.get_filtered_incidents(this.state.filter_text, this.state.filter_priority, this.state.filter_status, this.state.filter_auth ,this.state.filter_start_date,  this.state.filter_end_date)
 		.then (response => {
 			console.log("response without filter is ", response)
 			if (response.length !== 0)
@@ -311,7 +341,6 @@ class Incidents extends Component
 					{
 						if(incident.auth.includes(1) && incident.officers.includes(user_id))
 						{
-							console.log("Edo beno me incident", incident)
 							coordinate = {}
 							coordinate['lat'] = incident.location['latitude']
 							coordinate['lng'] = incident.location['longitude']    
@@ -386,7 +415,7 @@ class Incidents extends Component
 
 						<div className="col-md-3">	
 							<form onSubmit={this.apply_filter}> 
-								<input type="text" value={this.state.filter_text} onChange={this.handleTextArea} name="filter_text" placeholder="Αναζήτηση Συμβάντων. . ." id = "search_bar" style={{width: '90%', marginTop: '-2px', marginLeft:'25%'}}></input>																
+								<input type="text" value={this.state.filter_text} onChange={this.handleTextArea} name="filter_text" placeholder="Αναζήτηση Συμβάντων. . ." id = "search_bar" style={{width: '90%', marginTop: '0px', marginLeft:'25%'}}></input>																
 							</form>
 						</div>
 					</div>
@@ -422,21 +451,18 @@ class Incidents extends Component
 								</div>
 							</FormGroup>
 							</Col>
-							{/* <Col sm="auto">
-                            <Form id="incinfo">
-                                <FormGroup className="mx-auto">
-                                    <div>
-                                        <Label className="pl-4" for="exampleCheckbox">Φορείς</Label>
-                                        <div required className="CheckBox mx-auto px-2" innerref={incident.auth}> 
-                                            <CustomInput type="checkbox" id="mycheck" label="Ε.Κ.Α.Β." onClick={this.customInputValue.bind(this, "0")}/>
-                                            <CustomInput type="checkbox" id="2" label="ΕΛ.ΑΣ."  onClick={this.customInputValue.bind(this, "1")}/>
-                                            <CustomInput type="checkbox" id="3" label="Λιμενικό"  onClick={this.customInputValue.bind(this, "2")}/>
-                                            <CustomInput type="checkbox" id="4" label="Πυρoσβεστική"  onClick={this.customInputValue.bind(this, "3")}/>
-                                        </div>
-                                    </div>
+							{(Number(usertype) === 0 || Number(usertype) === 3) && // Only Control Center and Goverment Employees may filter incidents by authorities
+							<Col sm={6} style={{marginLeft: '-49%'}}>
+                                <FormGroup>
+									<Label><h6>Φορείς</h6></Label>
+									<div innerref={this.state.filter_auth}> 
+										<CustomInput type="checkbox" id="7" label="Ε.Κ.Α.Β." onClick={this.handleAuthState.bind(this, "7")}/>
+										<CustomInput type="checkbox" id="8" label="ΕΛ.ΑΣ."  onClick={this.handleAuthState.bind(this, "8")}/>
+										<CustomInput type="checkbox" id="9" label="Λιμενικό"  onClick={this.handleAuthState.bind(this, "9")}/>
+										<CustomInput type="checkbox" id="10" label="Πυρoσβεστική"  onClick={this.handleAuthState.bind(this, "10")}/>
+									</div>
                                 </FormGroup>
-                            </Form>
-                        </Col> */}
+                        	</Col>}
 							<br/><br/><br/><br/>
 							<div className="row">
 								<div className="col-md-5">
