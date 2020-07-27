@@ -11,13 +11,14 @@ function HeatMap(props)
 		points[i] = new window.google.maps.LatLng(props.coordinates[i].lat, props.coordinates[i].lng);
 	}
 	const Heatmap = withGoogleMap(props => (
-		<GoogleMap defaultZoom ={7} center = {{ lat: 38.496594, lng: 22.530154 }}>
+		<GoogleMap defaultZoom ={6.2} center = {{ lat: 38.3216742, lng: 24.103115 }}>
 			<HeatmapLayer data = {points} />
 		</GoogleMap>
 	));
 
 	return(
 		<div id="heatmap">
+			<p className="title-bar">Θερμικός Χάρτης</p>
 			<Heatmap
 				containerElement = { <div className="h-100" /> }
 				mapElement = { <div className="h-100" /> }

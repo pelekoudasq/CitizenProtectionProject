@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import SideMenu from "./SideMenu";
 import HeatMap from "./HeatMap";
+import RadiusMap from "./RadiusMap";
 import { withRouter } from "react-router";
 import "../css/statistics.css";
 import {
@@ -29,11 +30,11 @@ class Statistics extends Component {
       showModal: false,
       coordinates: [],
       visiblePosts: 5,
-      isloading: false,
+      isloading: true,
       statsPeople: [],
       statsAuth: [],
       statsLabels: [],
-      auths: [],
+	  auths: []
     };
   }
 
@@ -99,18 +100,19 @@ class Statistics extends Component {
         });
 
         fetch(`${apiUrl}/incidents`, requestOptions)
-          .then((response) => response.json())
-          .then((response) => {
+          .then(async (response) => response.json())
+          .then(async (response) => {
             this.setState({
               incidents: response,
             });
 
-            this.state.incidents.forEach((incident) => {
+            await this.state.incidents.forEach((incident) => {
+				console.log("For Each")
               /*Loop through every row of the jsonfile and get the attributes*/
               /*define the new coordinate */
               coordinate = {};
               coordinate["lat"] = incident.location["latitude"];
-              coordinate["lng"] = incident.location["longtitude"];
+              coordinate["lng"] = incident.location["longitude"];
               coordinate["priority"] = incident.priority;
               /* Push it to the array of coordinates */
               coordinates.push(coordinate);
@@ -149,14 +151,15 @@ class Statistics extends Component {
                 // }
               });
             });
-
+			console.log("set statee")
             this.setState({
-              coordinates: coordinates,
-              statsPeople: statsPeople,
-              statsAuth: statsAuth,
-              total_open: total_open,
-              total_close: total_close,
-              statsLabels: statsLabels,
+				isloading: false,
+				coordinates: coordinates,
+				statsPeople: statsPeople,
+				statsAuth: statsAuth,
+				total_open: total_open,
+				total_close: total_close,
+				statsLabels: statsLabels,
             });
           });
 
@@ -200,15 +203,15 @@ class Statistics extends Component {
         </ul>
 
         <div className="tab-content" id="myTabContent">
+        
           <div className="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-            <div className="container" style={{ marginLeft: "5%", marginRight: "0px" }}>
-              <HeatMap coordinates={this.state.coordinates} />
-            </div>
+            <div style={{ marginLeft: "5%", marginRight: "0px"}}>
+				{(!this.state.isloading && <RadiusMap coordinates={ this.state.coordinates} radius={50}/>)}
+				{(!this.state.isloading && <HeatMap coordinates={ this.state.coordinates }/>)}
+			</div>
           </div>
 
           <div className="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-
-
         <div className="container">
           <div className="row">
             <div className="col-8" id="BoxLeft">
