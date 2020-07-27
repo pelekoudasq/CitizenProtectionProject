@@ -13,7 +13,6 @@ const router = express.Router();
 const db = mongojs(config.dburi);
 
 
-/* routes */
 function arePointsNear(incLat, intLong, pLat, pLong, km) {
 	var ky = 40000 / 360;
 	var kx = Math.cos(Math.PI * incLat / 180.0) * ky;
@@ -21,6 +20,8 @@ function arePointsNear(incLat, intLong, pLat, pLong, km) {
 	var dy = Math.abs(incLat - pLat) * ky;
 	return Math.sqrt(dx * dx + dy * dy) <= km;
 }
+
+/* routes */
 
 // GET all incidents
 router.get('/', function(req, res, next) {
@@ -42,6 +43,7 @@ router.get('/', function(req, res, next) {
 			res.json(incidents)
 	});
 });
+
 
 // GET active incidents
 router.get('/active', function(req, res, next) {
@@ -69,7 +71,6 @@ router.get('/active', function(req, res, next) {
 router.get('/labels/', function(req, res, next) {
 
 	const format = req.query.format;
-	// console.log('laaabeeelssssssssssssssssss');
 	db.IncidentLabels.find({}, function(err, labels) {
 		if (err) {
 			if (format && format === "xml")
@@ -92,9 +93,8 @@ router.get('/department/:department_id', function(req, res, next) {
 	const format = req.query.format;
 	const start = parseInt(req.query.start);
 	const count = parseInt(req.query.count);
-	// const dept_id = ObjectID(req.body.dept_id);
 
-	db.Incidents.find({ active: true, departments: req.params.department_id }).sort({ date: -1 }).limit(count).skip(start, function(err, incidents) {
+	db.Incidents.find({ active: true, departments: mongojs.ObjectID(req.params.department_id) }).sort({ date: -1 }).limit(count).skip(start, function(err, incidents) {
 		if (err) {
 			if (format && format === "xml")
 				res.send(json2xml(err))
@@ -116,9 +116,8 @@ router.get('/department/all/:department_id', function(req, res, next) {
 	const format = req.query.format;
 	const start = parseInt(req.query.start);
 	const count = parseInt(req.query.count);
-	// const dept_id = ObjectID(req.body.dept_id);
 
-	db.Incidents.find({ departments: req.params.department_id }).sort({ date: -1 }).limit(count).skip(start, function(err, incidents) {
+	db.Incidents.find({ departments: mongojs.ObjectID(req.params.department_id) }).sort({ date: -1 }).limit(count).skip(start, function(err, incidents) {
 		if (err) {
 			if (format && format === "xml")
 				res.send(json2xml(err))
@@ -136,7 +135,6 @@ router.get('/department/all/:department_id', function(req, res, next) {
 // POST get auctions by filters
 router.post('/filter', function(req, res, next) {
 
-	console.log("api: incidents via filters");
 	let query = {};	
 
 	if (
@@ -166,11 +164,10 @@ router.post('/filter', function(req, res, next) {
 	}
 	
 	if (req.body.state.length && !req.body.state.find(element => element === "6")) {
-		if (req.body.state.find(element => element === "4")) {
+		if (req.body.state.find(element => element === "4"))
 			query['$and'].push({ active: false })
-		} else if (req.body.state.find(element => element === "5")) {
+		else if (req.body.state.find(element => element === "5"))
 			query['$and'].push({ active: true })
-		}
 	}
 	
 	var date_1, date_2;
@@ -181,9 +178,8 @@ router.post('/filter', function(req, res, next) {
 	if (req.body.end_date)
 		date_2 = new Date(req.body.end_date)
 	
-	if (date_1 && date_2) {
+	if (date_1 && date_2)
 		query['$and'].push({ date: { $gte: date_1, $lt: date_2 }});
-	}
 
 	//7, 8, 9, 10
 	if (req.body.auth.length) {
@@ -193,13 +189,10 @@ router.post('/filter', function(req, res, next) {
 			auths.push(0)
 		if (req.body.auth.find(element => element === "8"))
 			auths.push(1)
-			// query['$and'].push({ auth: { $all: [1] }});
 		if (req.body.auth.find(element => element === "9"))
 			auths.push(2)
-			// query['$and'].push({ auth: { $all: [2] }});
 		if (req.body.auth.find(element => element === "10"))
 			auths.push(3)
-			// query['$and'].push({ auth: { $all: [3] }});
 		query['$and'].push({ auth: { $all: auths }});
 	}
 
@@ -294,18 +287,12 @@ router.post('/', function(req, res, next) {
 				for (var i = 0; i < incParam.auth.length; i++)
 					incParam.auth[i] = parseInt(incParam.auth[i]);
 				var spots;
-				if (incParam.auth === "Χαμηλή") {
-					// console.log(incParam.auth)
+				if (incParam.auth === "Χαμηλή")
 					spots = 2
-				}
-				else if (incParam.auth === "Μέτρια") {
-					// console.log(incParam.auth)
+				else if (incParam.auth === "Μέτρια")
 					spots = 4
-				}
-				else {
-					// console.log(incParam.auth)
+				else
 					spots = 6
-				}
 				var description = null
 				if (incParam.description)
 					description = incParam.description
@@ -344,7 +331,10 @@ router.post('/', function(req, res, next) {
 						injured: 0,
 						arrested: 0
 					},
-					end_date: endDate
+					end_date: endDate,
+					keywords: [],
+					callerName: null,
+					callerNumber: null
 				}, function(err, incident) {
 					if (err) {
 						res.send(err);
@@ -353,14 +343,12 @@ router.post('/', function(req, res, next) {
 					/* incident saved */
 					
 					/* assign to users type 2 */
-					// console.log(incident.auth);
 					db.Users.find({ userType : 2 , "details.authorityType" : { $in : incident.auth } }, function(err, users) {
 						if (err) {
 							res.json(incident);
 							return;
 						}
 						users.forEach(user => {
-							// console.log(user);
 							if (arePointsNear(location.latitude, location.longitude, user.details.lat, user.details.long, 5)) {
 								db.Users.update(
 									{ _id: user._id },
@@ -375,7 +363,6 @@ router.post('/', function(req, res, next) {
 						});
 						res.json(incident);
 					});
-					// res.json(incident);
 				})
 			}
 		} else {
@@ -391,17 +378,16 @@ router.post('/', function(req, res, next) {
 // POST update incident
 router.post('/update/:id', function(req, res, next) {
 
-	// console.log(req.body);
 	const incParam = req.body;
 
 	db.Incidents.update(
 		{ _id: mongojs.ObjectID(req.params.id) },
 		{
 			$set: {
-				description : incParam.description,
-				callerName : incParam.callerName,
-				callerNumber : incParam.callerNumber,
-				keywords : incParam.keywords
+				description: incParam.description,
+				callerName: incParam.callerName,
+				callerNumber: incParam.callerNumber,
+				keywords: incParam.keywords
 			}
 		}
 	, function(err, incident) {
@@ -413,10 +399,10 @@ router.post('/update/:id', function(req, res, next) {
 	});
 });
 
+
 // POST edit incident
 router.post('/edit', function(req, res, next) {
 
-	console.log(req.body);
 	const incParam = req.body;
 
 	db.Incidents.update(
@@ -439,10 +425,10 @@ router.post('/edit', function(req, res, next) {
 	});
 });
 
+
 // POST edit auth of incident
 router.post('/editAuth', function(req, res, next) {
 
-	console.log(req.body);
 	const incParam = req.body;
 	db.Incidents.update(
 		{ _id: mongojs.ObjectID(incParam.incident_id) },
@@ -461,6 +447,7 @@ router.post('/editAuth', function(req, res, next) {
 		});
 	});
 });
+
 
 // POST accept request
 router.post('/accept', function(req, res, next) {	
@@ -519,6 +506,7 @@ router.post('/accept', function(req, res, next) {
 	});
 });
 
+
 // POST comment to incident
 router.post('/comment', function(req, res, next) {
 
@@ -552,6 +540,7 @@ router.post('/comment', function(req, res, next) {
 		});
 	});
 });
+
 
 // POST KE report to incident
 router.post('/report', function(req, res, next) {

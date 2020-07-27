@@ -28,6 +28,7 @@ router.get('/health-check', function(req, res, next) {
 	}) 
 })
 
+
 // reset system
 router.get('/reset', function(req, res, next) {
 
@@ -58,6 +59,7 @@ router.get('/reset', function(req, res, next) {
 	})
 })
 
+
 // logout
 router.get('/logout', function(req, res, next) {
 
@@ -84,6 +86,7 @@ async function comparePass(user, password) {
 		}
 	}
 }
+
 
 // login user
 router.post('/login', function(req, res, next) {
@@ -118,6 +121,7 @@ router.post('/login', function(req, res, next) {
 	});
 });
 
+
 // GET authorities enum
 router.get('/authorities/', function(req, res, next) {
 
@@ -136,5 +140,6 @@ router.get('/authorities/', function(req, res, next) {
 			res.json(authorities)
 	})
 });
+
 
 module.exports = router;

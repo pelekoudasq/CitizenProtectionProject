@@ -46,7 +46,6 @@ router.get('/', function(req, res, next) {
 });
 
 
-// TODO: if userType in [1, 2, 5] must have agency
 // Add new user
 router.post('/', function(req, res, next){
 
@@ -236,7 +235,6 @@ router.put('/:id', function(req, res, next) {
 // DELETE user
 router.delete('/:id', function(req, res, next) {
 
-	// console.log('DEEEEEEEELEEEEEEEEEEETEEEEEEEEEEEEEE');
 	const format = req.query.format;
 	db.Users.remove({ _id: mongojs.ObjectID(req.params.id) }, function(err, result) {
 		if (err) {
@@ -277,7 +275,6 @@ router.get('/:id', function(req, res, next) {
 // GET incident requests
 router.get('/requests/:user_id', function(req, res, next) {
 
-	// console.log('users: get incident requests by user');
 	db.Users.findOne({ _id: mongojs.ObjectID(req.params.user_id) }, function(err, user) {
 		if (err) {
 			res.send(err);
@@ -301,7 +298,6 @@ router.get('/requests/:user_id', function(req, res, next) {
 // GET accepted incidents
 router.get('/accepted/:user_id', function(req, res, next) {
 
-	console.log('users: get accepted incidents by user');
 	db.Users.findOne({ _id: mongojs.ObjectID(req.params.user_id) }, function(err, user) {
 		if (err) {
 			res.send(err);
