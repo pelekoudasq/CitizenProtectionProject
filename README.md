@@ -107,3 +107,10 @@ npm install -g
 npm link
 control-center
 ```	
+
+
+Εκτέλεση Android
+----------------------------
+
+Άνοιγμα φακέλου mobile-app με Android Studio και εκτέλεση με emulator.
+(Κατά την διάρκεια της υλοποίησης χρησιμοποιήθηκε η έκδοση 4.0.1 του Android Studio και δοκιμαζόταν σε emulator της συσκευής PIXEL 2 με API 30)
