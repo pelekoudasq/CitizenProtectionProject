@@ -33,29 +33,27 @@ router.get('/reset', function(req, res, next) {
 
 	const format = req.query.format;
 	db.Incidents.drop(function (err, reset) {
-		if (err) {
-			res.status(500).json(err);
-			return
-		}
-		passwordHash = bcrypt.hashSync('pass123!', 10);
-		db.Users.save({
-			userType: 4,
-			name: {
-				firstName: 'adminName',
-				lastName: 'adminSurname'
-			},
-			username: 'admin',
-			passwordHash: passwordHash,
-			lastLoggedIn: new Date()
-		}, function(err, user) {
-			if (err) {
-				res.send(err);
-				return;
-			}
-			if (format && format === "xml")
-				res.send(json2xml({ status : 'OK' }))
-			else
-				res.json({ status : 'OK' })
+		db.Users.drop(function (err, reset1) {
+			passwordHash = bcrypt.hashSync('pass123!', 10);
+			db.Users.save({
+				userType: 4,
+				name: {
+					firstName: 'adminName',
+					lastName: 'adminSurname'
+				},
+				username: 'admin',
+				passwordHash: passwordHash,
+				lastLoggedIn: new Date()
+			}, function(err, user) {
+				if (err) {
+					res.send(err);
+					return;
+				}
+				if (format && format === "xml")
+					res.send(json2xml({ status : 'OK' }))
+				else
+					res.json({ status : 'OK' })
+			});
 		});
 	})
 })

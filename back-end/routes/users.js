@@ -62,7 +62,7 @@ router.post('/', function(req, res, next){
 	const latitude = req.body.latitude;
 	const longitude = req.body.longitude;
 	const departmentId = req.body.departmentId;
-	console.log(role)
+
 	db.Users.findOne({ username: username }, function(err, user){
 		if (user) {
 			res.status(400).json({ error: 'This username is already in use' });
@@ -70,7 +70,6 @@ router.post('/', function(req, res, next){
 		} else {
 			passwordHash = bcrypt.hashSync(password, 10);
 			if (role === 0) {
-				console.log("creating user type 0");
 				db.Users.save({
 					userType: role,
 					name: {
@@ -82,7 +81,6 @@ router.post('/', function(req, res, next){
 					lastLoggedIn: new Date()
 				});	
 			} else if (role === 1) {
-				console.log("creating user type 1");
 				db.Users.save({
 					userType: role,
 					name: name,
@@ -97,7 +95,6 @@ router.post('/', function(req, res, next){
 					lastLoggedIn: new Date()
 				});
 			} else if (role === 2) {
-				console.log("creating user type 2");
 				db.Users.save({
 					userType: role,
 					name: {
@@ -118,7 +115,6 @@ router.post('/', function(req, res, next){
 					acceptedIncidents: []
 				});
 			} else if (role === 3) {
-				console.log("creating user type 3");
 				db.Users.save({
 					userType: role,
 					name: {
@@ -130,7 +126,6 @@ router.post('/', function(req, res, next){
 					lastLoggedIn: new Date()
 				});
 			} else if (role === 4) {
-				console.log("creating user type 4");
 				db.Users.save({
 					userType: role,
 					name: {

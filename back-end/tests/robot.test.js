@@ -34,8 +34,8 @@ describe('Robot Test Endpoints', () => {
 			.post('/control-center/api/login')
 			.trustLocalhost()
 			.send({
-				username: 'sofia',
-				password: 'okokokok'
+				username: 'admin',
+				password: 'pass123!'
 			})
 		expect(res.statusCode).toEqual(200)
 		fs.writeFile('/tmp/admin-user-robot.json', JSON.stringify(JSON.parse(res.text)), function(err){

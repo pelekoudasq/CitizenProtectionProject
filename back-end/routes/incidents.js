@@ -69,7 +69,7 @@ router.get('/active', function(req, res, next) {
 router.get('/labels/', function(req, res, next) {
 
 	const format = req.query.format;
-	console.log('laaabeeelssssssssssssssssss');
+	// console.log('laaabeeelssssssssssssssssss');
 	db.IncidentLabels.find({}, function(err, labels) {
 		if (err) {
 			if (format && format === "xml")
@@ -165,7 +165,7 @@ router.post('/filter', function(req, res, next) {
 		query['$and'].push({ $or: prios })
 	}
 	
-	if (req.body.state.length) {
+	if (req.body.state.length && !req.body.state.find(element => element === "6")) {
 		if (req.body.state.find(element => element === "4")) {
 			query['$and'].push({ active: false })
 		} else if (req.body.state.find(element => element === "5")) {
@@ -448,7 +448,7 @@ router.post('/editAuth', function(req, res, next) {
 		{ _id: mongojs.ObjectID(incParam.incident_id) },
 		{
 			$set: {
-				auth : incParam.auth
+				auth: incParam.auth
 			}
 		}
 	, function(err, incident) {

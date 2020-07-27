@@ -33,8 +33,8 @@ describe('Functional Test Endpoints', () => {
 			.post('/control-center/api/login')
 			.trustLocalhost()
 			.send({
-				username: 'sofia',
-				password: 'okokokok'
+				username: 'admin',
+				password: 'pass123!'
 			})
 		expect(res.statusCode).toEqual(200)
 		fs.writeFile('/tmp/admin-user.json', JSON.stringify(JSON.parse(res.text)), function(err){
@@ -144,11 +144,11 @@ describe('Functional Test Endpoints', () => {
 		fs.readFile('/tmp/new-user.json', async function(err, data) {
 			const token = JSON.parse(data).token;
 			const res = await request(server)
-				.get('/control-center/api/incidents/?start=0&count=10')
+				.get('/control-center/api/incidents/?start=0&count=1')
 				.set('Authorization', `Bearer ${token}`)
 				.trustLocalhost()
 			expect(res.statusCode).toEqual(200)
-			expect(JSON.parse(res.text).length).toEqual(10)
+			expect(JSON.parse(res.text).length).toEqual(1)
 			done()
 		})
 	})
