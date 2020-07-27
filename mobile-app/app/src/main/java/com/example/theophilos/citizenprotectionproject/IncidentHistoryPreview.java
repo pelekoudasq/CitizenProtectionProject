@@ -6,6 +6,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationManager;
 import android.nfc.Tag;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -16,6 +19,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.navigation.NavigationView;
@@ -48,7 +52,7 @@ import java.util.List;
 
 import static com.example.theophilos.citizenprotectionproject.LoginActivity.getUnsafeOkHttpClient;
 
-public class IncidentPreviewScrolling extends AppCompatActivity implements
+public class IncidentHistoryPreview extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener,
         OnMapReadyCallback {
 
@@ -73,7 +77,7 @@ public class IncidentPreviewScrolling extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.incident_preview_activity_scrolling);
+        setContentView(R.layout.activity_incident_history_preview);
 
         Toolbar toolbar = findViewById(R.id.toolBar);
         setSupportActionBar(toolbar);
@@ -95,7 +99,7 @@ public class IncidentPreviewScrolling extends AppCompatActivity implements
         toggle.syncState();
 
         //Retrieve token wherever necessary
-        SharedPreferences preferences = IncidentPreviewScrolling.this.getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
+        SharedPreferences preferences = IncidentHistoryPreview.this.getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
         String usrName = preferences.getString("USRNAME", null);
 
 
@@ -168,7 +172,7 @@ public class IncidentPreviewScrolling extends AppCompatActivity implements
         Comments.clear();
         Times.clear();
         Dates.clear();
-        SharedPreferences preferences = IncidentPreviewScrolling.this.getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
+        SharedPreferences preferences = IncidentHistoryPreview.this.getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
         final String token  = preferences.getString("TOKEN",null);
         String usrId;
         for ( Comment c : comms ) {
@@ -203,7 +207,7 @@ public class IncidentPreviewScrolling extends AppCompatActivity implements
 
         switch (item.getItemId()){
             case R.id.nav_logout:
-                SharedPreferences preferences = IncidentPreviewScrolling.this.getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
+                SharedPreferences preferences = IncidentHistoryPreview.this.getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
                 String token  = preferences.getString("TOKEN",null);
                 JsonApi jsonApi = retrofit.create(JsonApi.class);
                 SharedPreferences.Editor editor = preferences.edit();
@@ -277,13 +281,7 @@ public class IncidentPreviewScrolling extends AppCompatActivity implements
     @Override
     public void onMapReady(final GoogleMap googleMap) {
 
-        SharedPreferences preferences = IncidentPreviewScrolling.this.getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
-//        String lat = preferences.getString("LAT", null);
-//        String lon = preferences.getString("LON", null);
-//        double d1 = Double.parseDouble(lat);
-//        double d2 = Double.parseDouble(lon);
-
-
+        SharedPreferences preferences = IncidentHistoryPreview.this.getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
         String token = preferences.getString("TOKEN", null);
 
 
@@ -299,16 +297,19 @@ public class IncidentPreviewScrolling extends AppCompatActivity implements
                 double lat = inc.getLocation().getLatitude();
                 double lon = inc.getLocation().getLongtitude();
 
-                CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(lat,lon));
-                CameraUpdate zoom=CameraUpdateFactory.zoomTo(10);
-                googleMap.moveCamera(center);
-                googleMap.animateCamera(zoom);
-
                 googleMap.addMarker(new MarkerOptions().position(new LatLng(lat,lon)).title("Marker"));
                 if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                     return;
                 }
-                googleMap.setMyLocationEnabled(true);
+
+                //googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 13));
+                CameraPosition cameraPosition = new CameraPosition.Builder()
+                        .target(new LatLng(lat,lon))
+                        .zoom(14)
+                        .bearing(90)
+                        .build();
+                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
 
 
             }

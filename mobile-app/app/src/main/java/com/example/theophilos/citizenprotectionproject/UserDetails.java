@@ -3,6 +3,8 @@ package com.example.theophilos.citizenprotectionproject;
 public class UserDetails {
     String lat;
     String lon;
+    String departmentId;
+    int authorityType;
 
     public String getLat() {
         return lat;
@@ -12,4 +14,11 @@ public class UserDetails {
         return lon;
     }
 
+    public String getDepartmentId() {
+        return departmentId;
+    }
+
+    public int getAuthorityType() {
+        return authorityType;
+    }
 }

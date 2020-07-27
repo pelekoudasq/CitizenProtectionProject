@@ -41,7 +41,8 @@ public class IncidentHistory extends AppCompatActivity implements NavigationView
     private DrawerLayout drawer;
 
     public Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl("https://10.0.2.2:9000")
+            //.baseUrl("https://10.0.2.2:9000")
+            .baseUrl("https://83.212.76.248:9000")
             .addConverterFactory(GsonConverterFactory.create())
             .client( getUnsafeOkHttpClient().build())
             .build();
@@ -201,7 +202,7 @@ public class IncidentHistory extends AppCompatActivity implements NavigationView
 
     private void initRecyclerView(){
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(incidentNames,incidentPriorities,incidentIds,this);
+        HistoryRecyclerViewAdapter adapter = new HistoryRecyclerViewAdapter(incidentNames,incidentPriorities,incidentIds,this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }

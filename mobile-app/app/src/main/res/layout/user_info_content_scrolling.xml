@@ -18,7 +18,7 @@
         <TextView
             android:layout_marginLeft="20dp"
             android:id="@+id/accountInfo"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="30dp"
             android:textColor="@color/toolbarColor"
@@ -30,29 +30,29 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
         <TextView
             android:layout_marginTop="20dp"
             android:layout_marginLeft="20dp"
             android:id="@+id/fullNameHeader"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="20dp"
+            android:textSize="18dp"
             android:textColor="@color/toolbarColor"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="10dp"
             android:text="Ονομα/νυμο :  "/>
 
         <TextView
-            android:layout_marginTop="20dp"
+            android:layout_marginRight="10dp"
             android:layout_marginLeft="20dp"
             android:id="@+id/fullName"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="20dp"
             android:textColor="@color/darkGrey"
             android:layout_marginBottom="10dp"
-            android:text=" ONOMA "/>
+            android:text="ONOMA "/>
 
     </LinearLayout>
 
@@ -60,57 +60,31 @@
         <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
         <TextView
             android:layout_marginLeft="20dp"
             android:id="@+id/userNameHeader"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="20dp"
+            android:textSize="18dp"
             android:textColor="@color/toolbarColor"
             android:layout_marginBottom="10dp"
             android:text="Όνομα Χρήστη :  "/>
 
         <TextView
+            android:layout_marginRight="10dp"
             android:layout_marginLeft="20dp"
             android:id="@+id/userName"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="20dp"
             android:textColor="@color/darkGrey"
             android:layout_marginBottom="20dp"
-            android:text=" USER "/>
+            android:text="USER "/>
 
     </LinearLayout>
 
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_marginLeft="20dp"
-                android:id="@+id/currentActiveHeader"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="20dp"
-                android:textColor="@color/toolbarColor"
-                android:layout_marginBottom="10dp"
-                android:text="Τρέχοντα Συμβάντα :  "/>
-
-            <TextView
-                android:layout_marginLeft="20dp"
-                android:id="@+id/currentActive"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="20dp"
-                android:textColor="@color/darkGrey"
-                android:layout_marginBottom="20dp"
-                android:text=" 10 "/>
-
-        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -119,15 +93,38 @@
 
             <TextView
                 android:layout_marginLeft="20dp"
-                android:id="@+id/LoacationHeader"
-                android:layout_width="wrap_content"
+                android:id="@+id/departmentNameHeader"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="18dp"
+                android:textColor="@color/toolbarColor"
+                android:layout_marginBottom="10dp"
+                android:text="Όνομα Τμήματος :  "/>
+
+            <TextView
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="20dp"
+                android:id="@+id/departmentName"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="20dp"
+                android:textColor="@color/darkGrey"
+                android:layout_marginBottom="20dp"
+                android:text="ΟΝΟΜΑ"/>
+
+        </LinearLayout>
+
+
+            <TextView
+                android:layout_marginLeft="20dp"
+                android:id="@+id/LoacationHeader"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="18dp"
                 android:textColor="@color/toolbarColor"
                 android:layout_marginBottom="10dp"
                 android:text="Τοποθεσία Χρήστη :  "/>
 
-        </LinearLayout>
 
         <com.example.theophilos.citizenprotectionproject.CustomMapView
             android:id="@+id/infoMapView"

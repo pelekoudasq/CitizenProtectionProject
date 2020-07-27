@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.security.cert.CertificateException;
+import java.util.List;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
@@ -35,7 +36,8 @@ public class LoginActivity extends AppCompatActivity {
     private TextView textViewResult;
 
     public Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl("https://10.0.2.2:9000")
+            //.baseUrl("https://10.0.2.2:9000")
+            .baseUrl("https://83.212.76.248:9000")
             .addConverterFactory(GsonConverterFactory.create())
             .client( getUnsafeOkHttpClient().build())
             .build();
@@ -75,8 +77,12 @@ public class LoginActivity extends AppCompatActivity {
                         preferences.edit().putString("USRNAME", sInfo.getUsername()).apply();
                         preferences.edit().putString("LAT", sInfo.getDetails().getLat()).apply();
                         preferences.edit().putString("LON", sInfo.getDetails().getLon()).apply();
+                        preferences.edit().putString("FNAME", sInfo.getName().getFirstname()).apply();
+                        preferences.edit().putString("LNAME", sInfo.getName().getLastname()).apply();
+                        preferences.edit().putString("DEPID", sInfo.getDetails().getDepartmentId()).apply();
 
                         final Intent intent = new Intent(getApplicationContext(), IncidentsActivity.class);
+                        intent.putExtra("exitFlag","true");
                         if (sInfo != null && sInfo.getUserType() == 2 && !isCancelled()) {
                             startActivity(intent);
                         } else if(!isCancelled()){

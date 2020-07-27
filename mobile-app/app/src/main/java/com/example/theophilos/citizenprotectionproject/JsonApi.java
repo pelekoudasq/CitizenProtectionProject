@@ -30,4 +30,10 @@ public interface JsonApi {
     @GET("control-center/api/incidents/{id}")
     Call<Incident> getIncident(@Header("Authorization") String token , @Path("id") String inc_id);
 
+    @GET("control-center/api/admin/users/{id}")
+    Call<Department> getDepartment(@Header("Authorization") String token , @Path("id") String dep_id );
+
+    @GET("control-center/api/admin/users/{id}")
+    Call<SessionInfo> getUser(@Header("Authorization") String token , @Path("id") String dep_id );
+
 }

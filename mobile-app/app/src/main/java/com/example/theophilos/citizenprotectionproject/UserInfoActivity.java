@@ -6,6 +6,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 
 import com.google.android.gms.maps.CameraUpdate;
@@ -13,6 +16,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
@@ -36,6 +40,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import static com.example.theophilos.citizenprotectionproject.LoginActivity.getUnsafeOkHttpClient;
 
@@ -47,7 +52,8 @@ public class UserInfoActivity extends AppCompatActivity implements
     private CustomMapView mapView;
 
     public Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl("https://10.0.2.2:9000")
+            //.baseUrl("https://10.0.2.2:9000")
+            .baseUrl("https://83.212.76.248:9000")
             .addConverterFactory(GsonConverterFactory.create())
             .client(getUnsafeOkHttpClient().build())
             .build();
@@ -82,6 +88,8 @@ public class UserInfoActivity extends AppCompatActivity implements
         //Retrieve token wherever necessary
         SharedPreferences preferences = UserInfoActivity.this.getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
         String usrName = preferences.getString("USRNAME", null);
+        String fname = preferences.getString("FNAME", null);
+        String lname = preferences.getString("LNAME", null);
 
 
         View hView = navigationView.getHeaderView(0);
@@ -89,29 +97,68 @@ public class UserInfoActivity extends AppCompatActivity implements
         nav_user.setText(usrName);
 
         initGoogleMap(savedInstanceState);
+
+        TextView fnameView = findViewById(R.id.fullName);
+        TextView unameView = findViewById(R.id.userName);
+
+
+        fnameView.setText(fname + " " + lname);
+        unameView.setText(usrName);
+
+        showDepartment();
+
+    }
+
+
+    public void showDepartment() {
+        final TextView depName = findViewById(R.id.departmentName);
+        SharedPreferences preferences = UserInfoActivity.this.getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
+        String dId = preferences.getString("DEPID", null);
+        String token = preferences.getString("TOKEN", null);
+
+        JsonApi jsonApi = retrofit.create(JsonApi.class);
+        Call<Department> call = jsonApi.getDepartment("Bearer " + token, dId);
+        call.enqueue(new Callback<Department>() {
+            @Override
+            public void onResponse(Call<Department> call, Response<Department> response) {
+                if (!response.isSuccessful()) {
+                    return;
+                }
+                Department dep = response.body();
+                depName.setText(dep.getName());
+
+            }
+
+            @Override
+            public void onFailure(Call<Department> call, Throwable t) {
+            }
+        });
+
+
     }
 
 
     @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item ){
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.nav_logout:
                 SharedPreferences preferences = UserInfoActivity.this.getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
-                String token  = preferences.getString("TOKEN",null);
+                String token = preferences.getString("TOKEN", null);
                 JsonApi jsonApi = retrofit.create(JsonApi.class);
                 SharedPreferences.Editor editor = preferences.edit();
                 editor.clear();
                 editor.apply();
                 finish();
-                Call<Void> call = jsonApi.logout("Bearer "+token);
+                Call<Void> call = jsonApi.logout("Bearer " + token);
                 call.enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {
-                        if(!response.isSuccessful()) {
+                        if (!response.isSuccessful()) {
                             return;
                         }
                     }
+
                     @Override
                     public void onFailure(Call<Void> call, Throwable t) {
                     }
@@ -178,16 +225,25 @@ public class UserInfoActivity extends AppCompatActivity implements
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        SharedPreferences preferences = UserInfoActivity.this.getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
-        String lat = preferences.getString("LAT", null);
-        String lon = preferences.getString("LON", null);
-        double d1 = Double.parseDouble(lat);
 
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        Criteria criteria = new Criteria();
 
-        CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(d1,23.7032915));
-        CameraUpdate zoom=CameraUpdateFactory.zoomTo(11);
-        googleMap.moveCamera(center);
-        googleMap.animateCamera(zoom);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
+        if (location != null)
+        {
+            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 13));
+
+            CameraPosition cameraPosition = new CameraPosition.Builder()
+                    .target(new LatLng(location.getLatitude(), location.getLongitude()))
+                    .zoom(14)
+                    .bearing(90)
+                    .build();
+            googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        }
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;

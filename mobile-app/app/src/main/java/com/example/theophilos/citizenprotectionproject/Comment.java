@@ -6,10 +6,12 @@ public class Comment {
 
     Date date;
     String text;
+    String user;
 
-    public Comment ( Date d , String t ){
+    public Comment ( Date d , String t ,String u){
         this.text = t;
         this.date = d;
+        this.user = u;
     }
 
     public Date getDate() {
@@ -20,4 +22,7 @@ public class Comment {
         return text;
     }
 
+    public String getUser() {
+        return user;
+    }
 }

@@ -21,6 +21,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,13 +36,16 @@ import static com.example.theophilos.citizenprotectionproject.LoginActivity.getU
 
 public class IncidentsActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
+    private long backPressedTime;
+
     private ArrayList<String> incidentNames = new ArrayList<>();
     private ArrayList<String> incidentPriorities = new ArrayList<>();
     private ArrayList<String> incidentIds = new ArrayList<>();
     private DrawerLayout drawer;
 
     public Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl("https://10.0.2.2:9000")
+            //.baseUrl("https://10.0.2.2:9000")
+            .baseUrl("https://83.212.76.248:9000")
             .addConverterFactory(GsonConverterFactory.create())
             .client( getUnsafeOkHttpClient().build())
             .build();
@@ -137,7 +141,41 @@ public class IncidentsActivity extends AppCompatActivity implements NavigationVi
         if (drawer.isDrawerOpen(GravityCompat.START)){
             drawer.closeDrawer(GravityCompat.START);
         } else{
-            return;
+            Intent myIntent = getIntent();
+            String flag = myIntent.getStringExtra("exitFlag");
+            if ( flag != null && flag.equals("true") ){
+                if ( backPressedTime + 2000 > System.currentTimeMillis()){
+                    SharedPreferences preferences = IncidentsActivity.this.getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
+                    String token  = preferences.getString("TOKEN",null);
+                    JsonApi jsonApi = retrofit.create(JsonApi.class);
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.clear();
+                    editor.apply();
+                    finish();
+                    Call<Void> call = jsonApi.logout("Bearer "+token);
+                    call.enqueue(new Callback<Void>() {
+                        @Override
+                        public void onResponse(Call<Void> call, Response<Void> response) {
+                            if(!response.isSuccessful()) {
+                                return;
+                            }
+                        }
+                        @Override
+                        public void onFailure(Call<Void> call, Throwable t) {
+                        }
+                    });
+                    Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                    startActivity(intent);
+                }
+                else{
+                    Toast.makeText(getApplicationContext(), "Πατήστε πίσω ξανά για αποσύνδεση", Toast.LENGTH_SHORT).show();
+                }
+
+                backPressedTime = System.currentTimeMillis();
+            }
+            else{
+                this.finish();
+            }
         }
 
     }

@@ -1,5 +1,7 @@
 package com.example.theophilos.citizenprotectionproject;
 
+import java.util.List;
+
 /**
  * Created by theophilos on 2/7/20.
  */
@@ -11,6 +13,7 @@ public class SessionInfo {
     String username;
     UserDetails details;
     int userType;
+    Name name;
 
     public String get_id() {
         return _id;
@@ -31,6 +34,13 @@ public class SessionInfo {
     public int getUserType() {
         return userType;
     }
+
+    public Name getName() {
+        return name;
+    }
+
+
+
 }
 
 
