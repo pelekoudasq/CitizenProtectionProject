@@ -510,7 +510,7 @@ router.post('/comment', function(req, res, next) {
 				}
 			},
 			$inc: {
-				departmentReports: req.body.final
+				departmentReports: req.body.final_comment
 			}
 		}
 	, function(err, ret) {
