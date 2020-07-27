@@ -76,14 +76,24 @@ class Incident extends Component
             }
 
         let id = this.props.incident._id
-
-        console.log("To id ine", id);
+        
+        // console.log("To id ine", id);
 
         fetch(`${apiUrl}/incidents/${id}`, requestOptions)
         .then(response => response.json())
         .then(response => {
            console.log("When click more", response)  
         }); 
+        let coordinates = [] //array of objects of coordinates
+        let coordinate = {}
+        
+        coordinate['lat'] = this.props.incident.location['latitude']
+        coordinate['lng'] = this.props.incident.location['longitude']
+        coordinate['priority'] = this.props.incident.priority
+
+        coordinates.push(coordinate)
+
+        localStorage.setItem("coordinates", JSON.stringify(coordinates))
 
         this.props.history.push(`/incident/${id}`)
 	}

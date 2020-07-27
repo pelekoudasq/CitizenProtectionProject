@@ -11,13 +11,10 @@ class IncidentMap extends Component
 	
 	render(){
 		
-		// let coordinates = JSON.parse(localStorage.getItem("coordinates"))
-		// let coordinates = this.props.coordinates.coordinates
-
-		// console.log("props ", this.props.coordinates);
+		let coordinates = JSON.parse(localStorage.getItem("coordinates"))
 		const IncidentMap = withGoogleMap(props => (
-			<GoogleMap defaultZoom = {15} center = {{ lat: this.props.coordinates[0].lat, lng: this.props.coordinates[0].lng }}>
-				<Marker position={{ lat: this.props.coordinates[0].lat, lng: this.props.coordinates[0].lng }}/>
+			<GoogleMap defaultZoom = {15} center = {{ lat: coordinates[0].lat, lng: coordinates[0].lng }}>
+				<Marker position={{ lat: coordinates[0].lat, lng: coordinates[0].lng }}/>
 			</GoogleMap>
 			
 		));

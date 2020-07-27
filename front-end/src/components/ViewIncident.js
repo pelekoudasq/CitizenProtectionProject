@@ -95,10 +95,11 @@ class ViewIncident extends Component
 	{	
 
         let id = this.props.match.params["id"]
+        // let lat = this.props.match.params["lat"]
+        // let long = this.props.match.params["long"]
         let coordinates = [] //array of objects of coordinates
         let coordinate = {}
-        console.log(id)
-            
+        // console.log(id)
 
         incidentService.get_incident(id)
         .then(response => {
@@ -113,7 +114,7 @@ class ViewIncident extends Component
 
             coordinates.push(coordinate)
 
-            localStorage.setItem("coordinates", JSON.stringify(coordinates))
+            // localStorage.setItem("coordinates", JSON.stringify(coordinates))
             this.setState({
                 address: response.location.address,
                 coordinates: coordinates,
@@ -328,14 +329,14 @@ class ViewIncident extends Component
 			icon = high
 
 		return(
-			<div className = "hide-scroll">
+			<div className="hide-scroll">
 				<SideMenu />
 		        <button className="btn btn-link" >
-		        <FontAwesomeIcon className="iconBack" icon={ faArrowLeft } onClick={this.goBack}/>
+                    <FontAwesomeIcon className="iconBack" icon={ faArrowLeft } onClick={this.goBack}/>
 		        </button>
 
-                <h5 className = "head_ltitleInfo">{incident.title}</h5>
-        		<div className = "hrz_lineBack"></div>
+                <h5 className="head_ltitleInfo">{incident.title}</h5>
+        		<div className="hrz_lineBack"></div>
 
         		{/*this.state.isloading && <div className="load-spin"></div> */}
 
@@ -351,7 +352,7 @@ class ViewIncident extends Component
                                         </tr>
                                         <tr>
                                             <td className="pr-3">Προτεραιότητα:</td>
-                                            <td><img id="priority-icon" src={icon} alt= ''/> {incident.priority}</td>
+                                            <td><img id="priority-icon" src={icon} alt=''/> {incident.priority}</td>
                                         </tr>
                                         <tr>
                                             <td className="pr-3">Όνομα Αναφέροντα:</td>
@@ -375,11 +376,11 @@ class ViewIncident extends Component
                                         { incident.description && (
                                             <tr>
                                                 <td colSpan="2" style={{ width: "180px" }}>
-                                                        <div className="p-1 u-shadow-v18 g-bg-secondary rounded">
-                                                            <div className="text-wrap">
-                                                                { incident.description }
-                                                            </div>
+                                                    <div className="p-1 u-shadow-v18 g-bg-secondary rounded">
+                                                        <div className="text-wrap">
+                                                            { incident.description }
                                                         </div>
+                                                    </div>
                                                 </td>
                                             </tr>
                                         )}
@@ -437,7 +438,7 @@ class ViewIncident extends Component
                                                     <td colSpan="2" className="pborder rounded" style={{ width: "180px" }}>
                                                         <div className="p-1 u-shadow-v18 g-bg-secondary rounded">
                                                             <div className="text-wrap">
-                                                                { incident.description }
+                                                                {incident.description}
                                                             </div>
                                                         </div>
                                                     </td>
@@ -465,7 +466,7 @@ class ViewIncident extends Component
                                         </div>
                                         {incident.active && (Number(usertype) === 0 || Number(usertype) === 1) && (
                                             <button id="close-image" className="mx-auto">
-                                            <img src={alert1} alt='' style={{ width: '180px'}} onClick= {(formflag === true) && this.handleAuth}/>
+                                            <img src={alert1} alt='' style={{ width: '180px'}} onClick={(formflag === true) ? this.handleAuth : undefined}/>
                                             </button>
                                         )}
                                     </div>
@@ -473,7 +474,7 @@ class ViewIncident extends Component
                             </Form>
                         </Col>
                         <Col>
-                            {(this.state.coordinates && <IncidentMap coordinates={JSON.parse(localStorage.getItem("coordinates"))}/>)}
+                            {(this.state.coordinates && <IncidentMap coordinates={this.state.coordinates}/>)}
                         </Col>
                     </Row>
                     <Row>
@@ -484,8 +485,8 @@ class ViewIncident extends Component
                         )}
                     </Row>
                     <Row id="reports">
-                        <h6 className = "head_ltitleInfo">Αναφορές</h6>
-                        <div className = "hrz_lineBack"></div>
+                        <h6 className="head_ltitleInfo">Αναφορές</h6>
+                        <div className="hrz_lineBack"></div>
                         <Col sm={6} className="mt-1 my-scroll scroll">
                             <ul className='list-group overflow-auto' key={this.state.incident._id}>
                                 {!this.state.isLoading && this.state.comments}
