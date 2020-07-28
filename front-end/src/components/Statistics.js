@@ -10,18 +10,18 @@ import { PieChart, Pie, Cell, BarChart, Bar, AreaChart, Area, XAxis, YAxis, Cart
 
 const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#FF8042"];
 
-const RADIAN = Math.PI / 180;
-const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index,}) => {
-  const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
-  const x = cx + radius * Math.cos(-midAngle * RADIAN);
-  const y = cy + radius * Math.sin(-midAngle * RADIAN);
+// const RADIAN = Math.PI / 180;
+// const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index,}) => {
+//   const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+//   const x = cx + radius * Math.cos(-midAngle * RADIAN);
+//   const y = cy + radius * Math.sin(-midAngle * RADIAN);
 
-  return (
-    <text x={x} y={y} fill="white" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central">
-      {`${(percent * 100).toFixed(0)}%`}
-    </text>
-  );
-};
+//   return (
+//     <text x={x} y={y} fill="white" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central">
+//       {`${(percent * 100).toFixed(0)}%`}
+//     </text>
+//   );
+// };
 
 class Statistics extends Component {
   constructor(props) {
@@ -73,7 +73,8 @@ class Statistics extends Component {
       .then( (response) => {
         this.setState({
           auths: response,
-        });
+		});
+		console.log(response)
 
         this.state.auths.forEach((auths) => {
 			/*Loop through every row of the jsonfile and get the attributes*/
@@ -219,7 +220,7 @@ class Statistics extends Component {
 			</thead>
 			<tbody>
 				<tr>
-					<td>Μέση διάρκεια συμβάντων</td>
+					<td>Μέση διάρκεια συμβάντων (ώρες)</td>
 					<td>{(stats.close !== 0) ? ((stats.days/stats.close).toFixed(3)) : ("-")}</td>
 				</tr>
 				<tr>
@@ -344,48 +345,50 @@ class Statistics extends Component {
               </div>
             </div>
 
+			{this.state.userType === "null" && (
+
             <div className="container">
-              <div className="row">
-                <div className="col-sm-3" id="graphBox-pie">
-                  <p className="title-pie">Ποσοστό συμμετοχής για {this.authName()}</p>
-                  <PieChart width={700} height={270}>
-                    <Pie dataKey="value" isAnimationActive={false} data={this.state.statsAuth} cx={120} cy={130} outerRadius={90} fill="#8884d8" label>
-                      {this.state.statsAuth.map((entry, index) => (
-                        <Cell key={index} fill={COLORS[index % COLORS.length]}/>
-                      ))}
-                    </Pie>
-                    <Tooltip/>
-                  </PieChart>
-                </div>
+				<div className="row">
+					<div className="col-sm-3" id="graphBox-pie">
+					<p className="title-pie">Ποσοστό συμμετοχής για {this.authName()}</p>
+					<PieChart width={700} height={270}>
+						<Pie dataKey="value" isAnimationActive={false} data={this.state.statsAuth} cx={120} cy={130} outerRadius={90} fill="#8884d8" label>
+						{this.state.statsAuth.map((entry, index) => (
+							<Cell key={index} fill={COLORS[index % COLORS.length]}/>
+						))}
+						</Pie>
+						<Tooltip/>
+					</PieChart>
+					</div>
 
-                <div className="col-sm-1" id="betweenBox"></div>
+					<div className="col-sm-1" id="betweenBox"></div>
 
-                <div className="col-sm-5" id="graphBox-bar2">
-                  <p className="title-bar2">
-                    Πλήθος ανοιχτών/κλειστών συμβάντων για {this.authName()}
-                  </p>
-                  <AreaChart width={420} height={270} data={this.state.statsAuth} margin={{ top: 40, right: 0, left: 0, bottom: 0 }}>
-                    <defs>
-                      <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8}/>
-                        <stop offset="95%" stopColor="#8884d8" stopOpacity={0}/>
-                      </linearGradient>
-                      <linearGradient id="colorPv" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#82ca9d" stopOpacity={0.8}/>
-                        <stop offset="95%" stopColor="#82ca9d" stopOpacity={0}/>
-                      </linearGradient>
-                    </defs>
-                    <XAxis dataKey="name" />
-                    <YAxis />
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <Tooltip />
-                    <Area type="monotone" dataKey="close" stroke="#8884d8" fillOpacity={1} fill="url(#colorUv)"/>
-                    <Area type="monotone" dataKey="open" stroke="#82ca9d" fillOpacity={1} fill="url(#colorPv)"/>
-                  </AreaChart>
-                </div>
-              </div>
-            </div>
-
+					<div className="col-sm-5" id="graphBox-bar2">
+					<p className="title-bar2">
+						Πλήθος ανοιχτών/κλειστών συμβάντων για {this.authName()}
+					</p>
+					<AreaChart width={420} height={270} data={this.state.statsAuth} margin={{ top: 40, right: 0, left: 0, bottom: 0 }}>
+						<defs>
+						<linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
+							<stop offset="5%" stopColor="#8884d8" stopOpacity={0.8}/>
+							<stop offset="95%" stopColor="#8884d8" stopOpacity={0}/>
+						</linearGradient>
+						<linearGradient id="colorPv" x1="0" y1="0" x2="0" y2="1">
+							<stop offset="5%" stopColor="#82ca9d" stopOpacity={0.8}/>
+							<stop offset="95%" stopColor="#82ca9d" stopOpacity={0}/>
+						</linearGradient>
+						</defs>
+						<XAxis dataKey="name" />
+						<YAxis />
+						<CartesianGrid strokeDasharray="3 3" />
+						<Tooltip />
+						<Area type="monotone" dataKey="close" stroke="#8884d8" fillOpacity={1} fill="url(#colorUv)"/>
+						<Area type="monotone" dataKey="open" stroke="#82ca9d" fillOpacity={1} fill="url(#colorPv)"/>
+					</AreaChart>
+					</div>
+					</div>
+				</div>
+			)}
             </div>
                 <div className="col-4" id="BoxRight">
                     <p className="title-bar2">
