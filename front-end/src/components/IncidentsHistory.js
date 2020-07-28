@@ -324,9 +324,22 @@ class Incidents extends Component
 			console.log("response without filter is ", response)
 			if (response.length !== 0)
 			{
-					response.forEach(incident => { /*Loop through every row of the jsonfile and get the attributes*/
-					/*define the new coordinate */
-					if (Number(usertype) === 0 || Number(usertype) === 3)
+				response.forEach(incident => { /*Loop through every row of the jsonfile and get the attributes*/
+				/*define the new coordinate */
+				if (Number(usertype) === 0 || Number(usertype) === 3)
+				{
+					coordinate = {}
+					coordinate['lat'] = incident.location['latitude']
+					coordinate['lng'] = incident.location['longitude']    
+					coordinate['priority'] = incident.priority
+
+					/* Push it to the array of coordinates */
+					coordinates.push(coordinate)
+					temp_incidents.push(incident)
+				}
+				else if(Number(usertype) === 2)
+				{
+					if(incident.auth.includes(1) && incident.officers.includes(user_id))
 					{
 						coordinate = {}
 						coordinate['lat'] = incident.location['latitude']
@@ -337,20 +350,7 @@ class Incidents extends Component
 						coordinates.push(coordinate)
 						temp_incidents.push(incident)
 					}
-					else if(Number(usertype) === 2)
-					{
-						if(incident.auth.includes(1) && incident.officers.includes(user_id))
-						{
-							coordinate = {}
-							coordinate['lat'] = incident.location['latitude']
-							coordinate['lng'] = incident.location['longitude']    
-							coordinate['priority'] = incident.priority
-
-							/* Push it to the array of coordinates */
-							coordinates.push(coordinate)
-							temp_incidents.push(incident)
-						}
-					}
+				}
 				})
 				// console.log("incidents after filter are ", temp_incidents)
 				this.setState({

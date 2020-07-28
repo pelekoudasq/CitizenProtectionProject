@@ -5,6 +5,7 @@ import NavBar from './components/NavBar'
 import IncidentForm from './components/IncidentForm'
 import LoginForm from './components/LoginForm'
 import NotFound from './components/NotFound'
+import Unauthorized from './components/Unauthorized'
 import { withRouter } from 'react-router'
 import ViewIncident from './components/ViewIncident'
 import MainPage from './components/MainPage'
@@ -47,8 +48,10 @@ class App extends Component
                 <Route path='/login' component={LoginForm} />
                 <Route path='/incidents' component={this.renderProtectedComponent(IncidentsHistory)} />
                 <Route path= '/incident/:id' component={this.renderProtectedComponent(ViewIncident)} />
-                {Number(usertype) === 0 &&
-                    <Route path='/new_incident' component={this.renderProtectedComponent(IncidentForm)} />}
+                {Number(usertype) === 0 ?
+                    <Route path='/new_incident' component={this.renderProtectedComponent(IncidentForm)} />
+                :  <Route component={Unauthorized} />
+                }
                 <Route component={NotFound} />
             </Switch>
         </div>
