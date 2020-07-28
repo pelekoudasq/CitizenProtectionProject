@@ -70,33 +70,41 @@ class Statistics extends Component {
     ];
 
     statisticsService.get_authorities()
-      .then((response) => {
+      .then( (response) => {
         this.setState({
           auths: response,
         });
 
         this.state.auths.forEach((auths) => {
-          /*Loop through every row of the jsonfile and get the attributes*/
-          statsAuth.push({
-            name: auths.title,
-            enum: auths.enum,
-            open: 0,
-            close: 0,
-            value: 0,
-            prlow: 0,
-            prmed: 0,
-            prhig: 0,
-            days: 0
-          });
-        });
+			/*Loop through every row of the jsonfile and get the attributes*/
+			statsAuth.push({
+				name: auths.title,
+				enum: auths.enum,
+				open: 0,
+				close: 0,
+				value: 0,
+				prlow: 0,
+				prmed: 0,
+				prhig: 0,
+				days: 0
+			});
+		});
 
-        incidentService.get_all_incidents()
+
+		let auth = []
+
+		console.log(this.state.userType)
+		if (this.state.userType !== "null") {
+			auth.push(JSON.stringify(Number(this.state.userType)+7))
+		}
+
+		incidentService.get_filtered_incidents("", [], [], auth ,"", "")
           .then(async (response) => {
             this.setState({
               incidents: response,
             });
 
-            await this.state.incidents.forEach((incident) => {
+			await this.state.incidents.forEach((incident) => {
               /*Loop through every row of the jsonfile and get the attributes*/
               /*define the new coordinate */
               coordinate = {};
