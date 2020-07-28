@@ -318,10 +318,10 @@ class Incidents extends Component
 		let user_id = localStorage.getItem("userid");
 		let temp_incidents = []
 
-		console.log("filtra auth einai ", this.state.filter_auth)
+		// console.log("filtra auth einai ", this.state.filter_auth)
 		incidentService.get_filtered_incidents(this.state.filter_text, this.state.filter_priority, this.state.filter_status, this.state.filter_auth ,this.state.filter_start_date,  this.state.filter_end_date)
 		.then (response => {
-			console.log("response without filter is ", response)
+			// console.log("response without filter is ", response)
 			if (response.length !== 0)
 			{
 				response.forEach(incident => { /*Loop through every row of the jsonfile and get the attributes*/
