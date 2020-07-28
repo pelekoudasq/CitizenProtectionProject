@@ -3,6 +3,12 @@
     margin-bottom: 10px;
 }
 
+#genericContainer{
+    margin-left: 6%;
+    width: 94%;
+    margin-top: 1.5%;
+}
+
 .title-generic{
     margin-bottom: 5px;
     font-size: 20px;
@@ -23,6 +29,24 @@
     font-size: 18px;
  }
 
+#BoxLeft{
+    padding-left: 0px;
+    max-width: 63%;
+}
+
+#BoxRight{
+    -webkit-box-shadow: 2px 5px 9px 3px rgba(0,0,0,0.09);
+    -moz-box-shadow: 2px 5px 9px 3px rgba(0,0,0,0.09);
+    box-shadow: 2px 5px 9px 3px rgba(0,0,0,0.09);
+
+    border:1px;
+    max-width: 100%;
+    height: auto;
+    padding: 0px;
+    margin-bottom: 25px;
+    margin-left: 0px;
+}
+
 #graphBox-bar{
     -webkit-box-shadow: 2px 5px 9px 3px rgba(0,0,0,0.09);
     -moz-box-shadow: 2px 5px 9px 3px rgba(0,0,0,0.09);
@@ -42,7 +66,7 @@
     -moz-box-shadow: 2px 5px 9px 3px rgba(0,0,0,0.09);
     box-shadow: 2px 5px 9px 3px rgba(0,0,0,0.09);
 
-    min-width: 270px;
+    min-width: 290px;
     max-width: 25%;
     margin-bottom: 20px;
 }
@@ -58,12 +82,15 @@
     box-shadow: 2px 5px 9px 3px rgba(0,0,0,0.09);
 
     padding-left: 0px;
-    min-width: 430px;
-    max-width: 40%;
+    min-width: 450px;
+    max-width: 50%;
     margin-bottom: 20px;
 }
 
 #statTable{
+    margin-top: 1%;
+    margin-left: auto;
+    margin-right: auto;
     width: 80%;
 }
 
@@ -73,16 +100,25 @@
     box-shadow: 2px 5px 9px 3px rgba(0,0,0,0.09);
 
     /* min-width: 770px; */
-    max-width: 50%;
+    /* max-width: 50%; */
     height: auto;
     padding: 0px;
     margin-bottom: 25px;
 }
 
+#title-header{
+    background-color: #dee2e6;
+}
 
+#title-table{
+    font-size: 10px;
+}
 
-
-
+#table-auth{
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+}
 
 
 .blink_me {

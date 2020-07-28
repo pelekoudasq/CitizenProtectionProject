@@ -20,7 +20,7 @@ class LoginForm extends  Component
     }
 
     componentDidMount()
-	{	
+	{
         authenticationService.logout();
         this.props.history.push('/login');
 	}
@@ -51,6 +51,8 @@ class LoginForm extends  Component
                     localStorage.setItem('token', user.token);
                     localStorage.setItem('username', u);
                     localStorage.setItem('userid', user._id);
+                    if (user.details)
+                        localStorage.setItem('authoritytype', user.details.authorityType);
                     //console.log("mpainei edw: ", this.state.flag)
 
 
