@@ -49,13 +49,14 @@ class Incidents extends Component
         let coordinate = {}; //object of coordinates
 		let coordinates = [] //array of objects of coordinates
 		let usertype =  localStorage.getItem("usertype");
+		let auth_type = localStorage.getItem("authoritytype")
 
-		if (Number(usertype) === 0 ||Number(usertype) === 3 ) //api call for control center
+		if (Number(usertype) === 0 || (Number(usertype) === 3 && auth_type === "null"))//api call for control center
 		{	
 			incidentService.get_all_incidents(this.state.visiblePosts, 9)
 			.then( response => {
 				this.setState({
-					incidents: response.reverse(),
+					incidents: response,
 					no_posts: false,
 					visiblePosts: this.state.visiblePosts + 8
 				})
@@ -120,7 +121,7 @@ class Incidents extends Component
 				if(response.length !==0)
 				{
 					this.setState({
-						incidents: response.reverse(),
+						incidents: response,
 						no_posts: false
 					})
 					
@@ -148,8 +149,33 @@ class Incidents extends Component
 				}
 			});	
 		}
+		else if(Number(usertype) === 3)
+		{
+			let temp_incidents = []
+			incidentService.get_all_incidents(this.state.visiblePosts, 100)
+			.then( response => {
+				response.forEach(incident => { /*Loop through every row of the jsonfile and get the attributes*/
+					if(incident.auth.includes(Number(auth_type)))
+					{
+						coordinate = {}
+						coordinate['lat'] = incident.location['latitude']
+						coordinate['lng'] = incident.location['longitude']    
+						coordinate['priority'] = incident.priority
 
-
+						/* Push it to the array of coordinates */
+						coordinates.push(coordinate)
+						temp_incidents.push(incident)
+					}
+				})
+				this.setState({
+					coordinates: coordinates,
+					postsDone: true,
+					incidents: temp_incidents,
+					isloading: false,
+					no_posts: false
+				})
+			});	
+		}
 	}
 
 	loadmore()
@@ -316,6 +342,7 @@ class Incidents extends Component
 		let coordinates = [] //array of objects of coordinates
 		let usertype =  localStorage.getItem("usertype");
 		let user_id = localStorage.getItem("userid");
+		let auth_type = localStorage.getItem("authoritytype")
 		let temp_incidents = []
 
 		// console.log("filtra auth einai ", this.state.filter_auth)
@@ -325,21 +352,7 @@ class Incidents extends Component
 			if (response.length !== 0)
 			{
 				response.forEach(incident => { /*Loop through every row of the jsonfile and get the attributes*/
-				/*define the new coordinate */
-				if (Number(usertype) === 0 || Number(usertype) === 3)
-				{
-					coordinate = {}
-					coordinate['lat'] = incident.location['latitude']
-					coordinate['lng'] = incident.location['longitude']    
-					coordinate['priority'] = incident.priority
-
-					/* Push it to the array of coordinates */
-					coordinates.push(coordinate)
-					temp_incidents.push(incident)
-				}
-				else if(Number(usertype) === 2)
-				{
-					if(incident.auth.includes(1) && incident.officers.includes(user_id))
+					if (Number(usertype) === 0 || (Number(usertype) === 3 && auth_type === "null"))
 					{
 						coordinate = {}
 						coordinate['lat'] = incident.location['latitude']
@@ -350,7 +363,38 @@ class Incidents extends Component
 						coordinates.push(coordinate)
 						temp_incidents.push(incident)
 					}
-				}
+					else if(Number(usertype) === 2 || Number(usertype) === 1)
+					{
+						if((incident.auth.includes(0) && incident.officers.includes(user_id)) || (incident.auth.includes(0) && incident.departments.includes(user_id)) ||
+						(incident.auth.includes(1) && incident.officers.includes(user_id)) || (incident.auth.includes(1) && incident.departments.includes(user_id)) ||
+						(incident.auth.includes(2) && incident.officers.includes(user_id)) || (incident.auth.includes(2) && incident.departments.includes(user_id)) ||
+						(incident.auth.includes(3) && incident.officers.includes(user_id)) || (incident.auth.includes(3) && incident.departments.includes(user_id)))
+						{
+							coordinate = {}
+							coordinate['lat'] = incident.location['latitude']
+							coordinate['lng'] = incident.location['longitude']    
+							coordinate['priority'] = incident.priority
+
+							/* Push it to the array of coordinates */
+							coordinates.push(coordinate)
+							temp_incidents.push(incident)
+						}
+					}
+					else if((Number(usertype) === 3))
+					{
+						if(incident.auth.includes(Number(auth_type)))
+						{
+							coordinate = {}
+							coordinate['lat'] = incident.location['latitude']
+							coordinate['lng'] = incident.location['longitude']    
+							coordinate['priority'] = incident.priority
+	
+							/* Push it to the array of coordinates */
+							coordinates.push(coordinate)
+							temp_incidents.push(incident)
+						}
+					}
+
 				})
 				// console.log("incidents after filter are ", temp_incidents)
 				this.setState({
@@ -394,6 +438,7 @@ class Incidents extends Component
 	{
 		let incidents = this.state.incidents
 		let usertype =  localStorage.getItem("usertype")
+		let auth_type = localStorage.getItem("authoritytype")
 
 		return(
 			<div>
@@ -451,7 +496,7 @@ class Incidents extends Component
 								</div>
 							</FormGroup>
 							</Col>
-							{(Number(usertype) === 0 || Number(usertype) === 3) && // Only Control Center and Goverment Employees may filter incidents by authorities
+							{(Number(usertype) === 0 || (Number(usertype) === 3 && auth_type === "null")) && // Only Control Center and Goverment Employees may filter incidents by authorities
 							<Col sm={6} style={{marginLeft: '-49%'}}>
                                 <FormGroup>
 									<Label><h6>Φορείς</h6></Label>

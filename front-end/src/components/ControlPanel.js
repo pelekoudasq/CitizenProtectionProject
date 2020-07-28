@@ -65,17 +65,15 @@ class ControlPanel extends Component
 				this.setState({
 					coordinates: coordinates
 				})
-				if (response.length < 9) {
-					this.setState({
-						postsDone: false
-					})
-				}
 			});	
 		}
 		else if(Number(usertype) === 2) //api call for employees
 		{	
 			incidentService.get_user_requested_incidents()
+
 			.then( response => {
+				console.log("O naftis exei usertype " ,usertype)
+				console.log("Ta peristatika tou nafti einai ", response)
 				if(response.incidents && response.incidents.length !==0)
 				{
 					console.log()
@@ -112,9 +110,9 @@ class ControlPanel extends Component
 		}
 		else if(Number(usertype) === 1)
 		{	
-			incidentService.get_department_incidents(this.state.visiblePosts, 50)
+			incidentService.get_department_incidents(this.state.visiblePosts, 9)
 			.then( response => {
-				// console.log("Atpf", response)
+				console.log("Atpf", response)
 				if(response.length !==0)
 				{
 					this.setState({
@@ -137,12 +135,6 @@ class ControlPanel extends Component
 					this.setState({
 						coordinates: coordinates
 					})
-
-					if (response.length < 10) {
-						this.setState({
-							postsDone: true
-						})
-					}
 				}
 				else if(response.length === 0)
 				{
@@ -169,8 +161,8 @@ class ControlPanel extends Component
 			visiblePosts: this.state.visiblePosts + 10
 		})
 		let coordinate = {} //object of coordinates
-        let coordinates = [] //array of objects of coordinates
-
+		let coordinates = [] //array of objects of coordinates
+		
 		incidentService.get_active_incidents(this.state.visiblePosts, 10)
 		.then (response => {
 			if (response.length !== 0)
@@ -202,11 +194,7 @@ class ControlPanel extends Component
 					coordinates: [...prevState.coordinates, ...coordinates]
 				}))
 
-				if (response.length < 10) {
-					this.setState({
-						postsDone: true
-					})
-				}
+
 			}
 			else if(response.length === 0)
 			{
@@ -303,7 +291,7 @@ class ControlPanel extends Component
 				{!this.state.no_posts && <div className = "inc_line" style= {{position: 'absolute'}}></div>}
 				<br/>
 
-				{(!this.state.postsDone && !this.state.no_posts && Number(usertype) !== 2) && //if no more posts left, then dont display
+				{(!this.state.postsDone && !this.state.no_posts) && //if no more posts left, then dont display
         			(<Button id = "load" className = "loadmore" onClick = {this.loadmore} style = {{position: 'absolute', marginLeft: '27%'}}>Φόρτωση Περισσοτέρων</Button>)}
             </div>
 		)
