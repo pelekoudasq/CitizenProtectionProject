@@ -267,6 +267,7 @@ class ViewIncident extends Component
             let incident = this.state.incident
             incidentService.get_user(this.state.incident.report.user)
             .then(response => {
+                console.log(response)
                 let report = <table className="table table-borderless">
                         <tbody>
                             <tr className="border-bottom">
@@ -280,7 +281,7 @@ class ViewIncident extends Component
                             <tr>
                                 <td colSpan="6">
                                     <div className="pt-3 p-1 u-shadow-v18 g-bg-secondary rounded">
-                                        <div className="font-weight-bold opacity6">{response[0].username}</div>
+                                        <div className="font-weight-bold opacity6">{response.username}</div>
                                         <div className="text-wrap">
                                             {incident.report.text}
                                         </div>
@@ -507,7 +508,7 @@ class ViewIncident extends Component
                                 <FormGroup className="m-1">
                                     <textarea className="py-0" id="descriptionBox" type="text" value={this.state.report} onChange={this.handleTextArea} name="report" placeholder="Τελική Αναφορά"/>
                                 </FormGroup>
-                                {(this.state.incident.departmentReports >= this.state.incident.departments.length) ?
+                                {(this.state.incident.departmentReports >= this.state.incident.departments.length && this.state.incident.departments.length > 0) ?
                                 (<Button className="float-right buttonblue" type="submit">Ολοκλήρωση Συμβάντος</Button>)
                                 :
                                 ( <Button disabled className="float-right buttonblue" type="submit">Ολοκλήρωση Συμβάντος</Button>)}
