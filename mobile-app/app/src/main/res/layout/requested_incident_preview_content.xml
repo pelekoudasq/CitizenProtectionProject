@@ -5,16 +5,25 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activities.AcceptedIncidentPreviewActivity"
-    tools:showIn="@layout/incident_history_preview"
+    tools:showIn="@layout/accepted_incident_preview"
     android:id="@+id/scrollView">
 
     <LinearLayout
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         >
 
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/radius2"
+            android:onClick="acceptIncident"
+            android:text="Αποδοχή"
+            android:textAllCaps="false"
+            android:textSize="20dp" />
 
 
         <TextView
@@ -24,7 +33,7 @@
             android:layout_height="wrap_content"
             android:textSize="25dp"
             android:textColor="@color/darkGrey"
-            android:layout_marginBottom="15dp"
+            android:layout_marginBottom="10dp"
             android:drawableLeft="@drawable/ic_launcher_foreground"
             android:drawablePadding="10dp"/>
 
@@ -36,7 +45,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="15dp"
-            android:layout_marginBottom="15dp"
+            android:layout_marginBottom="10dp"
             android:textColor="@color/darkGrey"/>
 
         <TextView
@@ -47,7 +56,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="15dp"
-            android:layout_marginBottom="15dp"
+            android:layout_marginBottom="10dp"
             android:textColor="@color/darkGrey"/>
 
         <com.example.theophilos.citizenprotectionproject.utilities.CustomMapView
@@ -82,6 +91,10 @@
 
         </RelativeLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
             <TextView
                 android:layout_marginLeft="20dp"
@@ -94,6 +107,15 @@
                 android:layout_marginTop="10dp"
                 />
 
+            <ImageButton
+                android:layout_width="40dp"
+                android:layout_height="60dp"
+                android:layout_weight="30"
+                android:gravity="right"
+                android:onClick="showComments"
+                android:src="@drawable/ic_baseline_refresh_24_2"
+                android:layout_marginRight="5dp"/>
+        </LinearLayout>
 
 
         <RelativeLayout

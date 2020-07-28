@@ -2,31 +2,49 @@ package com.example.theophilos.citizenprotectionproject.activities;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 
-import com.example.theophilos.citizenprotectionproject.JsonApi;
-import com.example.theophilos.citizenprotectionproject.R;
-import com.example.theophilos.citizenprotectionproject.objects.Comment;
-import com.example.theophilos.citizenprotectionproject.objects.Incident;
+import com.example.theophilos.citizenprotectionproject.objects.AcceptIncident;
 import com.example.theophilos.citizenprotectionproject.utilities.CommentRecyclerViewAdapter;
 import com.example.theophilos.citizenprotectionproject.utilities.CustomMapView;
+import com.example.theophilos.citizenprotectionproject.objects.Incident;
+import com.example.theophilos.citizenprotectionproject.JsonApi;
+import com.example.theophilos.citizenprotectionproject.objects.NewComment;
+import com.example.theophilos.citizenprotectionproject.utilities.PolylineData;
+import com.example.theophilos.citizenprotectionproject.R;
+import com.example.theophilos.citizenprotectionproject.objects.Comment;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.material.navigation.NavigationView;
+import com.google.maps.DirectionsApiRequest;
+import com.google.maps.GeoApiContext;
+import com.google.maps.PendingResult;
+import com.google.maps.internal.PolylineEncoding;
+import com.google.maps.model.DirectionsResult;
+import com.google.maps.model.DirectionsRoute;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -37,8 +55,13 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import android.os.Handler;
+import android.os.Looper;
+import android.text.InputType;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import java.text.DateFormat;
@@ -49,9 +72,9 @@ import java.util.List;
 
 import static com.example.theophilos.citizenprotectionproject.activities.LoginActivity.getUnsafeOkHttpClient;
 
-public class IncidentHistoryPreviewActivity extends AppCompatActivity implements
+public class RequestedIncidentPreview extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener,
-        OnMapReadyCallback {
+        OnMapReadyCallback{
 
     private DrawerLayout drawer;
     private CustomMapView mapView;
@@ -60,6 +83,9 @@ public class IncidentHistoryPreviewActivity extends AppCompatActivity implements
     private ArrayList<String> Times = new ArrayList<>();
     private List<Comment> comms;
     private static final String TAG = "IncidentPreviewScrolling";
+    private GeoApiContext mGeoApiContext = null;
+    private ArrayList<PolylineData> mPolylineData = new ArrayList<>();
+    GoogleMap map;
 
     public Retrofit retrofit = new Retrofit.Builder()
             .baseUrl("https://10.0.2.2:9000")
@@ -74,7 +100,7 @@ public class IncidentHistoryPreviewActivity extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.incident_history_preview);
+        setContentView(R.layout.requested_incident_preview);
 
         Toolbar toolbar = findViewById(R.id.toolBar);
         setSupportActionBar(toolbar);
@@ -96,7 +122,7 @@ public class IncidentHistoryPreviewActivity extends AppCompatActivity implements
         toggle.syncState();
 
         //Retrieve token wherever necessary
-        SharedPreferences preferences = IncidentHistoryPreviewActivity.this.getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
+        SharedPreferences preferences = RequestedIncidentPreview.this.getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
         String usrName = preferences.getString("USRNAME", null);
 
 
@@ -113,31 +139,29 @@ public class IncidentHistoryPreviewActivity extends AppCompatActivity implements
         final TextView dateView = findViewById(R.id.incidentDate);
         nameView.setText(title);
 
-        String token  = preferences.getString("TOKEN",null);
+        String token = preferences.getString("TOKEN", null);
         JsonApi jsonApi = retrofit.create(JsonApi.class);
-        Call<Incident> call = jsonApi.getIncident("Bearer "+token,myIntent.getStringExtra("id"));
+        Call<Incident> call = jsonApi.getIncident("Bearer " + token, myIntent.getStringExtra("id"));
         call.enqueue(new Callback<Incident>() {
             @Override
             public void onResponse(Call<Incident> call, Response<Incident> response) {
-                if(!response.isSuccessful()) {
+                if (!response.isSuccessful()) {
                     return;
                 }
                 Incident inc = response.body();
                 Incident.Location loc = inc.getLocation();
                 String adr;
 
-                if ( loc != null ){
+                if (loc != null) {
                     adr = loc.getAddress();
                     addressView.setText(adr);
                 }
 
-                if ( inc.getPriority().equals("Υψηλή")){
+                if (inc.getPriority().equals("Υψηλή")) {
                     nameView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.high, 0, 0, 0);
-                }
-                else if ( inc.getPriority().equals("Μέτρια")){
+                } else if (inc.getPriority().equals("Μέτρια")) {
                     nameView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.medium, 0, 0, 0);
-                }
-                else if ( inc.getPriority().equals("Χαμηλή")){
+                } else if (inc.getPriority().equals("Χαμηλή")) {
                     nameView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.low, 0, 0, 0);
                 }
 
@@ -147,10 +171,9 @@ public class IncidentHistoryPreviewActivity extends AppCompatActivity implements
                 dateView.setText(dateString);
 
                 String desc = inc.getDescription();
-                if(desc == null ){
+                if (desc == null) {
                     descView.setText("Δεν έχει δοθεί ακόμα περιγραφή");
-                }
-                else{
+                } else {
                     descView.setText(desc);
                 }
 
@@ -160,6 +183,7 @@ public class IncidentHistoryPreviewActivity extends AppCompatActivity implements
 
 
             }
+
             @Override
             public void onFailure(Call<Incident> call, Throwable t) {
             }
@@ -169,29 +193,40 @@ public class IncidentHistoryPreviewActivity extends AppCompatActivity implements
     }
 
 
-
-
-    public void showComments(View view){
+    public void showComments(View view) {
+        SharedPreferences preferences = RequestedIncidentPreview.this.getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
         Comments.clear();
         Times.clear();
         Dates.clear();
-        SharedPreferences preferences = IncidentHistoryPreviewActivity.this.getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
-        final String token  = preferences.getString("TOKEN",null);
-        String usrId;
-        for ( Comment c : comms ) {
-            Comments.add(c.getText());
-            String time = new SimpleDateFormat("HH:mm").format(c.getDate());
-            Times.add(time);
-            String date = new SimpleDateFormat("dd-MM-yyyy").format(c.getDate());
-            Dates.add(date);
+        String token = preferences.getString("TOKEN", null);
+        JsonApi jsonApi = retrofit.create(JsonApi.class);
+        Call<Incident> call = jsonApi.getIncident("Bearer " + token, getIntent().getStringExtra("id"));
+        call.enqueue(new Callback<Incident>() {
+            @Override
+            public void onResponse(Call<Incident> call, Response<Incident> response) {
+                if (!response.isSuccessful()) {
+                    return;
+                }
+                Incident inc = response.body();
+                List<Comment> comms = inc.getComments();
+                for (Comment c : comms) {
+                    Comments.add(c.getText());
+                    String time = new SimpleDateFormat("HH:mm").format(c.getDate());
+                    Times.add(time);
+                    String date = new SimpleDateFormat("dd-MM-yyyy").format(c.getDate());
+                    Dates.add(date);
 
-        }
+                }
 
-        initRecyclerView();
+                reverseArrayList(Comments);
+                initRecyclerView();
+            }
 
-
+            @Override
+            public void onFailure(Call<Incident> call, Throwable t) {
+            }
+        });
     }
-
 
 
     private void initGoogleMap(Bundle savedInstanceState) {
@@ -203,28 +238,34 @@ public class IncidentHistoryPreviewActivity extends AppCompatActivity implements
         mapView.onCreate(mapViewBundle);
 
         mapView.getMapAsync(this);
+
+        if (mGeoApiContext == null) {
+            mGeoApiContext = new GeoApiContext.Builder().apiKey("AIzaSyAYKnVPsLIZ95ycf9yrqUczcPNVfXFxXyY").build();
+        }
     }
 
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item ){
 
-        switch (item.getItemId()){
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+        switch (item.getItemId()) {
             case R.id.nav_logout:
-                SharedPreferences preferences = IncidentHistoryPreviewActivity.this.getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
-                String token  = preferences.getString("TOKEN",null);
+                SharedPreferences preferences = RequestedIncidentPreview.this.getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
+                String token = preferences.getString("TOKEN", null);
                 JsonApi jsonApi = retrofit.create(JsonApi.class);
                 SharedPreferences.Editor editor = preferences.edit();
                 editor.clear();
                 editor.apply();
                 finish();
-                Call<Void> call = jsonApi.logout("Bearer " + token );
+                Call<Void> call = jsonApi.logout("Bearer " + token);
                 call.enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {
-                        if(!response.isSuccessful()) {
+                        if (!response.isSuccessful()) {
                             return;
                         }
                     }
+
                     @Override
                     public void onFailure(Call<Void> call, Throwable t) {
                     }
@@ -289,10 +330,17 @@ public class IncidentHistoryPreviewActivity extends AppCompatActivity implements
     @Override
     public void onMapReady(final GoogleMap googleMap) {
 
-        SharedPreferences preferences = IncidentHistoryPreviewActivity.this.getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
+        SharedPreferences preferences = RequestedIncidentPreview.this.getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
+
         String token = preferences.getString("TOKEN", null);
 
+        map = googleMap;
 
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        map.setMyLocationEnabled(true);
         JsonApi jsonApi = retrofit.create(JsonApi.class);
         Call<Incident> call = jsonApi.getIncident("Bearer "+token,getIntent().getStringExtra("id"));
         call.enqueue(new Callback<Incident>() {
@@ -305,19 +353,28 @@ public class IncidentHistoryPreviewActivity extends AppCompatActivity implements
                 double lat = inc.getLocation().getLatitude();
                 double lon = inc.getLocation().getLongtitude();
 
-                googleMap.addMarker(new MarkerOptions().position(new LatLng(lat,lon)).title("Marker"));
+
+                LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+                Criteria criteria = new Criteria();
+
                 if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                     return;
                 }
+                Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
 
-                //googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 13));
+
                 CameraPosition cameraPosition = new CameraPosition.Builder()
-                        .target(new LatLng(lat,lon))
-                        .zoom(14)
+                        .target(new LatLng(location.getLatitude(), location.getLongitude()))
+                        .zoom(10)
+                        .tilt(0)
                         .bearing(90)
                         .build();
-                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
+                MarkerOptions markerOpt = new MarkerOptions().position(new LatLng(lat,lon)).title("Marker");
+                Marker marker = map.addMarker(new MarkerOptions().position(new LatLng(lat,lon)).title("Hello World"));
+
+                map.addMarker(markerOpt);
 
 
             }
@@ -325,7 +382,6 @@ public class IncidentHistoryPreviewActivity extends AppCompatActivity implements
             public void onFailure(Call<Incident> call, Throwable t) {
             }
         });
-
 
 
     }
@@ -337,6 +393,57 @@ public class IncidentHistoryPreviewActivity extends AppCompatActivity implements
         CommentRecyclerViewAdapter adapter = new CommentRecyclerViewAdapter(Comments,Dates,Times,this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+    }
+
+    private String m_Text = "";
+
+    public ArrayList<String> reverseArrayList(ArrayList<String> list)
+    {
+        for (int i = 0; i < list.size() / 2; i++) {
+            String temp = list.get(i);
+            list.set(i, list.get(list.size() - i - 1));
+            list.set(list.size() - i - 1, temp);
+        }
+        return list;
+    }
+
+    public void acceptIncident(View view){
+        SharedPreferences preferences = RequestedIncidentPreview.this.getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
+        String token = preferences.getString("TOKEN", null);
+        String usrId = preferences.getString("ID", null);
+
+        Intent myIntent = getIntent();
+        String incId = myIntent.getStringExtra("id");
+        String title = myIntent.getStringExtra("title");
+
+        AcceptIncident accInc = new AcceptIncident(usrId,incId);
+
+
+        JsonApi jsonApi = retrofit.create(JsonApi.class);
+        Call<Void> call = jsonApi.acceptIncident("Bearer "+token,accInc);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (!response.isSuccessful()) {
+                    return;
+                }
+
+                final Intent intent = new Intent(getApplicationContext(), AcceptedIncidentPreviewActivity.class);
+                intent.putExtra("id",incId);
+                intent.putExtra("title",title);
+                intent.putExtra("flag2","true");
+                startActivity(intent);
+
+
+
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+            }
+        });
+
 
     }
 

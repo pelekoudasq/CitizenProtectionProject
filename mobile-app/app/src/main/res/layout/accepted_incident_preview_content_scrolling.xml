@@ -24,9 +24,20 @@
             android:layout_height="wrap_content"
             android:textSize="25dp"
             android:textColor="@color/darkGrey"
-            android:layout_marginBottom="25dp"
+            android:layout_marginBottom="15dp"
             android:drawableLeft="@drawable/ic_launcher_foreground"
             android:drawablePadding="10dp"/>
+
+        <TextView
+            android:layout_marginLeft="20dp"
+            android:drawableLeft="@drawable/ic_baseline_access_time_24"
+            android:drawablePadding="10dp"
+            android:id="@+id/incidentDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="15dp"
+            android:layout_marginBottom="15dp"
+            android:textColor="@color/darkGrey"/>
 
         <TextView
             android:layout_marginLeft="20dp"
@@ -36,6 +47,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="15dp"
+            android:layout_marginBottom="15dp"
             android:textColor="@color/darkGrey"/>
 
         <com.example.theophilos.citizenprotectionproject.utilities.CustomMapView

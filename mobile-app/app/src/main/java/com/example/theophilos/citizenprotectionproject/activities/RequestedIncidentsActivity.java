@@ -13,6 +13,7 @@ import com.example.theophilos.citizenprotectionproject.objects.Incidents;
 import com.example.theophilos.citizenprotectionproject.JsonApi;
 import com.example.theophilos.citizenprotectionproject.R;
 import com.example.theophilos.citizenprotectionproject.utilities.AcceptedRecyclerViewAdapter;
+import com.example.theophilos.citizenprotectionproject.utilities.RequestedRecyclerView;
 import com.google.android.material.navigation.NavigationView;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -40,7 +41,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 import static com.example.theophilos.citizenprotectionproject.activities.LoginActivity.getUnsafeOkHttpClient;
 
-public class AcceptedIncidentsActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class RequestedIncidentsActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private long backPressedTime;
 
@@ -59,7 +60,7 @@ public class AcceptedIncidentsActivity extends AppCompatActivity implements Navi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.accepted_incidents);
+        setContentView(R.layout.requested_incidents);
 
         Toolbar toolbar = findViewById(R.id.toolBar);
         setSupportActionBar(toolbar);
@@ -81,7 +82,7 @@ public class AcceptedIncidentsActivity extends AppCompatActivity implements Navi
 
 
         //Retrieve token wherever necessary
-        SharedPreferences preferences = AcceptedIncidentsActivity.this.getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
+        SharedPreferences preferences = RequestedIncidentsActivity.this.getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
         String usrName = preferences.getString("USRNAME",null);
 
 
@@ -99,7 +100,7 @@ public class AcceptedIncidentsActivity extends AppCompatActivity implements Navi
 
         switch (item.getItemId()){
             case R.id.nav_logout:
-                SharedPreferences preferences = AcceptedIncidentsActivity.this.getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
+                SharedPreferences preferences = RequestedIncidentsActivity.this.getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
                 String token  = preferences.getString("TOKEN",null);
                 JsonApi jsonApi = retrofit.create(JsonApi.class);
                 SharedPreferences.Editor editor = preferences.edit();
@@ -129,12 +130,12 @@ public class AcceptedIncidentsActivity extends AppCompatActivity implements Navi
                 intent = new Intent(getApplicationContext(), UserInfoActivity.class);
                 startActivity(intent);
                 break;
-            case R.id.nav_accepted:
-                drawer.closeDrawer(GravityCompat.START);
-                break;
             case R.id.nav_requested:
                 drawer.closeDrawer(GravityCompat.START);
-                intent = new Intent(getApplicationContext(), RequestedIncidentsActivity.class);
+                break;
+            case R.id.nav_accepted:
+                drawer.closeDrawer(GravityCompat.START);
+                intent = new Intent(getApplicationContext(), AcceptedIncidentsActivity.class);
                 startActivity(intent);
                 break;
             case R.id.nav_history:
@@ -156,7 +157,7 @@ public class AcceptedIncidentsActivity extends AppCompatActivity implements Navi
             String flag = myIntent.getStringExtra("exitFlag");
             if ( flag != null && flag.equals("true") ){
                 if ( backPressedTime + 2000 > System.currentTimeMillis()){
-                    SharedPreferences preferences = AcceptedIncidentsActivity.this.getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
+                    SharedPreferences preferences = RequestedIncidentsActivity.this.getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
                     String token  = preferences.getString("TOKEN",null);
                     JsonApi jsonApi = retrofit.create(JsonApi.class);
                     SharedPreferences.Editor editor = preferences.edit();
@@ -199,12 +200,12 @@ public class AcceptedIncidentsActivity extends AppCompatActivity implements Navi
         incidentIds.clear();
 
 
-        SharedPreferences preferences = AcceptedIncidentsActivity.this.getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
+        SharedPreferences preferences = RequestedIncidentsActivity.this.getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
         String usrId  = preferences.getString("ID",null);
         String token  = preferences.getString("TOKEN",null);
 
         JsonApi jsonApi = retrofit.create(JsonApi.class);
-        Call<Incidents> call = jsonApi.getAcceptedIncidents( "Bearer "+token , usrId );
+        Call<Incidents> call = jsonApi.getRequestedIncidents( "Bearer "+token , usrId );
 
 
         call.enqueue(new Callback<Incidents>() {
@@ -263,7 +264,7 @@ public class AcceptedIncidentsActivity extends AppCompatActivity implements Navi
 
     private void initRecyclerView(){
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
-        AcceptedRecyclerViewAdapter adapter = new AcceptedRecyclerViewAdapter(incidentNames,incidentPriorities,incidentIds,this);
+        RequestedRecyclerView adapter = new RequestedRecyclerView(incidentNames,incidentPriorities,incidentIds,this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }

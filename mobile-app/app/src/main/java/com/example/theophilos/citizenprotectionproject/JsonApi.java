@@ -1,5 +1,6 @@
 package com.example.theophilos.citizenprotectionproject;
 
+import com.example.theophilos.citizenprotectionproject.objects.AcceptIncident;
 import com.example.theophilos.citizenprotectionproject.objects.Department;
 import com.example.theophilos.citizenprotectionproject.objects.HealthCheck;
 import com.example.theophilos.citizenprotectionproject.objects.Incident;
@@ -30,6 +31,9 @@ public interface JsonApi {
     @GET("control-center/api/admin/users/accepted/{id}")
     Call<Incidents> getAcceptedIncidents(@Header("Authorization") String token , @Path("id") String user_id );
 
+    @GET("control-center/api/admin/users/requests/{id}")
+    Call<Incidents> getRequestedIncidents(@Header("Authorization") String token , @Path("id") String user_id );
+
     @POST("control-center/api/logout")
     Call<Void> logout(@Header("Authorization") String token);
 
@@ -44,5 +48,9 @@ public interface JsonApi {
 
     @POST("control-center/api/incidents/comment")
     Call<Void> newComment(@Header("Authorization") String token , @Body NewComment comment);
+
+    @POST("control-center/api/incidents/accept")
+    Call<Void> acceptIncident(@Header("Authorization") String token , @Body AcceptIncident accInc);
+
 
 }

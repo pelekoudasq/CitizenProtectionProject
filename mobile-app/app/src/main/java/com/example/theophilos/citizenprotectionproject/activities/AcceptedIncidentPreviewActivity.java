@@ -62,9 +62,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static com.example.theophilos.citizenprotectionproject.activities.LoginActivity.getUnsafeOkHttpClient;
@@ -134,6 +137,7 @@ public class AcceptedIncidentPreviewActivity extends AppCompatActivity implement
         nameView = findViewById(R.id.incidentName);
         final TextView addressView = findViewById(R.id.incidentAdress);
         final TextView descView = findViewById(R.id.incidentDesc);
+        final TextView dateView = findViewById(R.id.incidentDate);
         nameView.setText(title);
 
         String token = preferences.getString("TOKEN", null);
@@ -162,6 +166,11 @@ public class AcceptedIncidentPreviewActivity extends AppCompatActivity implement
                     nameView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.low, 0, 0, 0);
                 }
 
+                Date date = inc.getDate();
+                DateFormat dateFormat =  new SimpleDateFormat(" hh:mm:ss     dd-mm-yy");
+                String dateString = dateFormat.format(date);
+                dateView.setText(dateString);
+
                 String desc = inc.getDescription();
                 if (desc == null) {
                     descView.setText("Δεν έχει δοθεί ακόμα περιγραφή");
@@ -181,6 +190,25 @@ public class AcceptedIncidentPreviewActivity extends AppCompatActivity implement
             }
         });
 
+
+    }
+
+
+    @Override
+    public void onBackPressed(){
+        if (drawer.isDrawerOpen(GravityCompat.START)){
+            drawer.closeDrawer(GravityCompat.START);
+        } else{
+            Intent myIntent = getIntent();
+            String flag = myIntent.getStringExtra("flag2");
+            if ( flag != null && flag.equals("true") ){
+                final Intent intent = new Intent(getApplicationContext(), RequestedIncidentsActivity.class);
+                startActivity(intent);
+            }
+            else{
+                this.finish();
+            }
+        }
 
     }
 
@@ -362,6 +390,11 @@ public class AcceptedIncidentPreviewActivity extends AppCompatActivity implement
             case R.id.nav_accepted:
                 drawer.closeDrawer(GravityCompat.START);
                 intent = new Intent(getApplicationContext(), AcceptedIncidentsActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.nav_requested:
+                drawer.closeDrawer(GravityCompat.START);
+                intent = new Intent(getApplicationContext(), RequestedIncidentsActivity.class);
                 startActivity(intent);
                 break;
             case R.id.nav_history:

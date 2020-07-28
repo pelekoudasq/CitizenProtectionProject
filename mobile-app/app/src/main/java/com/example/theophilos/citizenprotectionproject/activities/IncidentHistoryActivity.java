@@ -213,6 +213,11 @@ public class IncidentHistoryActivity extends AppCompatActivity implements Naviga
                 intent = new Intent(getApplicationContext(), AcceptedIncidentsActivity.class);
                 startActivity(intent);
                 break;
+            case R.id.nav_requested:
+                drawer.closeDrawer(GravityCompat.START);
+                intent = new Intent(getApplicationContext(), RequestedIncidentsActivity.class);
+                startActivity(intent);
+                break;
             case R.id.nav_history:
                 drawer.closeDrawer(GravityCompat.START);
                 break;
@@ -283,14 +288,6 @@ public class IncidentHistoryActivity extends AppCompatActivity implements Naviga
                     LinearLayout buttonLayout, recyclerLayout;
 
                     List<Incident> incList = acceptedIncidents.getIncidents();
-//                    if (incList.size() == 0) {
-//                        recyclerLayout = findViewById(R.id.recyclerLayout);
-//                        recyclerLayout.setVisibility(View.INVISIBLE);
-//
-//                        buttonLayout = findViewById(R.id.buttonLayout);
-//                        buttonLayout.setVisibility(View.VISIBLE);
-//
-//                    } else {
 
                         buttonLayout = findViewById(R.id.buttonLayout);
                         buttonLayout.setVisibility(View.INVISIBLE);

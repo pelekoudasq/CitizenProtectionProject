@@ -174,6 +174,11 @@ public class UserInfoActivity extends AppCompatActivity implements
                 intent = new Intent(getApplicationContext(), AcceptedIncidentsActivity.class);
                 startActivity(intent);
                 break;
+            case R.id.nav_requested:
+                drawer.closeDrawer(GravityCompat.START);
+                intent = new Intent(getApplicationContext(), RequestedIncidentsActivity.class);
+                startActivity(intent);
+                break;
             case R.id.nav_history:
                 drawer.closeDrawer(GravityCompat.START);
                 intent = new Intent(getApplicationContext(), IncidentHistoryActivity.class);

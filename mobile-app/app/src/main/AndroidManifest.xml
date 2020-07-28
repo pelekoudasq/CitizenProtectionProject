@@ -10,9 +10,15 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".activities.RequestedIncidentPreview"
+            android:label="@string/title_activity_requested_incident_preview"
+            android:noHistory="true"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".activities.RequestedIncidentsActivity" />
+        <activity
             android:name=".activities.IncidentHistoryPreviewActivity"
             android:label="@string/title_activity_incident_history_preview"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.UserInfoActivity"
             android:label="@string/title_activity_user_info"
@@ -50,10 +56,10 @@
 
         <uses-library android:name="com.google.android.maps" />
     </application>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
 
 </manifest>
