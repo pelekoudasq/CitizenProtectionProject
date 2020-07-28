@@ -10,6 +10,19 @@ import { PieChart, Pie, Cell, BarChart, Bar, AreaChart, Area, XAxis, YAxis, Cart
 
 const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#FF8042"];
 
+const RADIAN = Math.PI / 180;
+const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index,}) => {
+  const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+  const x = cx + radius * Math.cos(-midAngle * RADIAN);
+  const y = cy + radius * Math.sin(-midAngle * RADIAN);
+
+  return (
+    <text x={x} y={y} fill="white" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central">
+      {`${(percent * 100).toFixed(0)}%`}
+    </text>
+  );
+};
+
 class Statistics extends Component {
   constructor(props) {
     super(props);
@@ -144,7 +157,6 @@ class Statistics extends Component {
                   }
               });
             });
-            console.log("sss", statsAuth)
 
             this.setState({
 				isloading: false,
@@ -153,16 +165,17 @@ class Statistics extends Component {
 				statsAuth: statsAuth,
 				total_open: total_open,
 				total_close: total_close,
-				statsLabels: statsLabels,
+				statsLabels: statsLabels
             });
           });
 
       });
+
   }
 
   makeTable() {
     return this.state.statsLabels.map((item, index) => {
-        var percent = Math.floor(item.active*100/item.count);
+        var percent = (item.active*100/item.count).toFixed(1);
         const { name, deaths, arrested, injured, count } = item //destructuring
         return (
            <tr key={name}>
@@ -186,11 +199,10 @@ class Statistics extends Component {
 
   authTable(name){
 	var index = this.state.statsAuth.findIndex(item => item.name === name);
-	console.log("edw", this.state.statsAuth[index])
 	let stats = this.state.statsAuth[index];
 	if(stats)
       	return(
-			<table className="table table-bordered" id="table-auth">
+			<table className="table table-bordered table-sm" id="table-auth">
 			<thead>
 				<tr>
 				<th scope="col">Στοιχείο</th>
