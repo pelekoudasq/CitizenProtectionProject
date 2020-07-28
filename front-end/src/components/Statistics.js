@@ -130,15 +130,17 @@ class Statistics extends Component {
                 incident.active === true
                   ? (statsAuth[auth_num].open += 1)
                   : (statsAuth[auth_num].close += 1);
-                  if(incident.priority == "Χαμηλή")
+                  if(incident.priority === "Χαμηλή")
                       statsAuth[auth_num].prlow += 1;
-                  else if(incident.priority == "Μέτρια")
+                  else if(incident.priority === "Μέτρια")
                       statsAuth[auth_num].prmed += 1;
                   else
                       statsAuth[auth_num].prhig += 1;
-                  if(incident.end_date != null){
-                      var dayscount = incident.end_date-incident.date;
-                      statsAuth[auth_num].days += dayscount;
+                  if(incident.end_date !== null){
+					  var d1 = new Date(incident.end_date)
+					  var d2 = new Date(incident.date)
+					  var dayscount = d1-d2;
+                      statsAuth[auth_num].days += dayscount/3600e3;
                   }
               });
             });
@@ -161,7 +163,7 @@ class Statistics extends Component {
   makeTable() {
     return this.state.statsLabels.map((item, index) => {
         var percent = Math.floor(item.active*100/item.count);
-        const { name, deaths, arrested, injured, count, active } = item //destructuring
+        const { name, deaths, arrested, injured, count } = item //destructuring
         return (
            <tr key={name}>
               <td>{name}</td>
@@ -183,40 +185,44 @@ class Statistics extends Component {
   }
 
   authTable(name){
-      var index = this.state.statsAuth.findIndex(item => item.name === name);
-      console.log("edw", this.state.statsAuth[index])
-      return(
-          <table className="table table-bordered" id="table-auth">
-          <thead>
-            <tr>
-              <th scope="col">Στοιχείο</th>
-              <th scope="col">Αριθμός</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-                <td>Μέση διάρκεια συμβάντων</td>
-                <td>0</td>
-            </tr>
-            <tr>
-                <td>Συμβάντα με υψηλή προτεραιότητα</td>
-                <td>0</td>
-            </tr>
-            <tr>
-                <td>Συμβάντα με μεσαία προτεραιότητα</td>
-                <td>0</td>
-            </tr>
-            <tr>
-                <td>Συμβάντα με χαμηλή προτεραιότητα</td>
-                <td>0</td>
-            </tr>
-            <tr>
-                <td>Σύνολο συμβάντων</td>
-                <td>0</td>
-            </tr>
-          </tbody>
-        </table>
-      )
+	var index = this.state.statsAuth.findIndex(item => item.name === name);
+	console.log("edw", this.state.statsAuth[index])
+	let stats = this.state.statsAuth[index];
+	if(stats)
+      	return(
+			<table className="table table-bordered" id="table-auth">
+			<thead>
+				<tr>
+				<th scope="col">Στοιχείο</th>
+				<th scope="col">Αριθμός</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>Μέση διάρκεια συμβάντων</td>
+					<td>{(stats.close !== 0) ? ((stats.days/stats.close).toFixed(3)) : ("-")}</td>
+				</tr>
+				<tr>
+					<td>Συμβάντα με υψηλή προτεραιότητα</td>
+		  			<td>{stats.prhig}</td>
+				</tr>
+				<tr>
+					<td>Συμβάντα με μεσαία προτεραιότητα</td>
+		  			<td>{stats.prmed}</td>
+				</tr>
+				<tr>
+					<td>Συμβάντα με χαμηλή προτεραιότητα</td>
+		  			<td>{stats.prlow}</td>
+				</tr>
+				<tr>
+					<td>Σύνολο συμβάντων</td>
+		  			<td>{stats.value}</td>
+				</tr>
+			</tbody>
+			</table>
+	)
+	else
+		return <p></p>
   }
 
   authTabs(){

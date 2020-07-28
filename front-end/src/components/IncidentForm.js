@@ -6,7 +6,6 @@ import { Link } from 'react-router-dom'
 import alert1 from '../icons/alert.png'
 import '../css/incidentform.css';
 import SideMenu from './SideMenu'
-import apiUrl from '../services/apiUrl'
 import Multiselect from 'react-widgets/lib/Multiselect'
 import AutoCompleteLoc from './AutoCompleteLoc'
 import "react-widgets/dist/css/react-widgets.css";
@@ -35,7 +34,7 @@ class IncidentForm extends Component
             titleError: true,
             locError: true,
             formLoading: false,
-            successSubmit: " ",
+            successSubmit: false,
             labels: []
         }
         this.customInputValue = this.customInputValue.bind(this);
@@ -53,13 +52,11 @@ class IncidentForm extends Component
         .then(response => {
 
             response.forEach(label =>{
-                // console.log(label.label)
                 this.setState({
                   labels: this.state.labels.concat(label.label)
                 })
             })            
         })
-        console.log(this.state.labels)
     }
 
     customInputValue(buttonName) {
@@ -96,9 +93,7 @@ class IncidentForm extends Component
     {
         // return authorization header with jwt token
         const token = localStorage.getItem('token');
-        // console.log(token)
         if (token) {
-            // console.log(token)
             return { Authorization: `Bearer ${token}` };
         } 
         else 
@@ -109,50 +104,24 @@ class IncidentForm extends Component
 
 
     handleSubmit = event => {
-        console.log('IncidentForm...');
-        console.log('Title: ',this.state.title.current.value);
-        console.log('Location: ',this.state.location);
-        console.log('Authorizations: ',this.state.auth);
-        console.log('Priority: ',this.state.priority.current.value); 
-        //console.log("i forma", this.state.formLoading)     
-
+      
         this.setState({
             formLoading: true
-        }); 
+        });
 
-        let checkFetch = response => 
+        let checkFetch = response =>
         {
-            //console.log('respone status is', response.status)
-            if(response.status !== 200)
+            if(response.status !== 200){
                 this.setState({flag: false, formLoading: false})
-                //console.log('flag in check fetch ', this.state.flag)
+                console.log(response)
+            }
             return response;
         }
 
-        let requestOptions = {
-            mode: 'cors',
-            method: 'POST',
-            headers: this.authHeader(),
-            body: JSON.stringify({ 
-                title: this.state.title.current.value,
-                address: this.state.location,
-                priority: this.state.priority.current.value,
-                auth: this.state.auth        
-            }),
-        }
-
-        requestOptions.headers['Content-Type'] = 'application/json'
-
-        let request = `${apiUrl}/incidents/`
-
-
-        fetch(request, requestOptions)
-
+        incidentService.post_incident(this.state.title.current.value, this.state.location, this.state.priority.current.value, this.state.auth)
         .then(checkFetch)
         .then(response => response.json())
         .then( json => {
-            // console.log(json);
-            //console.log('flag after fetch', this.state.flag)
             if(this.state.flag)
             {
                 this.setState({
@@ -160,6 +129,7 @@ class IncidentForm extends Component
                     formLoading: false,
                     successSubmit: true
                 })
+                console.log("success" + this.state.successSubmit)
             }
             else
                 this.setState({
@@ -167,56 +137,32 @@ class IncidentForm extends Component
                     formLoading: false,
                     successSubmit: false
                 })
-                //console.log("id in first fetch", this.state.id)
+                console.log(this.state.successSubmit)
         }) 
         event.preventDefault();
     };
 
     handleSubmitmoreInfo = event => {
-        // console.log('IncidentFormmoreInfo...');
-        // console.log('Calling number: ', this.state.call_num.current.value);
-        // console.log('Calling name: ', this.state.call_name.current.value);
-        // console.log('Incident type: ', this.state.incident_type.current._values.value);
-        // console.log('Description: ', this.state.description);
         let checkFetch = response => 
         {
-            //console.log('respone status is', response.status)
-            if(response.status !== 200)                
+            if(response.status !== 200)
             {
                 //console.log('flag in check fetch ', this.state.flag)
             }
             return response;
         }
 
-        let requestOptions = {
-            mode: 'cors',
-            method: 'POST',
-            headers: this.authHeader(),
-            body: JSON.stringify({
-                description : this.state.description,
-                callerName : this.state.call_name.current.value,
-                callerNumber : this.state.call_num.current.value,
-                keywords : this.state.incident_type.current._values.value
-            }),
+        if(this.state.id){
+            incidentService.update_incident(this.state.id, this.state.description, this.state.call_name.current.value, this.state.call_num.current.value, this.state.incident_type.current._values.value)
+            .then(checkFetch)
+            .then( json => {
+                console.log(json);
+                console.log('flag', this.state.flag)
+            })
+
+            setTimeout(() => alert('Το Συμβάν Καταγράφηκε Επιτυχώς'), 10);
+            this.props.history.push("/")
         }
-
-        requestOptions.headers['Content-Type'] = 'application/json'
-
-        let request = `${apiUrl}/incidents/update/${this.state.id}`
-
-        fetch(request, requestOptions)
-
-        .then(checkFetch)
-        .then(response => response.json())
-        .then( json => {
-            console.log(json);
-            console.log('flag', this.state.flag)
-        })
-
-        setTimeout(() => alert('Το Συμβάν Καταγράφηκε Επιτυχώς'), 10);
-        this.props.history.push("/")
-
-
     event.preventDefault();
     };
     
@@ -350,7 +296,7 @@ class IncidentForm extends Component
                         <Row>
                             <FormGroup>
                             <Col>
-                            <Button disabled = {!formflag} onClick={this.handleSubmitmoreInfo}>Ολοκλήρωση</Button>
+                            <Button disabled = {!(formflag && this.state.successSubmit)} onClick={this.handleSubmitmoreInfo}>Ολοκλήρωση</Button>
                             </Col>
                             </FormGroup>
                         </Row>

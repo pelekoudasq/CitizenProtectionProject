@@ -4,6 +4,8 @@ export const incidentService = {
     get_all_incidents,
     get_active_incidents,
     accept_incident,
+    post_incident,
+    update_incident,
     get_user_accepted_incidents,
     get_user_requested_incidents,
     get_filtered_incidents,
@@ -31,7 +33,6 @@ function authHeader()
         return {};
     }
 }
-
 
 function get_active_incidents(start, count) { //only control center makes this call
 
@@ -86,6 +87,49 @@ function accept_incident(incident_id) //only employees make this call
         return response;
     });	
 
+}
+
+function post_incident(title, address, priority, auth)
+{
+	const requestOptions = {
+		mode: 'cors',
+		method: 'POST',
+        headers: authHeader(),
+        body: JSON.stringify({
+            title,
+            address,
+            priority,
+            auth
+        }),
+	};
+    requestOptions.headers['Content-Type'] = 'application/json'   
+
+    return fetch(`${apiUrl}/incidents/`, requestOptions)
+    .then(response => {
+        return response;
+    });	
+}
+
+function update_incident(incident_id, description, callerName, callerNumber, keywords)
+{
+	const requestOptions = {
+		mode: 'cors',
+		method: 'POST',
+        headers: authHeader(),
+        body: JSON.stringify({
+            description,
+            callerName,
+            callerNumber,
+            keywords
+        }),
+	};
+    requestOptions.headers['Content-Type'] = 'application/json'   
+
+    return fetch(`${apiUrl}/incidents/update/${incident_id}`, requestOptions)
+    .then(response => response.json())
+    .then(response => {
+        return response;
+    });	
 }
 
 
