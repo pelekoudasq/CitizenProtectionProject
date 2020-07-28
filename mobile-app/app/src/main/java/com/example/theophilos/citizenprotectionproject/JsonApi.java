@@ -1,6 +1,12 @@
 package com.example.theophilos.citizenprotectionproject;
 
-import java.util.List;
+import com.example.theophilos.citizenprotectionproject.objects.Department;
+import com.example.theophilos.citizenprotectionproject.objects.HealthCheck;
+import com.example.theophilos.citizenprotectionproject.objects.Incident;
+import com.example.theophilos.citizenprotectionproject.objects.Incidents;
+import com.example.theophilos.citizenprotectionproject.objects.NewComment;
+import com.example.theophilos.citizenprotectionproject.objects.SessionInfo;
+import com.example.theophilos.citizenprotectionproject.objects.UserInfo;
 
 import retrofit2.Call;
 import retrofit2.http.Body;

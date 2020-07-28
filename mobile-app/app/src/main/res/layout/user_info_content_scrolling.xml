@@ -5,8 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".UserInfoActivity"
-    tools:showIn="@layout/user_info_activity">
+    tools:context=".activities.UserInfoActivity"
+    tools:showIn="@layout/user_info">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -126,7 +126,7 @@
                 android:text="Τοποθεσία Χρήστη :  "/>
 
 
-        <com.example.theophilos.citizenprotectionproject.CustomMapView
+        <com.example.theophilos.citizenprotectionproject.utilities.CustomMapView
             android:id="@+id/infoMapView"
             android:layout_width="match_parent"
             android:layout_height="400dp" />
