@@ -18,7 +18,8 @@ function arePointsNear(incLat, intLong, pLat, pLong, km) {
 	var kx = Math.cos(Math.PI * incLat / 180.0) * ky;
 	var dx = Math.abs(intLong - pLong) * kx;
 	var dy = Math.abs(incLat - pLat) * ky;
-	return Math.sqrt(dx * dx + dy * dy) <= km;
+	var dist = Math.sqrt(dx * dx + dy * dy);
+	return dist <= km;
 }
 
 /* routes */
@@ -344,12 +345,13 @@ router.post('/', function(req, res, next) {
 					
 					/* assign to users type 2 */
 					db.Users.find({ userType : 2 , "details.authorityType" : { $in : incident.auth } }, function(err, users) {
+						console.log(users.length)
 						if (err) {
 							res.json(incident);
 							return;
 						}
 						users.forEach(user => {
-							if (arePointsNear(location.latitude, location.longitude, user.details.lat, user.details.long, 5)) {
+							if (arePointsNear(Number(location.latitude), Number(location.longitude), Number(user.details.lat), Number(user.details.long), 5)) {
 								db.Users.update(
 									{ _id: user._id },
 									{ $push: { incidentRequests : incident._id } },
