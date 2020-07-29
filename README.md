@@ -40,7 +40,7 @@ cd front-end
 npm install -g
 npm start
 ```
-Ύστερα, πλοήγηση στη σελίδα `http://localhost:3000/`
+Ύστερα, πλοήγηση στη σελίδα `https://localhost:3000/`
 
 
 Εγκατάσταση και εκτέλεση Backend
@@ -106,7 +106,7 @@ cd cli-app/control-center
 npm install -g
 npm link
 control-center
-```	
+```
 
 
 Εκτέλεση Android
