@@ -83,7 +83,6 @@ class Incidents extends Component
 			.then( response => {
 				if(response.length !==0)
 				{
-					// console.log("Response from sofia is",response.incidents)
 					this.setState({
 						incidents: response.incidents.reverse(),
 						no_posts: false

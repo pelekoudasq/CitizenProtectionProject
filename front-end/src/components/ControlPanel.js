@@ -44,7 +44,6 @@ class ControlPanel extends Component
 		{	
 			incidentService.get_active_incidents(this.state.visiblePosts, 9)
 			.then( response => {
-				// console.log("Response from control center is",response)
 				this.setState({
 					incidents: response,
 					visiblePosts: this.state.visiblePosts + 9,
@@ -70,13 +69,9 @@ class ControlPanel extends Component
 		else if(Number(usertype) === 2) //api call for employees
 		{	
 			incidentService.get_user_requested_incidents()
-
 			.then( response => {
-				console.log("O naftis exei usertype " ,usertype)
-				console.log("Ta peristatika tou nafti einai ", response)
 				if(response.incidents && response.incidents.length !==0)
 				{
-					console.log()
 					this.setState({
 						incidents: response.incidents,
 						visiblePosts: this.state.visiblePosts + 7,
@@ -112,7 +107,6 @@ class ControlPanel extends Component
 		{	
 			incidentService.get_department_incidents(this.state.visiblePosts, 9)
 			.then( response => {
-				console.log("Atpf", response)
 				if(response.length !==0)
 				{
 					this.setState({

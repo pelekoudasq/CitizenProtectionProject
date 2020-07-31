@@ -113,7 +113,6 @@ class IncidentForm extends Component
         {
             if(response.status !== 200){
                 this.setState({flag: false, formLoading: false})
-                console.log(response)
             }
             return response;
         }
@@ -129,7 +128,6 @@ class IncidentForm extends Component
                     formLoading: false,
                     successSubmit: true
                 })
-                console.log("success" + this.state.successSubmit)
             }
             else
                 this.setState({
@@ -137,7 +135,6 @@ class IncidentForm extends Component
                     formLoading: false,
                     successSubmit: false
                 })
-                console.log(this.state.successSubmit)
         }) 
         event.preventDefault();
     };
@@ -146,19 +143,13 @@ class IncidentForm extends Component
         let checkFetch = response => 
         {
             if(response.status !== 200)
-            {
-                //console.log('flag in check fetch ', this.state.flag)
-            }
+                console.log('flag in check fetch ', this.state.flag)
             return response;
         }
 
         if(this.state.id){
             incidentService.update_incident(this.state.id, this.state.description, this.state.call_name.current.value, this.state.call_num.current.value, this.state.incident_type.current._values.value)
             .then(checkFetch)
-            .then( json => {
-                console.log(json);
-                console.log('flag', this.state.flag)
-            })
 
             setTimeout(() => alert('Το Συμβάν Καταγράφηκε Επιτυχώς'), 10);
             this.props.history.push("/")
@@ -270,7 +261,7 @@ class IncidentForm extends Component
                         </Row>
                             <FormGroup>
                             <button id="close-image">
-                            <img src={alert1} alt='' style={{ width: '230px'}} onClick= {(formflag === true) ? this.handleSubmit : console.log(" ")} />
+                            <img src={alert1} alt='' style={{ width: '230px'}} onClick= {(formflag === true) && this.handleSubmit} />
                             </button>
                             </FormGroup>
                     </Container>

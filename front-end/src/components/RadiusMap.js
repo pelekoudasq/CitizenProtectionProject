@@ -30,7 +30,6 @@ class RadiusMap extends Component
     }
 
     getMarkers(circleCenter) {
-        console.log(circleCenter)
         let marks = []
         this.props.coordinates.forEach(coords => {
             let res = this.arePointsNear({lat: coords.lat, lng: coords.lng }, circleCenter, this.state.radius);
@@ -49,7 +48,6 @@ class RadiusMap extends Component
         this.circle.current.props.center.lat = circleCenter.lat()
         this.circle.current.props.center.lng = circleCenter.lng()
         this.getMarkers(circleCenter)
-        console.log("markers ", this.state.markers);
     }
 
     changeRadius = event =>{

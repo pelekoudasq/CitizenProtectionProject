@@ -369,7 +369,6 @@ function get_labels() {
     return fetch(`${apiUrl}/incidents/labels`, requestOptions)
     .then(response => response.json())
     .then(response => {
-        console.log(response)
         return response;
     }); 
 }

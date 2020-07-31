@@ -74,7 +74,6 @@ class Statistics extends Component {
         this.setState({
           auths: response,
 		});
-		console.log(response)
 
         this.state.auths.forEach((auths) => {
 			/*Loop through every row of the jsonfile and get the attributes*/
@@ -94,7 +93,6 @@ class Statistics extends Component {
 
 		let auth = []
 
-		console.log(this.state.userType)
 		if (this.state.userType !== "null") {
 			auth.push(JSON.stringify(Number(this.state.userType)+7))
 		}
