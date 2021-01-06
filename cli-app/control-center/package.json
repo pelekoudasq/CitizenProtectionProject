@@ -20,7 +20,7 @@
   "author": "Koumarela and Pelekoudas",
   "license": "MIT",
   "dependencies": {
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "commander": "^5.1.0",
     "esm": "^3.2.25",
     "https": "^1.0.0"
