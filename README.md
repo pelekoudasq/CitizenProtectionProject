@@ -26,7 +26,7 @@
 Κλωνοποίηση αποθετηρίου
 -----------------------
 ```bash
-git clone git://github.com/pelekoudasq/bidit.git
+git clone git://github.com/pelekoudasq/CitizenProtectionProject.git
 cd CitizenProtectionProject
 ```
 
